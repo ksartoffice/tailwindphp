@@ -913,7 +913,12 @@ function parseCss(array &$ast, array $options = []): array
                     $seenVirtualModules[$importPath] = true;
                 }
 
-                // Handle 'tailwindcss' virtual module - full Tailwind CSS (theme + preflight + utilities)
+                // Handle 'tailwindcss' virtual module - full Tailwind CSS.
+                // This must mirror the docs equivalent expansion:
+                // @layer theme, base, components, utilities;
+                // @import "tailwindcss/theme.css" layer(theme);
+                // @import "tailwindcss/preflight.css" layer(base);
+                // @import "tailwindcss/utilities.css" layer(utilities);
                 if ($importPath === 'tailwindcss') {
                     // Load theme.css
                     $themeCss = readResourceFile('theme.css');
@@ -923,16 +928,18 @@ function parseCss(array &$ast, array $options = []): array
                     $preflightCss = readResourceFile('preflight.css');
                     $preflightAst = parse($preflightCss);
 
-                    // Create utilities node
-                    $utilitiesNode = atRule('@tailwind', 'utilities', []);
-
                     // Apply modifiers to theme if present
                     if (str_contains($modifiers, 'theme(')) {
                         $themeAst = [atRule('@media', $modifiers, $themeAst)];
                     }
 
-                    // Combine: theme + preflight + utilities
-                    $fullContent = array_merge($themeAst, $preflightAst, [$utilitiesNode]);
+                    // Build layered full import structure for parity with Tailwind's index.css.
+                    $fullContent = [
+                        atRule('@layer', 'theme, base, components, utilities', []),
+                        atRule('@layer', 'theme', $themeAst),
+                        atRule('@layer', 'base', $preflightAst),
+                        atRule('@layer', 'utilities', [atRule('@tailwind', 'utilities', [])]),
+                    ];
 
                     return WalkAction::Replace($fullContent);
                 }

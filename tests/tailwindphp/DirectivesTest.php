@@ -36,6 +36,29 @@ class DirectivesTest extends TestCase
         $this->assertStringContainsString('display: flex', $css);
     }
 
+    public function test_full_import_wraps_default_layers(): void
+    {
+        $css = Tailwind::generate([
+            'content' => '<div class="flex">',
+            'css' => '@import "tailwindcss";',
+        ]);
+
+        $this->assertStringContainsString('@layer theme, base, components, utilities;', $css);
+        $this->assertStringContainsString('@layer base', $css);
+        $this->assertMatchesRegularExpression('/@layer base\s*\{[\s\S]*?box-sizing:\s*border-box/s', $css);
+    }
+
+    public function test_full_import_contains_theme_and_utilities_layers(): void
+    {
+        $css = Tailwind::generate([
+            'content' => '<div class="flex">',
+            'css' => '@import "tailwindcss";',
+        ]);
+
+        $this->assertMatchesRegularExpression('/@layer theme\s*\{[\s\S]*?--font-sans/s', $css);
+        $this->assertMatchesRegularExpression('/@layer utilities\s*\{[\s\S]*?\.flex/s', $css);
+    }
+
     public function test_full_import_includes_theme(): void
     {
         $css = Tailwind::generate([
