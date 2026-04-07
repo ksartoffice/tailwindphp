@@ -61,6 +61,9 @@ function registerLayoutUtilities(UtilityBuilder $builder): void
         ['inset', 'inset'],
         ['inset-x', 'inset-inline'],
         ['inset-y', 'inset-block'],
+        // v3 compatibility aliases
+        ['start', 'inset-inline-start'],
+        ['end', 'inset-inline-end'],
         ['inset-s', 'inset-inline-start'],
         ['inset-e', 'inset-inline-end'],
         ['inset-bs', 'inset-block-start'],
@@ -341,6 +344,15 @@ function registerLayoutUtilities(UtilityBuilder $builder): void
     $builder->staticUtility('break-after-column', [['break-after', 'column']]);
 
     // Box Decoration Break
+    // v3 compatibility aliases: decoration-slice / decoration-clone
+    $builder->staticUtility('decoration-clone', [
+        ['-webkit-box-decoration-break', 'clone'],
+        ['box-decoration-break', 'clone'],
+    ]);
+    $builder->staticUtility('decoration-slice', [
+        ['-webkit-box-decoration-break', 'slice'],
+        ['box-decoration-break', 'slice'],
+    ]);
     $builder->staticUtility('box-decoration-clone', [
         ['-webkit-box-decoration-break', 'clone'],
         ['box-decoration-break', 'clone'],
@@ -362,6 +374,8 @@ function registerLayoutUtilities(UtilityBuilder $builder): void
     $builder->staticUtility('wrap-anywhere', [['overflow-wrap', 'anywhere']]);
     $builder->staticUtility('wrap-break-word', [['overflow-wrap', 'break-word']]);
     $builder->staticUtility('wrap-normal', [['overflow-wrap', 'normal']]);
+    // v3 compatibility alias
+    $builder->staticUtility('overflow-ellipsis', [['text-overflow', 'ellipsis']]);
 
     // Overscroll Behavior
     $overscrollValues = ['auto', 'contain', 'none'];

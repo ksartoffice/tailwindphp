@@ -65,6 +65,31 @@ class PublicApiTest extends TestCase
         $this->assertSame('hover:bg-blue-500', merge('hover:bg-red-500', 'hover:bg-blue-500'));
     }
 
+    #[Test]
+    public function merge_resolves_v3_gradient_and_v4_gradient_conflicts(): void
+    {
+        $this->assertSame('bg-linear-to-l', merge('bg-gradient-to-r', 'bg-linear-to-l'));
+    }
+
+    #[Test]
+    public function merge_resolves_v3_overflow_ellipsis_conflicts(): void
+    {
+        $this->assertSame('text-clip', merge('overflow-ellipsis', 'text-clip'));
+    }
+
+    #[Test]
+    public function merge_resolves_v3_decoration_conflicts(): void
+    {
+        $this->assertSame('box-decoration-clone', merge('decoration-slice', 'box-decoration-clone'));
+    }
+
+    #[Test]
+    public function merge_resolves_v3_flex_grow_and_shrink_conflicts(): void
+    {
+        $this->assertSame('grow-0', merge('flex-grow', 'grow-0'));
+        $this->assertSame('shrink-0', merge('flex-shrink', 'shrink-0'));
+    }
+
     // ==================================================
     // join() tests
     // ==================================================

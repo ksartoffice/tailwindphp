@@ -92,9 +92,39 @@ function registerFlexboxUtilities(UtilityBuilder $builder): void
             return [decl('flex-grow', $value)];
         },
     ]);
+    // v3 compatibility alias
+    $builder->functionalUtility('flex-grow', [
+        'handleBareValue' => function ($value) {
+            if (isPositiveInteger($value['value'])) {
+                return $value['value'];
+            }
+
+            return null;
+        },
+        'themeKeys' => ['--flex-grow'],
+        'defaultValue' => '1',
+        'handle' => function ($value, $dataType) {
+            return [decl('flex-grow', $value)];
+        },
+    ]);
 
     // Flex Shrink
     $builder->functionalUtility('shrink', [
+        'handleBareValue' => function ($value) {
+            if (isPositiveInteger($value['value'])) {
+                return $value['value'];
+            }
+
+            return null;
+        },
+        'themeKeys' => ['--flex-shrink'],
+        'defaultValue' => '1',
+        'handle' => function ($value, $dataType) {
+            return [decl('flex-shrink', $value)];
+        },
+    ]);
+    // v3 compatibility alias
+    $builder->functionalUtility('flex-shrink', [
         'handleBareValue' => function ($value) {
             if (isPositiveInteger($value['value'])) {
                 return $value['value'];
