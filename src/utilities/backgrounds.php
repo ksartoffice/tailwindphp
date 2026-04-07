@@ -168,6 +168,25 @@ function registerBackgroundUtilities(UtilityBuilder $builder): void
         registerLinearGradientUtility($builder, "bg-linear-{$suffix}", $direction);
     }
 
+    // v3 compatibility: bg-gradient-to-* aliases
+    // TailwindCSS keeps these as static utilities with explicit oklab interpolation.
+    $legacyGradientDirections = [
+        't' => 'top',
+        'tr' => 'top right',
+        'r' => 'right',
+        'br' => 'bottom right',
+        'b' => 'bottom',
+        'bl' => 'bottom left',
+        'l' => 'left',
+        'tl' => 'top left',
+    ];
+    foreach ($legacyGradientDirections as $suffix => $direction) {
+        $builder->staticUtility("bg-gradient-to-{$suffix}", [
+            ['--tw-gradient-position', "to {$direction} in oklab"],
+            ['background-image', 'linear-gradient(var(--tw-gradient-stops))'],
+        ]);
+    }
+
     // Register bg-linear-{angle} utilities (e.g., bg-linear-45)
     // Note: supportsNegative is false here because arbitrary non-angle values like [to_bottom]
     // should not support negative. The handleBareValue already handles numeric angles.

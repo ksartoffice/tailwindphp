@@ -139,6 +139,30 @@ class UtilitiesTest extends TestCase
     {
         $this->assertGenerates('inset-e-0', 'inset-inline-end:');
     }
+    public function test_start_4(): void
+    {
+        $this->assertGenerates('start-4', 'inset-inline-start:');
+    }
+    public function test_start_negative_4(): void
+    {
+        $this->assertGenerates('-start-4', 'inset-inline-start:');
+    }
+    public function test_start_px(): void
+    {
+        $this->assertGenerates('start-px', 'inset-inline-start: 1px');
+    }
+    public function test_end_4(): void
+    {
+        $this->assertGenerates('end-4', 'inset-inline-end:');
+    }
+    public function test_end_negative_4(): void
+    {
+        $this->assertGenerates('-end-4', 'inset-inline-end:');
+    }
+    public function test_end_auto(): void
+    {
+        $this->assertGenerates('end-auto', 'inset-inline-end: auto');
+    }
 
     // Z-index
     public function test_z_0(): void
@@ -339,6 +363,14 @@ class UtilitiesTest extends TestCase
     {
         $this->assertGenerates('box-decoration-slice', 'box-decoration-break: slice');
     }
+    public function test_decoration_clone(): void
+    {
+        $this->assertGenerates('decoration-clone', 'box-decoration-break: clone');
+    }
+    public function test_decoration_slice(): void
+    {
+        $this->assertGenerates('decoration-slice', 'box-decoration-break: slice');
+    }
 
     // ==================================================
     // FLEXBOX & GRID (flexbox.php)
@@ -403,6 +435,14 @@ class UtilitiesTest extends TestCase
     {
         $this->assertGenerates('grow-0', 'flex-grow: 0');
     }
+    public function test_flex_grow(): void
+    {
+        $this->assertGenerates('flex-grow', 'flex-grow: 1');
+    }
+    public function test_flex_grow_0(): void
+    {
+        $this->assertGenerates('flex-grow-0', 'flex-grow: 0');
+    }
 
     // Flex Shrink
     public function test_shrink(): void
@@ -412,6 +452,14 @@ class UtilitiesTest extends TestCase
     public function test_shrink_0(): void
     {
         $this->assertGenerates('shrink-0', 'flex-shrink: 0');
+    }
+    public function test_flex_shrink(): void
+    {
+        $this->assertGenerates('flex-shrink', 'flex-shrink: 1');
+    }
+    public function test_flex_shrink_0(): void
+    {
+        $this->assertGenerates('flex-shrink-0', 'flex-shrink: 0');
     }
 
     // Order
@@ -927,6 +975,14 @@ class UtilitiesTest extends TestCase
     {
         $this->assertGenerates('max-w-prose', 'max-width:');
     }
+    public function test_max_w_screen(): void
+    {
+        $this->assertGenerates('max-w-screen', 'max-width: 100vw');
+    }
+    public function test_max_w_screen_sm(): void
+    {
+        $this->assertGenerates('max-w-screen-sm', 'max-width:', 'var(--breakpoint-sm)');
+    }
 
     // Height
     public function test_h_0(): void
@@ -1337,6 +1393,10 @@ class UtilitiesTest extends TestCase
     {
         $this->assertGenerates('text-ellipsis', 'text-overflow: ellipsis');
     }
+    public function test_overflow_ellipsis(): void
+    {
+        $this->assertGenerates('overflow-ellipsis', 'text-overflow: ellipsis');
+    }
     public function test_text_clip(): void
     {
         $this->assertGenerates('text-clip', 'text-overflow: clip');
@@ -1594,6 +1654,11 @@ class UtilitiesTest extends TestCase
     public function test_bg_linear_to_br(): void
     {
         $this->assertGenerates('bg-linear-to-br', 'background-image:');
+    }
+    public function test_bg_gradient_to_r(): void
+    {
+        $this->assertGenerates('bg-gradient-to-r', 'background-image:');
+        $this->assertGenerates('bg-gradient-to-r', '--tw-gradient-position: to right in oklab');
     }
     public function test_bg_radial(): void
     {

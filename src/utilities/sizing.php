@@ -25,6 +25,8 @@ use function TailwindPHP\Ast\decl;
  */
 function registerSizingUtilities(UtilityBuilder $builder): void
 {
+    $theme = $builder->getTheme();
+
     // Static size/width/height utilities for common values
     // These are registered as static utilities, not as part of functional utilities
     foreach ([
@@ -66,6 +68,26 @@ function registerSizingUtilities(UtilityBuilder $builder): void
     $builder->staticUtility('w-screen', [['width', '100vw']]);
     $builder->staticUtility('min-w-screen', [['min-width', '100vw']]);
     $builder->staticUtility('max-w-screen', [['max-width', '100vw']]);
+    // v3 compatibility: max-w-screen-{breakpoint}
+    $builder->getUtilities()->functional('max-w-screen', function (array $candidate) use ($theme) {
+        if (!isset($candidate['value']) || $candidate['value'] === null) {
+            // Keep bare max-w-screen handled by existing static utility.
+            return null;
+        }
+        if ($candidate['value']['kind'] === 'arbitrary') {
+            return null;
+        }
+        if (isset($candidate['modifier']) && $candidate['modifier'] !== null) {
+            return null;
+        }
+
+        $value = $theme->resolve($candidate['value']['value'], ['--breakpoint']);
+        if ($value === null) {
+            return null;
+        }
+
+        return [decl('max-width', $value)];
+    });
     $builder->staticUtility('h-screen', [['height', '100vh']]);
     $builder->staticUtility('min-h-screen', [['min-height', '100vh']]);
     $builder->staticUtility('max-h-screen', [['max-height', '100vh']]);

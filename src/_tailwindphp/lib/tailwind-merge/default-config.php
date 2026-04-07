@@ -198,7 +198,10 @@ class DefaultConfig
                 'break-after' => [['break-after' => $scaleBreak()]],
                 'break-before' => [['break-before' => $scaleBreak()]],
                 'break-inside' => [['break-inside' => ['auto', 'avoid', 'avoid-page', 'avoid-column']]],
-                'box-decoration' => [['box-decoration' => ['slice', 'clone']]],
+                'box-decoration' => [
+                    ['box-decoration' => ['slice', 'clone']],
+                    ['decoration' => ['slice', 'clone']],
+                ],
                 'box' => [['box' => ['border', 'content']]],
                 'display' => [
                     'block', 'inline-block', 'inline', 'flex', 'inline-flex',
@@ -237,8 +240,14 @@ class DefaultConfig
                 'flex-direction' => [['flex' => ['row', 'row-reverse', 'col', 'col-reverse']]],
                 'flex-wrap' => [['flex' => ['nowrap', 'wrap', 'wrap-reverse']]],
                 'flex' => [['flex' => [$isNumber, $isFraction, 'auto', 'initial', 'none', $isArbitraryValue]]],
-                'grow' => [['grow' => ['', $isNumber, $isArbitraryVariable, $isArbitraryValue]]],
-                'shrink' => [['shrink' => ['', $isNumber, $isArbitraryVariable, $isArbitraryValue]]],
+                'grow' => [
+                    ['grow' => ['', $isNumber, $isArbitraryVariable, $isArbitraryValue]],
+                    ['flex-grow' => ['', $isNumber, $isArbitraryVariable, $isArbitraryValue]],
+                ],
+                'shrink' => [
+                    ['shrink' => ['', $isNumber, $isArbitraryVariable, $isArbitraryValue]],
+                    ['flex-shrink' => ['', $isNumber, $isArbitraryVariable, $isArbitraryValue]],
+                ],
                 'order' => [['order' => [$isInteger, 'first', 'last', 'none', $isArbitraryVariable, $isArbitraryValue]]],
                 'grid-cols' => [['grid-cols' => $scaleGridTemplateColsRows()]],
                 'col-start-end' => [['col' => $scaleGridColRowStartAndEnd()]],
@@ -329,7 +338,7 @@ class DefaultConfig
                 'text-decoration-color' => [['decoration' => $scaleColor()]],
                 'underline-offset' => [['underline-offset' => [$isNumber, 'auto', $isArbitraryVariable, $isArbitraryValue]]],
                 'text-transform' => ['uppercase', 'lowercase', 'capitalize', 'normal-case'],
-                'text-overflow' => ['truncate', 'text-ellipsis', 'text-clip'],
+                'text-overflow' => ['truncate', 'text-ellipsis', 'text-clip', 'overflow-ellipsis'],
                 'text-wrap' => [['text' => ['wrap', 'nowrap', 'balance', 'pretty']]],
                 'indent' => [['indent' => $scaleUnambiguousSpacing()]],
                 'vertical-align' => [['align' => [
@@ -352,6 +361,7 @@ class DefaultConfig
                 'bg-image' => [['bg' => [
                     'none',
                     [
+                        'gradient' => [['to' => ['t', 'tr', 'r', 'br', 'b', 'bl', 'l', 'tl']]],
                         'linear' => [['to' => ['t', 'tr', 'r', 'br', 'b', 'bl', 'l', 'tl']], $isInteger, $isArbitraryVariable, $isArbitraryValue],
                         'radial' => ['', $isArbitraryVariable, $isArbitraryValue],
                         'conic' => [$isInteger, $isArbitraryVariable, $isArbitraryValue],
