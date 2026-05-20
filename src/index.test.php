@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace TailwindPHP;
 
-use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use TailwindPHP\Tests\TestHelper;
 
@@ -89,7 +88,9 @@ class index extends TestCase
     /**
      * Run a single index test case.
      */
-    #[DataProvider('indexTestProvider')]
+    /**
+ * @dataProvider indexTestProvider
+ */
     public function test_index(array $test): void
     {
         $name = $test['name'] ?? 'unknown';

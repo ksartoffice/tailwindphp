@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace TailwindPHP;
 
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 use function TailwindPHP\Ast\decl;
@@ -33,7 +32,9 @@ class walk extends TestCase
 
     // ENTER (function) tests
 
-    #[Test]
+    /**
+ * @test
+ */
     public function visits_all_nodes_in_an_ast(): void
     {
         $ast = $this->createAst();
@@ -46,7 +47,9 @@ class walk extends TestCase
         $this->assertEquals(['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i'], $visited);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function visits_all_nodes_and_calculates_path(): void
     {
         $ast = $this->createAst();
@@ -75,7 +78,9 @@ class walk extends TestCase
         $this->assertEquals($expected, $paths);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function skips_a_node_children_first_node(): void
     {
         $ast = $this->createAst();
@@ -91,7 +96,9 @@ class walk extends TestCase
         $this->assertEquals(['a', 'b', 'd', 'e', 'f', 'g', 'h', 'i'], $visited);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function skips_a_node_children_middle_node(): void
     {
         $ast = $this->createAst();
@@ -107,7 +114,9 @@ class walk extends TestCase
         $this->assertEquals(['a', 'b', 'c', 'd', 'g', 'h', 'i'], $visited);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function skips_a_node_children_last_node(): void
     {
         $ast = $this->createAst();
@@ -123,7 +132,9 @@ class walk extends TestCase
         $this->assertEquals(['a', 'b', 'c', 'd', 'e', 'f', 'g', 'i'], $visited);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function stops_entirely(): void
     {
         $ast = $this->createAst();
@@ -139,7 +150,9 @@ class walk extends TestCase
         $this->assertEquals(['a', 'b', 'c', 'd'], $visited);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function replaces_a_node_and_visits_replacements(): void
     {
         $ast = $this->createAst();
@@ -158,7 +171,9 @@ class walk extends TestCase
         $this->assertEquals(['a', 'b', 'c', 'd', 'e1', 'f1', 'e2', 'f2', 'g', 'h', 'i'], $visited);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function replaces_a_node_and_skips_replacements(): void
     {
         $ast = $this->createAst();
@@ -185,7 +200,9 @@ class walk extends TestCase
         $this->assertEquals(['a', 'b', 'c', 'e1', 'f1', 'e2', 'f2', 'g', 'h', 'i'], $visited);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function replaces_a_node_and_stops(): void
     {
         $ast = $this->createAst();
@@ -214,7 +231,9 @@ class walk extends TestCase
 
     // ENTER (object) tests
 
-    #[Test]
+    /**
+ * @test
+ */
     public function visits_all_nodes_with_enter_hook(): void
     {
         $ast = $this->createAst();
@@ -231,7 +250,9 @@ class walk extends TestCase
 
     // EXIT tests
 
-    #[Test]
+    /**
+ * @test
+ */
     public function visits_all_nodes_on_exit(): void
     {
         $ast = $this->createAst();
@@ -246,7 +267,9 @@ class walk extends TestCase
         $this->assertEquals(['c', 'b', 'f', 'e', 'd', 'h', 'g', 'a', 'i'], $visited);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function stops_on_exit(): void
     {
         $ast = $this->createAst();
@@ -264,7 +287,9 @@ class walk extends TestCase
         $this->assertEquals(['c', 'b', 'f', 'e', 'd'], $visited);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function replaces_on_exit(): void
     {
         $ast = $this->createAst();
@@ -295,7 +320,9 @@ class walk extends TestCase
 
     // ENTER & EXIT tests
 
-    #[Test]
+    /**
+ * @test
+ */
     public function visits_all_nodes_with_enter_and_exit(): void
     {
         $ast = $this->createAst();
@@ -335,7 +362,9 @@ class walk extends TestCase
 
     // Real world use case test
 
-    #[Test]
+    /**
+ * @test
+ */
     public function real_world_use_case(): void
     {
         $ast = [

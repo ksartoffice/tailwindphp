@@ -109,7 +109,7 @@ function substituteAtApply(array &$ast, DesignSystem $designSystem): int
     foreach ($sorted as $pathKey) {
         if (isset($utilityNodes[$pathKey])) {
             // For @utility: substitute @apply recursively (handles nested rules like &:hover)
-            substituteApplyInNode($root['nodes'], $pathKey, $designSystem, recursive: true);
+            substituteApplyInNode($root['nodes'], $pathKey, $designSystem, true);
 
             // Register the utility immediately after substitution
             $node = getNodeAtPath($root['nodes'], (string)$pathKey);
@@ -120,7 +120,7 @@ function substituteAtApply(array &$ast, DesignSystem $designSystem): int
         } else {
             // For non-@utility nodes: only substitute direct children @apply
             // Nested @apply rules will be handled when their parent path is processed
-            substituteApplyInNode($root['nodes'], $pathKey, $designSystem, recursive: false);
+            substituteApplyInNode($root['nodes'], $pathKey, $designSystem, false);
         }
     }
 
@@ -242,7 +242,7 @@ function collectApplyInfo(
     array &$definitions,
     array &$utilityNodes,
     DesignSystem $designSystem,
-    int &$features,
+    int &$features
 ): void {
     foreach ($ast as $index => &$node) {
         $nodePath = array_merge($currentPath, [$index]);

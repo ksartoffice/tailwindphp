@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace TailwindPHP\Utils;
 
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 class brace_expansion extends TestCase
@@ -37,8 +35,10 @@ class brace_expansion extends TestCase
         ];
     }
 
-    #[Test]
-    #[DataProvider('expansionProvider')]
+    /**
+ * @dataProvider expansionProvider
+ * @test
+ */
     public function expands_patterns_correctly(string $input, array $expected): void
     {
         $result = expand($input);
@@ -47,14 +47,18 @@ class brace_expansion extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function throws_on_unbalanced_braces(): void
     {
         $this->expectException(\Exception::class);
         expand('a{b,c{d,e},{f,g}h}x{y,z');
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function throws_when_step_is_zero(): void
     {
         $this->expectException(\Exception::class);

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace TailwindPHP\Tests;
 
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use TailwindPHP\Cli\Console\Output;
 
@@ -23,7 +22,9 @@ class CliOutputTest extends TestCase
     // Basic Output Tests
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function can_instantiate_output(): void
     {
         $output = new Output();
@@ -35,7 +36,9 @@ class CliOutputTest extends TestCase
     // Quiet Mode Tests
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function quiet_mode_is_off_by_default(): void
     {
         $output = new Output();
@@ -45,7 +48,9 @@ class CliOutputTest extends TestCase
         $this->assertInstanceOf(Output::class, $output);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function can_set_quiet_mode(): void
     {
         $output = new Output();
@@ -59,7 +64,9 @@ class CliOutputTest extends TestCase
     // Verbose Mode Tests
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function verbose_mode_is_off_by_default(): void
     {
         $output = new Output();
@@ -67,7 +74,9 @@ class CliOutputTest extends TestCase
         $this->assertFalse($output->isVerbose());
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function can_set_verbose_mode(): void
     {
         $output = new Output();
@@ -76,7 +85,9 @@ class CliOutputTest extends TestCase
         $this->assertTrue($output->isVerbose());
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function can_toggle_verbose_mode(): void
     {
         $output = new Output();
@@ -92,7 +103,9 @@ class CliOutputTest extends TestCase
     // Color Formatting Tests
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function color_returns_text_when_color_not_found(): void
     {
         $output = new Output();
@@ -103,7 +116,9 @@ class CliOutputTest extends TestCase
         $this->assertSame('test', $result);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function format_strips_tags_when_no_color_support(): void
     {
         // We can test the format method's tag stripping behavior
@@ -118,7 +133,9 @@ class CliOutputTest extends TestCase
         $this->assertStringContainsString('message', $result);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function format_handles_multiple_tags(): void
     {
         $output = new Output();
@@ -130,7 +147,9 @@ class CliOutputTest extends TestCase
         $this->assertStringContainsString('success', $result);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function format_handles_nested_content(): void
     {
         $output = new Output();
@@ -142,7 +161,9 @@ class CliOutputTest extends TestCase
         $this->assertStringContainsString('value', $result);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function format_handles_text_without_tags(): void
     {
         $output = new Output();
@@ -157,7 +178,9 @@ class CliOutputTest extends TestCase
     // Color Method Tests
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function color_method_applies_color(): void
     {
         $output = new Output();
@@ -168,7 +191,9 @@ class CliOutputTest extends TestCase
         $this->assertStringContainsString('success', $result);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function color_method_handles_empty_text(): void
     {
         $output = new Output();
@@ -183,7 +208,9 @@ class CliOutputTest extends TestCase
     // ANSI Color Constants Tests
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function supports_basic_colors(): void
     {
         $output = new Output();
@@ -196,7 +223,9 @@ class CliOutputTest extends TestCase
         }
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function supports_bright_colors(): void
     {
         $output = new Output();
@@ -209,7 +238,9 @@ class CliOutputTest extends TestCase
         }
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function supports_style_modifiers(): void
     {
         $output = new Output();
@@ -222,7 +253,9 @@ class CliOutputTest extends TestCase
         }
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function supports_background_colors(): void
     {
         $output = new Output();
@@ -239,7 +272,9 @@ class CliOutputTest extends TestCase
     // Format Tag Tests
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function format_handles_case_insensitive_tags(): void
     {
         $output = new Output();
@@ -250,7 +285,9 @@ class CliOutputTest extends TestCase
         $this->assertStringContainsString('text', $result);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function format_handles_underscore_in_tag_names(): void
     {
         $output = new Output();
@@ -265,7 +302,9 @@ class CliOutputTest extends TestCase
     // Method Existence Tests
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function has_all_output_methods(): void
     {
         $output = new Output();
@@ -293,7 +332,9 @@ class CliOutputTest extends TestCase
     // Edge Cases
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function format_handles_empty_string(): void
     {
         $output = new Output();
@@ -303,7 +344,9 @@ class CliOutputTest extends TestCase
         $this->assertSame('', $result);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function format_handles_special_characters(): void
     {
         $output = new Output();
@@ -315,7 +358,9 @@ class CliOutputTest extends TestCase
         $this->assertStringContainsString('&', $result);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function format_handles_unclosed_tags(): void
     {
         $output = new Output();
@@ -327,7 +372,9 @@ class CliOutputTest extends TestCase
         $this->assertStringContainsString('text without closing', $result);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function format_handles_unmatched_closing_tags(): void
     {
         $output = new Output();

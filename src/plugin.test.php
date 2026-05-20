@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace TailwindPHP;
 
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -21,7 +20,9 @@ class plugin extends TestCase
         return $compiled['build']($classes);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function it_loads_typography_plugin(): void
     {
         $css = <<<'CSS'
@@ -35,7 +36,9 @@ class plugin extends TestCase
         $this->assertStringContainsString('--tw-prose-body', $result);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function it_loads_forms_plugin(): void
     {
         $css = <<<'CSS'
@@ -48,7 +51,9 @@ class plugin extends TestCase
         $this->assertStringContainsString('.form-input', $result);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function it_throws_on_unknown_plugin(): void
     {
         $this->expectException(\Exception::class);
@@ -62,7 +67,9 @@ class plugin extends TestCase
         $this->compileCss($css, []);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function it_rejects_nested_plugin_directive(): void
     {
         $this->expectException(\Exception::class);
@@ -78,7 +85,9 @@ class plugin extends TestCase
         $this->compileCss($css, []);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function typography_plugin_supports_custom_class_name(): void
     {
         $css = <<<'CSS'
@@ -93,7 +102,9 @@ class plugin extends TestCase
         $this->assertStringContainsString('.markdown', $result);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function typography_plugin_generates_prose_modifiers(): void
     {
         $css = <<<'CSS'
@@ -108,7 +119,9 @@ class plugin extends TestCase
         $this->assertStringContainsString('.prose-invert', $result);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function forms_plugin_generates_form_classes(): void
     {
         $css = <<<'CSS'
@@ -123,7 +136,9 @@ class plugin extends TestCase
         $this->assertStringContainsString('.form-select', $result);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function forms_plugin_supports_strategy_option(): void
     {
         $css = <<<'CSS'
@@ -138,7 +153,9 @@ class plugin extends TestCase
         $this->assertStringContainsString('.form-input', $result);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function multiple_plugins_can_be_loaded(): void
     {
         $css = <<<'CSS'

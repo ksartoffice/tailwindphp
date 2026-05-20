@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace TailwindPHP\Tests;
 
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use TailwindPHP\Tailwind;
 
@@ -23,7 +22,9 @@ class SourceDirectiveTest extends TestCase
     // Basic @source (file patterns)
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function parses_basic_source_directive(): void
     {
         $css = Tailwind::generate([
@@ -36,7 +37,9 @@ class SourceDirectiveTest extends TestCase
         $this->assertStringContainsString('display: flex', $css);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function parses_source_with_glob_pattern(): void
     {
         $css = Tailwind::generate([
@@ -49,7 +52,9 @@ class SourceDirectiveTest extends TestCase
         $this->assertStringContainsString('padding:', $css);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function parses_multiple_source_directives(): void
     {
         $css = Tailwind::generate([
@@ -68,7 +73,9 @@ class SourceDirectiveTest extends TestCase
     // @source not (negated patterns)
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function parses_negated_source_directive(): void
     {
         $css = Tailwind::generate([
@@ -82,7 +89,9 @@ class SourceDirectiveTest extends TestCase
         $this->assertStringContainsString('display: flex', $css);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function negated_source_returns_in_sources_array(): void
     {
         $result = \TailwindPHP\compile('
@@ -103,7 +112,9 @@ class SourceDirectiveTest extends TestCase
     // @source inline() (inline candidates)
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function inline_source_adds_candidates_directly(): void
     {
         $css = Tailwind::generate([
@@ -118,7 +129,9 @@ class SourceDirectiveTest extends TestCase
         $this->assertStringContainsString('margin:', $css);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function inline_source_with_single_class(): void
     {
         $css = Tailwind::generate([
@@ -131,7 +144,9 @@ class SourceDirectiveTest extends TestCase
         $this->assertStringContainsString('display: none', $css);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function inline_source_with_brace_expansion(): void
     {
         $css = Tailwind::generate([
@@ -146,7 +161,9 @@ class SourceDirectiveTest extends TestCase
         $this->assertStringContainsString('padding: calc(var(--spacing) * 4)', $css);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function inline_source_with_complex_brace_expansion(): void
     {
         $css = Tailwind::generate([
@@ -160,7 +177,9 @@ class SourceDirectiveTest extends TestCase
         $this->assertStringContainsString('color: var(--color-blue-500)', $css);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function inline_source_with_variants(): void
     {
         $css = Tailwind::generate([
@@ -179,7 +198,9 @@ class SourceDirectiveTest extends TestCase
     // @source not inline() (ignored candidates)
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function not_inline_source_excludes_candidates(): void
     {
         $css = Tailwind::generate([
@@ -195,7 +216,9 @@ class SourceDirectiveTest extends TestCase
         $this->assertStringNotContainsString('display: none', $css);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function not_inline_source_with_brace_expansion(): void
     {
         $css = Tailwind::generate([
@@ -213,7 +236,9 @@ class SourceDirectiveTest extends TestCase
         $this->assertStringContainsString('padding: calc(var(--spacing) * 8)', $css);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function not_inline_source_excludes_multiple_candidates(): void
     {
         $css = Tailwind::generate([
@@ -233,7 +258,9 @@ class SourceDirectiveTest extends TestCase
     // Validation errors
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function throws_when_source_has_body(): void
     {
         $this->expectException(\Exception::class);
@@ -250,7 +277,9 @@ class SourceDirectiveTest extends TestCase
         ]);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function throws_when_source_is_nested(): void
     {
         $this->expectException(\Exception::class);
@@ -267,7 +296,9 @@ class SourceDirectiveTest extends TestCase
         ]);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function throws_when_source_path_is_unquoted(): void
     {
         $this->expectException(\Exception::class);
@@ -282,7 +313,9 @@ class SourceDirectiveTest extends TestCase
         ]);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function throws_when_source_path_has_mismatched_quotes(): void
     {
         // Note: Mismatched quotes are caught by CSS parser first
@@ -302,7 +335,9 @@ class SourceDirectiveTest extends TestCase
     // Quote styles
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function accepts_double_quoted_paths(): void
     {
         $css = Tailwind::generate([
@@ -315,7 +350,9 @@ class SourceDirectiveTest extends TestCase
         $this->assertStringContainsString('display: flex', $css);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function accepts_single_quoted_paths(): void
     {
         $css = Tailwind::generate([
@@ -332,7 +369,9 @@ class SourceDirectiveTest extends TestCase
     // CLI integration (sources returned for scanning)
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function compile_returns_sources_array(): void
     {
         $result = \TailwindPHP\compile('
@@ -348,7 +387,9 @@ class SourceDirectiveTest extends TestCase
         $this->assertSame('./templates', $sources[1]['pattern']);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function sources_include_base_path(): void
     {
         $result = \TailwindPHP\compile('
@@ -364,7 +405,9 @@ class SourceDirectiveTest extends TestCase
     // Edge cases
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function inline_with_empty_content_still_works(): void
     {
         $css = Tailwind::generate([
@@ -377,7 +420,9 @@ class SourceDirectiveTest extends TestCase
         $this->assertStringContainsString('display: flex', $css);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function inline_candidates_combined_with_content_candidates(): void
     {
         $css = Tailwind::generate([
@@ -391,7 +436,9 @@ class SourceDirectiveTest extends TestCase
         $this->assertStringContainsString('display: block', $css);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function source_directive_is_removed_from_output(): void
     {
         $css = Tailwind::generate([

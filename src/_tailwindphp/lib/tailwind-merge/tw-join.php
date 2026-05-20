@@ -21,7 +21,7 @@ namespace TailwindPHP\Lib\TailwindMerge;
  * @param mixed ...$classLists Class values to join
  * @return string Space-separated class string
  */
-function twJoin(mixed ...$classLists): string
+function twJoin(...$classLists): string
 {
     $result = '';
 
@@ -45,7 +45,7 @@ function twJoin(mixed ...$classLists): string
  * @param mixed $mix The value to convert
  * @return string The resulting class string
  */
-function toValue(mixed $mix): string
+function toValue($mix): string
 {
     // Fast path for strings
     if (is_string($mix)) {

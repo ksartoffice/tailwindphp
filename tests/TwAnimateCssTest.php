@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace TailwindPHP\Tests;
 
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use TailwindPHP\Tailwind;
 
@@ -18,7 +17,9 @@ use TailwindPHP\Tailwind;
  */
 class TwAnimateCssTest extends TestCase
 {
-    #[Test]
+    /**
+ * @test
+ */
     public function it_imports_tw_animate_css(): void
     {
         $css = Tailwind::generate(
@@ -39,7 +40,9 @@ class TwAnimateCssTest extends TestCase
         $this->assertStringContainsString('.animate-out', $css);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function it_generates_fade_in_utilities(): void
     {
         $css = Tailwind::generate(
@@ -51,7 +54,9 @@ class TwAnimateCssTest extends TestCase
         $this->assertStringContainsString('--tw-enter-opacity', $css);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function it_generates_fade_out_utilities(): void
     {
         $css = Tailwind::generate(
@@ -63,7 +68,9 @@ class TwAnimateCssTest extends TestCase
         $this->assertStringContainsString('--tw-exit-opacity', $css);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function it_generates_zoom_utilities(): void
     {
         $css = Tailwind::generate(
@@ -77,7 +84,9 @@ class TwAnimateCssTest extends TestCase
         $this->assertStringContainsString('--tw-exit-scale', $css);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function it_generates_spin_utilities(): void
     {
         $css = Tailwind::generate(
@@ -91,7 +100,9 @@ class TwAnimateCssTest extends TestCase
         $this->assertStringContainsString('--tw-exit-rotate', $css);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function it_generates_slide_in_utilities(): void
     {
         $css = Tailwind::generate(
@@ -106,7 +117,9 @@ class TwAnimateCssTest extends TestCase
         $this->assertStringContainsString('--tw-enter-translate', $css);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function it_generates_slide_out_utilities(): void
     {
         $css = Tailwind::generate(
@@ -121,7 +134,9 @@ class TwAnimateCssTest extends TestCase
         $this->assertStringContainsString('--tw-exit-translate', $css);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function it_generates_slide_utilities_with_values(): void
     {
         $css = Tailwind::generate(
@@ -134,7 +149,9 @@ class TwAnimateCssTest extends TestCase
         $this->assertStringContainsString('.slide-out-to-left-full', $css);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function it_generates_animation_duration_utilities(): void
     {
         $css = Tailwind::generate(
@@ -147,7 +164,9 @@ class TwAnimateCssTest extends TestCase
         $this->assertStringContainsString('animation-duration', $css);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function it_generates_delay_utilities(): void
     {
         $css = Tailwind::generate(
@@ -158,7 +177,9 @@ class TwAnimateCssTest extends TestCase
         $this->assertStringContainsString('animation-delay', $css);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function it_generates_repeat_utilities(): void
     {
         $css = Tailwind::generate(
@@ -171,7 +192,9 @@ class TwAnimateCssTest extends TestCase
         $this->assertStringContainsString('animation-iteration-count', $css);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function it_generates_direction_utilities(): void
     {
         $css = Tailwind::generate(
@@ -185,7 +208,9 @@ class TwAnimateCssTest extends TestCase
         $this->assertStringContainsString('animation-direction', $css);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function it_generates_fill_mode_utilities(): void
     {
         $css = Tailwind::generate(
@@ -200,7 +225,9 @@ class TwAnimateCssTest extends TestCase
         $this->assertStringContainsString('animation-fill-mode', $css);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function it_generates_play_state_utilities(): void
     {
         $css = Tailwind::generate(
@@ -213,7 +240,9 @@ class TwAnimateCssTest extends TestCase
         $this->assertStringContainsString('animation-play-state', $css);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function it_generates_blur_utilities(): void
     {
         $css = Tailwind::generate(
@@ -227,7 +256,9 @@ class TwAnimateCssTest extends TestCase
         $this->assertStringContainsString('--tw-exit-blur', $css);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function it_generates_accordion_animations(): void
     {
         $css = Tailwind::generate(
@@ -241,7 +272,9 @@ class TwAnimateCssTest extends TestCase
         $this->assertStringContainsString('.animate-accordion-up', $css);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function it_generates_collapsible_animations(): void
     {
         $css = Tailwind::generate(
@@ -253,7 +286,9 @@ class TwAnimateCssTest extends TestCase
         $this->assertStringContainsString('@keyframes collapsible-up', $css);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function it_generates_caret_blink_animation(): void
     {
         $css = Tailwind::generate(
@@ -265,7 +300,9 @@ class TwAnimateCssTest extends TestCase
         $this->assertStringContainsString('.animate-caret-blink', $css);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function it_generates_animate_in_and_out(): void
     {
         $css = Tailwind::generate(
@@ -277,7 +314,9 @@ class TwAnimateCssTest extends TestCase
         $this->assertStringContainsString('.animate-out', $css);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function it_works_with_shadcn_dialog_pattern(): void
     {
         // Common shadcn/ui dialog animation pattern
@@ -293,7 +332,9 @@ class TwAnimateCssTest extends TestCase
         $this->assertStringContainsString('.zoom-in-95', $css);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function it_works_with_shadcn_dropdown_pattern(): void
     {
         // Common shadcn/ui dropdown animation pattern
@@ -313,7 +354,9 @@ class TwAnimateCssTest extends TestCase
         $this->assertStringContainsString('.zoom-out-95', $css);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function it_generates_directional_slide_utilities(): void
     {
         $css = Tailwind::generate(
@@ -328,7 +371,9 @@ class TwAnimateCssTest extends TestCase
         $this->assertStringContainsString('.slide-out-to-end', $css);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function it_works_combined_with_tailwindcss_import(): void
     {
         $css = Tailwind::generate(

@@ -1,8 +1,6 @@
 <?php
 
 declare(strict_types=1);
-
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 use function TailwindPHP\Utils\inferDataType;
@@ -36,40 +34,52 @@ class infer_data_type extends TestCase
     // inferDataType tests
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function infer_color(): void
     {
         $this->assertSame('color', inferDataType('#ff0000', ['color', 'length']));
         $this->assertSame('color', inferDataType('red', ['color', 'length']));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function infer_length(): void
     {
         $this->assertSame('length', inferDataType('10px', ['length', 'color']));
         $this->assertSame('length', inferDataType('1.5rem', ['length']));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function infer_percentage(): void
     {
         $this->assertSame('percentage', inferDataType('50%', ['percentage', 'length']));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function infer_number(): void
     {
         $this->assertSame('number', inferDataType('1.5', ['number']));
         $this->assertSame('number', inferDataType('42', ['number']));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function infer_returns_null_for_var(): void
     {
         $this->assertNull(inferDataType('var(--color)', ['color']));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function infer_returns_null_for_no_match(): void
     {
         $this->assertNull(inferDataType('hello', ['color', 'length']));
@@ -79,14 +89,18 @@ class infer_data_type extends TestCase
     // isUrl tests
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function is_url_valid(): void
     {
         $this->assertTrue(isUrl('url(image.png)'));
         $this->assertTrue(isUrl('url("image.png")'));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function is_url_invalid(): void
     {
         $this->assertFalse(isUrl('image.png'));
@@ -97,7 +111,9 @@ class infer_data_type extends TestCase
     // isLineWidth tests
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function is_line_width_keywords(): void
     {
         $this->assertTrue(isLineWidth('thin'));
@@ -105,7 +121,9 @@ class infer_data_type extends TestCase
         $this->assertTrue(isLineWidth('thick'));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function is_line_width_length(): void
     {
         $this->assertTrue(isLineWidth('1px'));
@@ -116,13 +134,17 @@ class infer_data_type extends TestCase
     // isImage tests
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function is_image_url(): void
     {
         $this->assertTrue(isImage('url(image.png)'));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function is_image_gradient(): void
     {
         $this->assertTrue(isImage('linear-gradient(to right, red, blue)'));
@@ -134,7 +156,9 @@ class infer_data_type extends TestCase
     // isGenericName tests
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function is_generic_name(): void
     {
         $this->assertTrue(isGenericName('serif'));
@@ -143,7 +167,9 @@ class infer_data_type extends TestCase
         $this->assertTrue(isGenericName('system-ui'));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function is_generic_name_invalid(): void
     {
         $this->assertFalse(isGenericName('Arial'));
@@ -154,7 +180,9 @@ class infer_data_type extends TestCase
     // isFamilyName tests
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function is_family_name_valid(): void
     {
         $this->assertTrue(isFamilyName('Arial'));
@@ -162,7 +190,9 @@ class infer_data_type extends TestCase
         $this->assertTrue(isFamilyName('Arial, sans-serif'));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function is_family_name_invalid_starts_with_digit(): void
     {
         $this->assertFalse(isFamilyName('123Font'));
@@ -172,7 +202,9 @@ class infer_data_type extends TestCase
     // isAbsoluteSize tests
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function is_absolute_size(): void
     {
         $this->assertTrue(isAbsoluteSize('xx-small'));
@@ -185,7 +217,9 @@ class infer_data_type extends TestCase
     // isRelativeSize tests
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function is_relative_size(): void
     {
         $this->assertTrue(isRelativeSize('larger'));
@@ -197,7 +231,9 @@ class infer_data_type extends TestCase
     // isNumberValue tests
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function is_number_value(): void
     {
         $this->assertTrue(isNumberValue('1.5'));
@@ -210,7 +246,9 @@ class infer_data_type extends TestCase
     // isPercentage tests
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function is_percentage(): void
     {
         $this->assertTrue(isPercentage('50%'));
@@ -223,7 +261,9 @@ class infer_data_type extends TestCase
     // isFraction tests
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function is_fraction(): void
     {
         $this->assertTrue(isFraction('1/2'));
@@ -235,7 +275,9 @@ class infer_data_type extends TestCase
     // isLengthValue tests
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function is_length_value(): void
     {
         $this->assertTrue(isLengthValue('10px'));
@@ -248,7 +290,9 @@ class infer_data_type extends TestCase
     // isAngle tests
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function is_angle(): void
     {
         $this->assertTrue(isAngle('45deg'));
@@ -261,7 +305,9 @@ class infer_data_type extends TestCase
     // isVector tests
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function is_vector(): void
     {
         $this->assertTrue(isVector('1 0 0'));
@@ -274,7 +320,9 @@ class infer_data_type extends TestCase
     // isPositiveInteger tests
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function is_positive_integer(): void
     {
         $this->assertTrue(isPositiveInteger('0'));
@@ -287,7 +335,9 @@ class infer_data_type extends TestCase
     // isStrictPositiveInteger tests
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function is_strict_positive_integer(): void
     {
         $this->assertTrue(isStrictPositiveInteger('1'));
@@ -300,7 +350,9 @@ class infer_data_type extends TestCase
     // isValidSpacingMultiplier tests
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function is_valid_spacing_multiplier(): void
     {
         $this->assertTrue(isValidSpacingMultiplier('0'));
@@ -314,7 +366,9 @@ class infer_data_type extends TestCase
     // isValidOpacityValue tests
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function is_valid_opacity_value(): void
     {
         $this->assertTrue(isValidOpacityValue('0'));
@@ -328,7 +382,9 @@ class infer_data_type extends TestCase
     // isMultipleOf tests
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function is_multiple_of(): void
     {
         $this->assertTrue(isMultipleOf('0', 0.5));

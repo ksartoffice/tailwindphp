@@ -349,7 +349,7 @@ class TypographyPlugin implements PluginInterface
     /**
      * Check if a value is a CSS declaration value (not a nested selector).
      */
-    private function isDeclarationValue(mixed $value): bool
+    private function isDeclarationValue($value): bool
     {
         if (!is_array($value)) {
             return true;

@@ -25,7 +25,7 @@ namespace TailwindPHP\Lib\Clsx;
  * @param mixed ...$args Class values to process
  * @return string Space-separated class string
  */
-function clsx(mixed ...$args): string
+function clsx(...$args): string
 {
     $result = '';
 
@@ -49,7 +49,7 @@ function clsx(mixed ...$args): string
  * @param mixed $mix The value to convert
  * @return string The resulting class string
  */
-function toValue(mixed $mix): string
+function toValue($mix): string
 {
     // Fast path for strings and numbers
     if (is_string($mix)) {
@@ -107,7 +107,7 @@ function toValue(mixed $mix): string
  * @param mixed $value The value to check
  * @return bool True if the value is truthy in JavaScript semantics
  */
-function isTruthy(mixed $value): bool
+function isTruthy($value): bool
 {
     // null, false, 0, '', undefined are falsy in both JS and PHP
     if ($value === null || $value === false || $value === 0 || $value === '' || $value === 0.0) {

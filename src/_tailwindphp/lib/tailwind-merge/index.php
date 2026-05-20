@@ -31,7 +31,7 @@ use function TailwindPHP\Lib\Clsx\clsx;
  * cn('text-red-500', ['hover:text-blue-500' => true]) // => 'text-red-500 hover:text-blue-500'
  * cn(['hidden' => false, 'block' => true]) // => 'block'
  */
-function cn(mixed ...$inputs): string
+function cn(...$inputs): string
 {
     return twMerge(clsx(...$inputs));
 }

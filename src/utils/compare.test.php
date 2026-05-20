@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace TailwindPHP\Utils;
 
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 class compare extends TestCase
@@ -41,15 +39,19 @@ class compare extends TestCase
         ];
     }
 
-    #[Test]
-    #[DataProvider('comparisonProvider')]
+    /**
+ * @dataProvider comparisonProvider
+ * @test
+ */
     public function compares_strings_correctly(string $a, string $b, int $expected): void
     {
         $result = compare($a, $b);
         $this->assertEquals($expected, $result <=> 0);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function sorts_strings_with_numbers_consistently(): void
     {
         $input = ['p-0', 'p-0.5', 'p-1', 'p-1.5', 'p-10', 'p-12', 'p-2', 'p-20', 'p-21'];
@@ -69,7 +71,9 @@ class compare extends TestCase
         ], $input);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function sorts_strings_with_modifiers_consistently(): void
     {
         $input = [

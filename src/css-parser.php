@@ -442,10 +442,13 @@ function parseDeclaration(string $buffer, int $colonIdx = -1): ?array
     }
 
     $importantIdx = strpos($buffer, '!important', $colonIdx + 1);
+    $value = $importantIdx === false
+        ? substr($buffer, $colonIdx + 1)
+        : substr($buffer, $colonIdx + 1, $importantIdx - $colonIdx - 1);
 
     return decl(
         trim(substr($buffer, 0, $colonIdx)),
-        trim(substr($buffer, $colonIdx + 1, $importantIdx === false ? null : $importantIdx - $colonIdx - 1)),
+        trim($value),
         $importantIdx !== false,
     );
 }

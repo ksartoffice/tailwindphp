@@ -12,8 +12,6 @@ declare(strict_types=1);
 
 namespace TailwindPHP\Lib\Clsx;
 
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ . '/clsx.php';
@@ -206,7 +204,7 @@ class clsx extends TestCase
     /**
      * Parse a JavaScript value into PHP.
      */
-    private static function parseValue(string $value): mixed
+    private static function parseValue(string $value)
     {
         $value = trim($value);
 
@@ -334,8 +332,10 @@ class clsx extends TestCase
     /**
      * Run a parsed test case.
      */
-    #[DataProvider('casesProvider')]
-    #[Test]
+    /**
+ * @dataProvider casesProvider
+ * @test
+ */
     public function test_case(array $test): void
     {
         // Handle exports test separately

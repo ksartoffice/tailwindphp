@@ -30,7 +30,7 @@ namespace TailwindPHP\Lib\Cva;
  * cx(['foo', 'bar']);                  // => 'foo bar'
  * cx(['foo', ['bar', ['baz']]]);       // => 'foo bar baz'
  */
-function cx(mixed ...$inputs): string
+function cx(...$inputs): string
 {
     $classes = [];
 
@@ -61,7 +61,7 @@ function cx(mixed ...$inputs): string
  * @param mixed $value
  * @return mixed
  */
-function falsyToString(mixed $value): mixed
+function falsyToString($value)
 {
     if (is_bool($value)) {
         return $value ? 'true' : 'false';
@@ -252,7 +252,7 @@ function defineConfig(array $options = []): array
     $onComplete = $options['hooks']['onComplete'] ?? $options['hooks']['cx:done'] ?? null;
 
     // Configured cx
-    $configuredCx = function (mixed ...$inputs) use ($onComplete): string {
+    $configuredCx = function (...$inputs) use ($onComplete): string {
         $result = cx(...$inputs);
 
         if ($onComplete !== null) {

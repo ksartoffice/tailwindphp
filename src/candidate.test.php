@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace TailwindPHP;
 
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 use function TailwindPHP\Candidate\cloneCandidate;
@@ -140,7 +138,7 @@ class StubDesignSystem implements DesignSystemInterface
     public function __construct(
         ?UtilitiesInterface $utilities = null,
         ?VariantsInterface $variants = null,
-        ?string $prefix = null,
+        ?string $prefix = null
     ) {
         $this->theme = new Theme();
         $this->theme->prefix = $prefix;
@@ -176,7 +174,7 @@ function run(
     string $candidate,
     ?StubUtilities $utilities = null,
     ?StubVariants $variants = null,
-    ?string $prefix = null,
+    ?string $prefix = null
 ): array {
     $utilities = $utilities ?? new StubUtilities();
     $variants = $variants ?? new StubVariants();
@@ -188,19 +186,25 @@ function run(
 
 class candidate extends TestCase
 {
-    #[Test]
+    /**
+ * @test
+ */
     public function should_skip_unknown_utilities(): void
     {
         $this->assertEquals([], run('unknown-utility'));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function should_skip_unknown_variants(): void
     {
         $this->assertEquals([], run('unknown-variant:flex'));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function should_parse_a_simple_utility(): void
     {
         $utilities = new StubUtilities();
@@ -216,7 +220,9 @@ class candidate extends TestCase
         $this->assertEquals([], $result[0]['variants']);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function should_parse_a_simple_utility_that_should_be_important(): void
     {
         $utilities = new StubUtilities();
@@ -230,7 +236,9 @@ class candidate extends TestCase
         $this->assertTrue($result[0]['important']);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function should_parse_a_simple_utility_that_can_be_negative(): void
     {
         $utilities = new StubUtilities();
@@ -246,7 +254,9 @@ class candidate extends TestCase
         $this->assertNull($result[0]['value']['fraction']);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function should_parse_a_simple_utility_with_a_variant(): void
     {
         $utilities = new StubUtilities();
@@ -265,7 +275,9 @@ class candidate extends TestCase
         $this->assertEquals('hover', $result[0]['variants'][0]['root']);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function should_parse_a_simple_utility_with_stacked_variants(): void
     {
         $utilities = new StubUtilities();
@@ -283,7 +295,9 @@ class candidate extends TestCase
         $this->assertEquals('focus', $result[0]['variants'][1]['root']);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function should_parse_a_simple_utility_with_an_arbitrary_variant(): void
     {
         $utilities = new StubUtilities();
@@ -298,7 +312,9 @@ class candidate extends TestCase
         $this->assertFalse($result[0]['variants'][0]['relative']);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function should_parse_an_arbitrary_variant_using_the_automatic_var_shorthand(): void
     {
         $utilities = new StubUtilities();
@@ -317,7 +333,9 @@ class candidate extends TestCase
         $this->assertEquals('var(--test)', $result[0]['variants'][0]['value']['value']);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function should_parse_a_simple_utility_with_a_parameterized_variant(): void
     {
         $utilities = new StubUtilities();
@@ -336,7 +354,9 @@ class candidate extends TestCase
         $this->assertEquals('disabled', $result[0]['variants'][0]['value']['value']);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function should_parse_compound_variants_with_an_arbitrary_value(): void
     {
         $utilities = new StubUtilities();
@@ -357,7 +377,9 @@ class candidate extends TestCase
         $this->assertEquals('& p', $result[0]['variants'][0]['variant']['selector']);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function should_parse_a_simple_utility_with_an_arbitrary_media_variant(): void
     {
         $utilities = new StubUtilities();
@@ -371,7 +393,9 @@ class candidate extends TestCase
         $this->assertEquals('@media(width>=123px)', $result[0]['variants'][0]['selector']);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function should_skip_arbitrary_variants_where_media_and_other_arbitrary_variants_are_combined(): void
     {
         $utilities = new StubUtilities();
@@ -382,7 +406,9 @@ class candidate extends TestCase
         $this->assertEquals([], $result);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function should_parse_a_utility_with_a_modifier(): void
     {
         $utilities = new StubUtilities();
@@ -399,7 +425,9 @@ class candidate extends TestCase
         $this->assertEquals('red-500/50', $result[0]['value']['fraction']);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function should_parse_a_utility_with_an_arbitrary_modifier(): void
     {
         $utilities = new StubUtilities();
@@ -413,7 +441,9 @@ class candidate extends TestCase
         $this->assertNull($result[0]['value']['fraction']);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function should_not_parse_a_partial_utility(): void
     {
         $utilities = new StubUtilities();
@@ -424,7 +454,9 @@ class candidate extends TestCase
         $this->assertEquals([], run('bg-', $utilities));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function should_not_parse_static_utilities_with_a_modifier(): void
     {
         $utilities = new StubUtilities();
@@ -433,7 +465,9 @@ class candidate extends TestCase
         $this->assertEquals([], run('flex/foo', $utilities));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function should_not_parse_functional_utilities_with_multiple_modifiers(): void
     {
         $utilities = new StubUtilities();
@@ -442,7 +476,9 @@ class candidate extends TestCase
         $this->assertEquals([], run('bg-red-1/2/3', $utilities));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function should_parse_a_utility_with_an_arbitrary_value(): void
     {
         $utilities = new StubUtilities();
@@ -458,7 +494,9 @@ class candidate extends TestCase
         $this->assertNull($result[0]['value']['dataType']);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function should_not_parse_a_utility_with_an_incomplete_arbitrary_value(): void
     {
         $utilities = new StubUtilities();
@@ -467,7 +505,9 @@ class candidate extends TestCase
         $this->assertEquals([], run('bg-[#0088cc', $utilities));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function should_parse_a_utility_with_an_arbitrary_value_with_parens(): void
     {
         $utilities = new StubUtilities();
@@ -481,7 +521,9 @@ class candidate extends TestCase
         $this->assertEquals('var(--my-color)', $result[0]['value']['value']);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function should_not_parse_a_utility_with_an_arbitrary_value_with_parens_not_starting_with_dashes(): void
     {
         $utilities = new StubUtilities();
@@ -490,7 +532,9 @@ class candidate extends TestCase
         $this->assertEquals([], run('bg-(my-color)', $utilities));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function should_parse_a_utility_with_an_arbitrary_value_including_a_typehint(): void
     {
         $utilities = new StubUtilities();
@@ -503,7 +547,9 @@ class candidate extends TestCase
         $this->assertEquals('var(--value)', $result[0]['value']['value']);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function should_parse_a_utility_with_an_arbitrary_value_with_parens_including_a_typehint(): void
     {
         $utilities = new StubUtilities();
@@ -516,7 +562,9 @@ class candidate extends TestCase
         $this->assertEquals('var(--my-color)', $result[0]['value']['value']);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function should_parse_arbitrary_properties(): void
     {
         $result = run('[color:red]');
@@ -527,7 +575,9 @@ class candidate extends TestCase
         $this->assertEquals('red', $result[0]['value']);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function should_parse_arbitrary_properties_with_a_modifier(): void
     {
         $result = run('[color:red]/50');
@@ -538,19 +588,25 @@ class candidate extends TestCase
         $this->assertEquals('50', $result[0]['modifier']['value']);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function should_skip_arbitrary_properties_that_start_with_uppercase(): void
     {
         $this->assertEquals([], run('[Color:red]'));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function should_skip_arbitrary_properties_without_value(): void
     {
         $this->assertEquals([], run('[color]'));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function should_parse_arbitrary_properties_that_are_important(): void
     {
         $result = run('[color:red]!');
@@ -559,7 +615,9 @@ class candidate extends TestCase
         $this->assertTrue($result[0]['important']);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function should_parse_arbitrary_properties_with_a_variant(): void
     {
         $variants = new StubVariants();
@@ -573,7 +631,9 @@ class candidate extends TestCase
         $this->assertEquals('hover', $result[0]['variants'][0]['root']);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function should_replace_underscore_with_space(): void
     {
         $utilities = new StubUtilities();
@@ -585,7 +645,9 @@ class candidate extends TestCase
         $this->assertEquals('"hello world"', $result[0]['value']['value']);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function should_not_replace_escaped_underscore_with_space(): void
     {
         $utilities = new StubUtilities();
@@ -597,7 +659,9 @@ class candidate extends TestCase
         $this->assertEquals('"hello_world"', $result[0]['value']['value']);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function should_not_replace_underscore_in_url(): void
     {
         $utilities = new StubUtilities();
@@ -609,7 +673,9 @@ class candidate extends TestCase
         $this->assertEquals('no-repeat url(https://example.com/some_page)', $result[0]['value']['value']);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function should_not_replace_underscore_in_first_argument_of_var(): void
     {
         $utilities = new StubUtilities();
@@ -621,7 +687,9 @@ class candidate extends TestCase
         $this->assertEquals('var(--spacing-1_5, var(--spacing-2_5, 1rem))', $result[0]['value']['value']);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function should_parse_candidates_with_a_prefix(): void
     {
         $utilities = new StubUtilities();
@@ -646,7 +714,9 @@ class candidate extends TestCase
         $this->assertEquals('hover', $result[0]['variants'][0]['root']);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function should_parse_a_static_variant_starting_with_at(): void
     {
         $utilities = new StubUtilities();
@@ -663,7 +733,9 @@ class candidate extends TestCase
         $this->assertEquals('@lg', $result[0]['variants'][0]['root']);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function should_parse_a_functional_variant_starting_with_at(): void
     {
         $utilities = new StubUtilities();
@@ -681,7 +753,9 @@ class candidate extends TestCase
         $this->assertEquals('lg', $result[0]['variants'][0]['value']['value']);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function should_parse_a_functional_variant_with_a_modifier(): void
     {
         $utilities = new StubUtilities();
@@ -727,8 +801,10 @@ class candidate extends TestCase
         ];
     }
 
-    #[Test]
-    #[DataProvider('emptyArbitraryValuesProvider')]
+    /**
+ * @dataProvider emptyArbitraryValuesProvider
+ * @test
+ */
     public function should_not_parse_invalid_empty_arbitrary_values(string $rawCandidate): void
     {
         $utilities = new StubUtilities();
@@ -757,8 +833,10 @@ class candidate extends TestCase
         ];
     }
 
-    #[Test]
-    #[DataProvider('invalidArbitraryValuesProvider')]
+    /**
+ * @dataProvider invalidArbitraryValuesProvider
+ * @test
+ */
     public function should_not_parse_invalid_arbitrary_values(string $rawCandidate): void
     {
         $utilities = new StubUtilities();
@@ -772,7 +850,9 @@ class candidate extends TestCase
         $this->assertEquals([], run($rawCandidate, $utilities, $variants));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function clone_candidate_preserves_structure(): void
     {
         $candidate = [
@@ -807,7 +887,9 @@ class candidate extends TestCase
         $this->assertEquals('bg', $candidate['root']);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function clone_variant_preserves_structure(): void
     {
         $variant = [
@@ -833,7 +915,9 @@ class candidate extends TestCase
         $this->assertEquals('group', $variant['root']);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function find_roots_returns_all_matching_permutations(): void
     {
         $known = ['bg', 'bg-red'];
@@ -847,7 +931,9 @@ class candidate extends TestCase
         $this->assertEquals(['bg', 'red-500'], $roots[1]);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function should_parse_utility_with_an_implicit_variable_as_the_modifier(): void
     {
         $utilities = new StubUtilities();
@@ -860,7 +946,9 @@ class candidate extends TestCase
         $this->assertEquals('var(--value)', $result[0]['modifier']['value']);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function should_parse_utility_with_an_implicit_variable_as_modifier_using_shorthand(): void
     {
         $utilities = new StubUtilities();
@@ -873,7 +961,9 @@ class candidate extends TestCase
         $this->assertEquals('var(--value)', $result[0]['modifier']['value']);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function should_not_parse_an_invalid_arbitrary_shorthand_modifier(): void
     {
         $utilities = new StubUtilities();
@@ -886,7 +976,9 @@ class candidate extends TestCase
         $this->assertEquals([], run('bg-red-500/(value)', $utilities));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function should_parse_compound_group_with_itself(): void
     {
         $utilities = new StubUtilities();
@@ -907,7 +999,9 @@ class candidate extends TestCase
         $this->assertEquals('hover', $result[0]['variants'][0]['variant']['variant']['variant']['root']);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function should_not_parse_a_partial_variant(): void
     {
         $utilities = new StubUtilities();

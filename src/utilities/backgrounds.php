@@ -430,17 +430,24 @@ function getGradientInterpolationMode(?string $modifier): ?string
         return null;
     }
 
-    return match ($modifier) {
-        'oklch' => 'oklch',
-        'oklab' => 'oklab',
-        'hsl' => 'hsl',
-        'srgb' => 'srgb',
-        'longer' => 'oklch longer hue',
-        'shorter' => 'oklch shorter hue',
-        'increasing' => 'oklch increasing hue',
-        'decreasing' => 'oklch decreasing hue',
-        default => $modifier, // For arbitrary values like [in_hsl_longer_hue]
-    };
+    switch ($modifier) {
+        case 'oklch':
+        case 'oklab':
+        case 'hsl':
+        case 'srgb':
+            return $modifier;
+        case 'longer':
+            return 'oklch longer hue';
+        case 'shorter':
+            return 'oklch shorter hue';
+        case 'increasing':
+            return 'oklch increasing hue';
+        case 'decreasing':
+            return 'oklch decreasing hue';
+        default:
+            // For arbitrary values like [in_hsl_longer_hue]
+            return $modifier;
+    }
 }
 
 /**

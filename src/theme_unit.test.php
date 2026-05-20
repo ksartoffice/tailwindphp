@@ -1,8 +1,6 @@
 <?php
 
 declare(strict_types=1);
-
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 use function TailwindPHP\isIgnoredThemeKey;
@@ -26,7 +24,9 @@ class theme_unit extends TestCase
     // isIgnoredThemeKey tests
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function ignored_theme_key_font_weight(): void
     {
         $this->assertTrue(isIgnoredThemeKey('--font-weight', '--font'));
@@ -34,14 +34,18 @@ class theme_unit extends TestCase
         $this->assertTrue(isIgnoredThemeKey('--font-size', '--font'));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function ignored_theme_key_font_family_not_ignored(): void
     {
         $this->assertFalse(isIgnoredThemeKey('--font-sans', '--font'));
         $this->assertFalse(isIgnoredThemeKey('--font-mono', '--font'));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function ignored_theme_key_inset(): void
     {
         $this->assertTrue(isIgnoredThemeKey('--inset-shadow', '--inset'));
@@ -49,7 +53,9 @@ class theme_unit extends TestCase
         $this->assertFalse(isIgnoredThemeKey('--inset-0', '--inset'));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function ignored_theme_key_text(): void
     {
         $this->assertTrue(isIgnoredThemeKey('--text-color', '--text'));
@@ -57,7 +63,9 @@ class theme_unit extends TestCase
         $this->assertFalse(isIgnoredThemeKey('--text-sm', '--text'));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function ignored_theme_key_grid_column(): void
     {
         $this->assertTrue(isIgnoredThemeKey('--grid-column-start', '--grid-column'));
@@ -69,14 +77,18 @@ class theme_unit extends TestCase
     // Theme constructor and basic methods
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function theme_constructor_empty(): void
     {
         $theme = new Theme();
         $this->assertSame(0, $theme->size());
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function theme_constructor_with_values(): void
     {
         $theme = new Theme([
@@ -86,14 +98,18 @@ class theme_unit extends TestCase
         $this->assertSame(2, $theme->size());
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function theme_get_prefix_default(): void
     {
         $theme = new Theme();
         $this->assertNull($theme->getPrefix());
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function theme_get_prefix_set(): void
     {
         $theme = new Theme();
@@ -105,7 +121,9 @@ class theme_unit extends TestCase
     // add() tests
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function theme_add_value(): void
     {
         $theme = new Theme();
@@ -113,7 +131,9 @@ class theme_unit extends TestCase
         $this->assertTrue($theme->has('--color-red'));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function theme_add_value_initial_removes(): void
     {
         $theme = new Theme([
@@ -123,7 +143,9 @@ class theme_unit extends TestCase
         $this->assertFalse($theme->has('--color-red'));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function theme_add_namespace_wildcard_clears(): void
     {
         $theme = new Theme([
@@ -137,7 +159,9 @@ class theme_unit extends TestCase
         $this->assertTrue($theme->has('--spacing-4'));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function theme_add_all_wildcard_clears_all(): void
     {
         $theme = new Theme([
@@ -148,7 +172,9 @@ class theme_unit extends TestCase
         $this->assertSame(0, $theme->size());
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function theme_add_default_doesnt_override_non_default(): void
     {
         $theme = new Theme();
@@ -157,7 +183,9 @@ class theme_unit extends TestCase
         $this->assertSame('#ff0000', $theme->get(['--color-red']));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function theme_add_default_overrides_default(): void
     {
         $theme = new Theme();
@@ -166,7 +194,9 @@ class theme_unit extends TestCase
         $this->assertSame('#ff5555', $theme->get(['--color-red']));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function theme_add_non_default_overrides_default(): void
     {
         $theme = new Theme();
@@ -175,7 +205,9 @@ class theme_unit extends TestCase
         $this->assertSame('#ff5555', $theme->get(['--color-red']));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function theme_add_invalid_wildcard_value_throws(): void
     {
         $this->expectException(\InvalidArgumentException::class);
@@ -187,7 +219,9 @@ class theme_unit extends TestCase
     // get() tests
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function theme_get_returns_value(): void
     {
         $theme = new Theme([
@@ -196,14 +230,18 @@ class theme_unit extends TestCase
         $this->assertSame('#ff0000', $theme->get(['--color-red']));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function theme_get_returns_null_for_missing(): void
     {
         $theme = new Theme();
         $this->assertNull($theme->get(['--color-red']));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function theme_get_returns_first_matching(): void
     {
         $theme = new Theme([
@@ -217,7 +255,9 @@ class theme_unit extends TestCase
     // has() and hasDefault() tests
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function theme_has_returns_true(): void
     {
         $theme = new Theme([
@@ -226,14 +266,18 @@ class theme_unit extends TestCase
         $this->assertTrue($theme->has('--color-red'));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function theme_has_returns_false(): void
     {
         $theme = new Theme();
         $this->assertFalse($theme->has('--color-red'));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function theme_has_default_true(): void
     {
         $theme = new Theme([
@@ -242,7 +286,9 @@ class theme_unit extends TestCase
         $this->assertTrue($theme->hasDefault('--color-red'));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function theme_has_default_false(): void
     {
         $theme = new Theme([
@@ -255,7 +301,9 @@ class theme_unit extends TestCase
     // keysInNamespaces() tests
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function theme_keys_in_namespaces(): void
     {
         $theme = new Theme([
@@ -269,7 +317,9 @@ class theme_unit extends TestCase
         $this->assertContains('blue', $keys);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function theme_keys_in_namespaces_skips_nested(): void
     {
         $theme = new Theme([
@@ -281,7 +331,9 @@ class theme_unit extends TestCase
         $this->assertSame('red', $keys[0]);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function theme_keys_in_namespaces_skips_ignored(): void
     {
         $theme = new Theme([
@@ -297,7 +349,9 @@ class theme_unit extends TestCase
     // resolve() tests
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function theme_resolve_returns_var(): void
     {
         $theme = new Theme([
@@ -307,7 +361,9 @@ class theme_unit extends TestCase
         $this->assertSame('var(--color-red)', $result);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function theme_resolve_inline_returns_value(): void
     {
         $theme = new Theme([
@@ -317,7 +373,9 @@ class theme_unit extends TestCase
         $this->assertSame('#ff0000', $result);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function theme_resolve_reference_includes_fallback(): void
     {
         $theme = new Theme([
@@ -327,14 +385,18 @@ class theme_unit extends TestCase
         $this->assertSame('var(--color-red, #ff0000)', $result);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function theme_resolve_returns_null_for_missing(): void
     {
         $theme = new Theme();
         $this->assertNull($theme->resolve('red', ['--color']));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function theme_resolve_with_dot_uses_underscore(): void
     {
         $theme = new Theme([
@@ -348,7 +410,9 @@ class theme_unit extends TestCase
     // resolveValue() tests
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function theme_resolve_value_returns_raw(): void
     {
         $theme = new Theme([
@@ -362,7 +426,9 @@ class theme_unit extends TestCase
     // resolveWith() tests
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function theme_resolve_with_returns_value_and_extra(): void
     {
         $theme = new Theme([
@@ -378,7 +444,9 @@ class theme_unit extends TestCase
     // namespace() tests
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function theme_namespace_returns_values(): void
     {
         $theme = new Theme([
@@ -394,7 +462,9 @@ class theme_unit extends TestCase
     // prefix tests
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function theme_prefix_key(): void
     {
         $theme = new Theme();
@@ -402,14 +472,18 @@ class theme_unit extends TestCase
         $this->assertSame('--tw-color-red', $theme->prefixKey('--color-red'));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function theme_prefix_key_no_prefix(): void
     {
         $theme = new Theme();
         $this->assertSame('--color-red', $theme->prefixKey('--color-red'));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function theme_entries_with_prefix(): void
     {
         $theme = new Theme([
@@ -427,7 +501,9 @@ class theme_unit extends TestCase
     // clearNamespace() tests
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function theme_clear_namespace(): void
     {
         $theme = new Theme([
@@ -438,7 +514,9 @@ class theme_unit extends TestCase
         $this->assertSame(0, $theme->size());
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function theme_clear_namespace_with_options(): void
     {
         $theme = new Theme([
@@ -454,7 +532,9 @@ class theme_unit extends TestCase
     // markUsedVariable() tests
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function theme_mark_used_variable(): void
     {
         $theme = new Theme([
@@ -467,7 +547,9 @@ class theme_unit extends TestCase
         $this->assertFalse($secondTime);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function theme_mark_used_variable_missing(): void
     {
         $theme = new Theme();
@@ -478,7 +560,9 @@ class theme_unit extends TestCase
     // keyframes tests
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function theme_add_keyframes(): void
     {
         $theme = new Theme();
@@ -487,7 +571,9 @@ class theme_unit extends TestCase
         $this->assertTrue($theme->hasKeyframe('spin'));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function theme_get_keyframes(): void
     {
         $theme = new Theme();
@@ -497,7 +583,9 @@ class theme_unit extends TestCase
         $this->assertCount(1, $keyframes);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function theme_get_keyframe_options(): void
     {
         $theme = new Theme();
@@ -506,7 +594,9 @@ class theme_unit extends TestCase
         $this->assertSame(THEME_OPTION_STATIC, $theme->getKeyframeOptions('spin'));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function theme_get_keyframe_options_missing(): void
     {
         $theme = new Theme();

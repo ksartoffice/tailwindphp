@@ -448,7 +448,7 @@ class Variants implements VariantsInterface
      * @param string $name Variant name
      * @param string|array $selector Selector string(s) or CSS-in-JS
      */
-    public function addPluginVariant(string $name, string|array $selector): void
+    public function addPluginVariant(string $name, $selector): void
     {
         $this->pluginVariants[$name] = [
             'selector' => $selector,
@@ -517,7 +517,7 @@ class Variants implements VariantsInterface
      * @param string|array $selector
      * @return callable
      */
-    private function createSelectorApplyFn(string|array $selector): callable
+    private function createSelectorApplyFn($selector): callable
     {
         return function (array $ast) use ($selector): ?array {
             // Handle multiple selectors
@@ -540,7 +540,7 @@ class Variants implements VariantsInterface
      * @param string|array $selector
      * @return int
      */
-    private function determineCompounds(string|array $selector): int
+    private function determineCompounds($selector): int
     {
         $selectors = is_array($selector) ? $selector : [$selector];
 
@@ -802,7 +802,7 @@ function createVariants(\TailwindPHP\Theme $theme): Variants
     $staticVariant = function (
         string $name,
         array $selectors,
-        array $options = [],
+        array $options = []
     ) use ($variants) {
         $compounds = $options['compounds'] ?? compoundsForSelectors($selectors);
 

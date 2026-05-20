@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace TailwindPHP\Tests;
 
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 use function TailwindPHP\cn;
@@ -25,25 +24,33 @@ class PublicApiTest extends TestCase
     // cn() tests
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function cn_merges_classes(): void
     {
         $this->assertSame('foo bar', cn('foo', 'bar'));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function cn_handles_conditionals(): void
     {
         $this->assertSame('foo bar', cn('foo', ['bar' => true, 'baz' => false]));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function cn_resolves_conflicts(): void
     {
         $this->assertSame('py-1 px-4', cn('px-2 py-1', 'px-4'));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function cn_handles_null_and_false(): void
     {
         $this->assertSame('foo bar', cn('foo', null, false, 'bar'));
@@ -53,37 +60,49 @@ class PublicApiTest extends TestCase
     // merge() tests
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function merge_resolves_conflicts(): void
     {
         $this->assertSame('py-1 px-4', merge('px-2 py-1', 'px-4'));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function merge_handles_variants(): void
     {
         $this->assertSame('hover:bg-blue-500', merge('hover:bg-red-500', 'hover:bg-blue-500'));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function merge_resolves_v3_gradient_and_v4_gradient_conflicts(): void
     {
         $this->assertSame('bg-linear-to-l', merge('bg-gradient-to-r', 'bg-linear-to-l'));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function merge_resolves_v3_overflow_ellipsis_conflicts(): void
     {
         $this->assertSame('text-clip', merge('overflow-ellipsis', 'text-clip'));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function merge_resolves_v3_decoration_conflicts(): void
     {
         $this->assertSame('box-decoration-clone', merge('decoration-slice', 'box-decoration-clone'));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function merge_resolves_v3_flex_grow_and_shrink_conflicts(): void
     {
         $this->assertSame('grow-0', merge('flex-grow', 'grow-0'));
@@ -94,13 +113,17 @@ class PublicApiTest extends TestCase
     // join() tests
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function join_concatenates_classes(): void
     {
         $this->assertSame('foo bar baz', join('foo', 'bar', 'baz'));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function join_filters_falsy_values(): void
     {
         $this->assertSame('foo bar', join('foo', null, false, '', 'bar'));
@@ -110,7 +133,9 @@ class PublicApiTest extends TestCase
     // variants() tests
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function variants_returns_callable(): void
     {
         $button = variants([
@@ -126,7 +151,9 @@ class PublicApiTest extends TestCase
         $this->assertIsCallable($button);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function variants_applies_base_classes(): void
     {
         $button = variants([
@@ -136,7 +163,9 @@ class PublicApiTest extends TestCase
         $this->assertSame('btn font-semibold', $button());
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function variants_applies_variant_classes(): void
     {
         $button = variants([
@@ -153,7 +182,9 @@ class PublicApiTest extends TestCase
         $this->assertSame('btn text-base px-4', $button(['size' => 'md']));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function variants_applies_default_variants(): void
     {
         $button = variants([
@@ -172,7 +203,9 @@ class PublicApiTest extends TestCase
         $this->assertSame('btn text-base', $button());
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function variants_allows_custom_class_override(): void
     {
         $button = variants([
@@ -186,7 +219,9 @@ class PublicApiTest extends TestCase
     // compose() tests
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function compose_merges_multiple_variants(): void
     {
         $box = variants([
@@ -220,7 +255,9 @@ class PublicApiTest extends TestCase
     // Integration: cn() + variants()
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function cn_works_with_variants_output(): void
     {
         $button = variants([

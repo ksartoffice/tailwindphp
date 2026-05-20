@@ -1,8 +1,6 @@
 <?php
 
 declare(strict_types=1);
-
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use TailwindPHP\DesignSystem\DesignSystem;
 use TailwindPHP\Theme;
@@ -47,28 +45,36 @@ class design_system extends TestCase
     // Constructor and getters
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function design_system_can_be_created(): void
     {
         $ds = $this->createDesignSystem();
         $this->assertInstanceOf(DesignSystem::class, $ds);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function design_system_get_theme(): void
     {
         $ds = $this->createDesignSystem();
         $this->assertInstanceOf(Theme::class, $ds->getTheme());
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function design_system_get_utilities(): void
     {
         $ds = $this->createDesignSystem();
         $this->assertInstanceOf(Utilities::class, $ds->getUtilities());
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function design_system_get_variants(): void
     {
         $ds = $this->createDesignSystem();
@@ -79,14 +85,18 @@ class design_system extends TestCase
     // Important flag
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function design_system_is_important_default_false(): void
     {
         $ds = $this->createDesignSystem();
         $this->assertFalse($ds->isImportant());
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function design_system_set_important(): void
     {
         $ds = $this->createDesignSystem();
@@ -98,7 +108,9 @@ class design_system extends TestCase
     // Invalid candidates
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function design_system_get_invalid_candidates_default_empty(): void
     {
         $ds = $this->createDesignSystem();
@@ -110,7 +122,9 @@ class design_system extends TestCase
     // Theme resolution
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function design_system_resolve_theme_value(): void
     {
         $ds = $this->createDesignSystem();
@@ -119,7 +133,9 @@ class design_system extends TestCase
         $this->assertSame('1rem', $value);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function design_system_resolve_theme_value_missing(): void
     {
         $ds = $this->createDesignSystem();
@@ -127,7 +143,9 @@ class design_system extends TestCase
         $this->assertNull($value);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function design_system_resolve_theme_value_color(): void
     {
         $ds = $this->createDesignSystem();
@@ -139,7 +157,9 @@ class design_system extends TestCase
     // Candidate parsing
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function design_system_parse_candidate_static(): void
     {
         $ds = $this->createDesignSystem();
@@ -147,7 +167,9 @@ class design_system extends TestCase
         $this->assertIsArray($candidates);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function design_system_parse_candidate_functional(): void
     {
         $ds = $this->createDesignSystem();
@@ -155,7 +177,9 @@ class design_system extends TestCase
         $this->assertIsArray($candidates);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function design_system_parse_candidate_unknown(): void
     {
         $ds = $this->createDesignSystem();
@@ -168,7 +192,9 @@ class design_system extends TestCase
     // Variant parsing
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function design_system_parse_variant(): void
     {
         $ds = $this->createDesignSystem();

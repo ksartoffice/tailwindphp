@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace TailwindPHP\Plugin\Plugins;
 
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 use function TailwindPHP\compile;
@@ -49,7 +48,9 @@ class forms_plugin extends TestCase
     // Class Strategy Tests (via addComponents)
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function form_input_class_has_appearance_none(): void
     {
         $css = $this->compileForms(['form-input']);
@@ -58,7 +59,9 @@ class forms_plugin extends TestCase
         $this->assertStringContainsString('appearance: none', $css);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function form_input_class_has_border_styling(): void
     {
         $css = $this->compileForms(['form-input']);
@@ -67,7 +70,9 @@ class forms_plugin extends TestCase
         $this->assertStringContainsString('border-width: 1px', $css);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function form_input_class_has_padding(): void
     {
         $css = $this->compileForms(['form-input']);
@@ -78,7 +83,9 @@ class forms_plugin extends TestCase
         $this->assertStringContainsString('padding-right:', $css);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function form_input_class_has_focus_styling(): void
     {
         $css = $this->compileForms(['form-input']);
@@ -87,7 +94,9 @@ class forms_plugin extends TestCase
         $this->assertStringContainsString('--tw-ring-color:', $css);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function form_textarea_class_is_generated(): void
     {
         $css = $this->compileForms(['form-textarea']);
@@ -96,7 +105,9 @@ class forms_plugin extends TestCase
         $this->assertStringContainsString('appearance: none', $css);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function form_select_class_has_chevron_background(): void
     {
         $css = $this->compileForms(['form-select']);
@@ -108,7 +119,9 @@ class forms_plugin extends TestCase
         $this->assertStringContainsString('background-size:', $css);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function form_multiselect_class_is_generated(): void
     {
         $css = $this->compileForms(['form-multiselect']);
@@ -116,7 +129,9 @@ class forms_plugin extends TestCase
         $this->assertStringContainsString('.form-multiselect', $css);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function form_checkbox_class_has_base_styling(): void
     {
         $css = $this->compileForms(['form-checkbox']);
@@ -127,7 +142,9 @@ class forms_plugin extends TestCase
         $this->assertStringContainsString('user-select: none', $css);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function form_radio_class_has_circular_border(): void
     {
         $css = $this->compileForms(['form-radio']);
@@ -136,7 +153,9 @@ class forms_plugin extends TestCase
         $this->assertStringContainsString('border-radius: 100%', $css);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function form_checkbox_class_has_square_border(): void
     {
         $css = $this->compileForms(['form-checkbox']);
@@ -149,7 +168,9 @@ class forms_plugin extends TestCase
     // Strategy Option Tests
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function class_strategy_outputs_form_classes(): void
     {
         $css = $this->compileForms(['form-input', 'form-checkbox', 'form-select'], ['strategy' => 'class']);
@@ -159,7 +180,9 @@ class forms_plugin extends TestCase
         $this->assertStringContainsString('.form-select', $css);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function default_strategy_also_outputs_form_classes(): void
     {
         // Default strategy includes both base AND class styles
@@ -173,7 +196,9 @@ class forms_plugin extends TestCase
     // Color Tests
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function uses_gray_500_for_borders(): void
     {
         $css = $this->compileForms(['form-input']);
@@ -182,7 +207,9 @@ class forms_plugin extends TestCase
         $this->assertStringContainsString('#6b7280', $css);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function uses_blue_600_for_focus(): void
     {
         $css = $this->compileForms(['form-input']);
@@ -195,7 +222,9 @@ class forms_plugin extends TestCase
     // Multiple Classes Tests
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function multiple_form_classes_can_be_generated(): void
     {
         $css = $this->compileForms(['form-input', 'form-checkbox', 'form-radio', 'form-select', 'form-textarea']);
@@ -211,7 +240,9 @@ class forms_plugin extends TestCase
     // Focus Ring Tests
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function focus_states_have_ring_offset(): void
     {
         $css = $this->compileForms(['form-input']);
@@ -221,7 +252,9 @@ class forms_plugin extends TestCase
         $this->assertStringContainsString('--tw-ring-offset-color:', $css);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function focus_states_have_outline_transparent(): void
     {
         $css = $this->compileForms(['form-input']);
@@ -233,7 +266,9 @@ class forms_plugin extends TestCase
     // SVG Data URI Tests
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function svg_icons_are_data_uris(): void
     {
         $css = $this->compileForms(['form-select']);
@@ -246,7 +281,9 @@ class forms_plugin extends TestCase
     // Print Color Adjust Tests
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function form_checkbox_has_print_color_adjust(): void
     {
         $css = $this->compileForms(['form-checkbox']);
@@ -254,7 +291,9 @@ class forms_plugin extends TestCase
         $this->assertStringContainsString('print-color-adjust: exact', $css);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function form_select_has_print_color_adjust(): void
     {
         $css = $this->compileForms(['form-select']);
@@ -266,7 +305,9 @@ class forms_plugin extends TestCase
     // Sizing Tests
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function form_checkbox_has_size(): void
     {
         $css = $this->compileForms(['form-checkbox']);
@@ -275,7 +316,9 @@ class forms_plugin extends TestCase
         $this->assertStringContainsString('width: 1rem', $css);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function form_radio_has_size(): void
     {
         $css = $this->compileForms(['form-radio']);
@@ -288,7 +331,9 @@ class forms_plugin extends TestCase
     // Display Tests
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function form_checkbox_has_inline_block_display(): void
     {
         $css = $this->compileForms(['form-checkbox']);
@@ -300,7 +345,9 @@ class forms_plugin extends TestCase
     // Background Tests
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function form_input_has_white_background(): void
     {
         $css = $this->compileForms(['form-input']);
@@ -308,7 +355,9 @@ class forms_plugin extends TestCase
         $this->assertStringContainsString('background-color: #fff', $css);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function form_checkbox_has_white_background(): void
     {
         $css = $this->compileForms(['form-checkbox']);
@@ -320,7 +369,9 @@ class forms_plugin extends TestCase
     // Shadow Variable Tests
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function form_input_has_shadow_variable(): void
     {
         $css = $this->compileForms(['form-input']);
@@ -332,7 +383,9 @@ class forms_plugin extends TestCase
     // Border Origin Tests
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function form_checkbox_has_border_box_origin(): void
     {
         $css = $this->compileForms(['form-checkbox']);
@@ -344,7 +397,9 @@ class forms_plugin extends TestCase
     // Flex Shrink Tests
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function form_checkbox_has_flex_shrink_zero(): void
     {
         $css = $this->compileForms(['form-checkbox']);
@@ -356,7 +411,9 @@ class forms_plugin extends TestCase
     // Color Property Tests
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function form_checkbox_has_blue_color(): void
     {
         $css = $this->compileForms(['form-checkbox']);

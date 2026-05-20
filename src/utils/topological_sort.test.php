@@ -1,8 +1,6 @@
 <?php
 
 declare(strict_types=1);
-
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 use function TailwindPHP\Utils\topologicalSort;
@@ -14,7 +12,9 @@ use function TailwindPHP\Utils\topologicalSort;
  */
 class topological_sort extends TestCase
 {
-    #[Test]
+    /**
+ * @test
+ */
     public function sorts_simple_graph(): void
     {
         $graph = [
@@ -31,7 +31,9 @@ class topological_sort extends TestCase
         $this->assertSame(['a', 'b', 'c'], $result);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function handles_multiple_dependencies(): void
     {
         $graph = [
@@ -51,14 +53,18 @@ class topological_sort extends TestCase
         $this->assertGreaterThan($bIndex, $cIndex);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function handles_empty_graph(): void
     {
         $result = topologicalSort([], fn () => null);
         $this->assertSame([], $result);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function handles_single_node(): void
     {
         $graph = ['a' => []];
@@ -66,7 +72,9 @@ class topological_sort extends TestCase
         $this->assertSame(['a'], $result);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function handles_disconnected_nodes(): void
     {
         $graph = [
@@ -82,7 +90,9 @@ class topological_sort extends TestCase
         $this->assertContains('c', $result);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function detects_circular_dependency(): void
     {
         $graph = [
@@ -101,7 +111,9 @@ class topological_sort extends TestCase
         $this->assertTrue($circularDetected);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function handles_complex_graph(): void
     {
         // Diamond dependency pattern
@@ -125,7 +137,9 @@ class topological_sort extends TestCase
         $this->assertLessThan($dIndex, $cIndex);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function ignores_unknown_dependencies(): void
     {
         $graph = [

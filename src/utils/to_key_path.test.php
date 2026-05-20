@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace TailwindPHP\Utils;
 
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 class to_key_path extends TestCase
 {
-    #[Test]
+    /**
+ * @test
+ */
     public function can_convert_key_paths_to_arrays(): void
     {
         $this->assertEquals(['fontSize', 'xs'], toKeyPath('fontSize.xs'));

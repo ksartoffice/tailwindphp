@@ -10,8 +10,6 @@ declare(strict_types=1);
 
 namespace TailwindPHP\Lib\Cva;
 
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ . '/cva.php';
@@ -39,9 +37,11 @@ class cva extends TestCase
         return $data;
     }
 
-    #[DataProvider('cxTestProvider')]
-    #[Test]
-    public function test_cx(mixed $input, string $expected): void
+    /**
+ * @dataProvider cxTestProvider
+ * @test
+ */
+    public function test_cx($input, string $expected): void
     {
         if (is_array($input)) {
             $result = cx(...$input);
@@ -56,7 +56,9 @@ class cva extends TestCase
     // compose tests
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function test_compose_merges_components(): void
     {
         $box = cva([
@@ -100,7 +102,9 @@ class cva extends TestCase
     // cva tests - without anything (empty)
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function test_cva_empty(): void
     {
         $example = cva();
@@ -168,8 +172,10 @@ class cva extends TestCase
         ];
     }
 
-    #[DataProvider('cvaWithoutBaseWithoutDefaultsProvider')]
-    #[Test]
+    /**
+ * @dataProvider cvaWithoutBaseWithoutDefaultsProvider
+ * @test
+ */
     public function test_cva_without_base_without_defaults(?array $props, string $expected): void
     {
         $button = cva([
@@ -266,8 +272,10 @@ class cva extends TestCase
         ];
     }
 
-    #[DataProvider('cvaWithBaseWithDefaultsProvider')]
-    #[Test]
+    /**
+ * @dataProvider cvaWithBaseWithDefaultsProvider
+ * @test
+ */
     public function test_cva_with_base_with_defaults(?array $props, string $expected): void
     {
         $button = cva([
@@ -369,8 +377,10 @@ class cva extends TestCase
         ];
     }
 
-    #[DataProvider('cvaWithBaseWithoutDefaultsProvider')]
-    #[Test]
+    /**
+ * @dataProvider cvaWithBaseWithoutDefaultsProvider
+ * @test
+ */
     public function test_cva_with_base_without_defaults(?array $props, string $expected): void
     {
         $button = cva([
@@ -411,7 +421,9 @@ class cva extends TestCase
     // defineConfig tests
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function test_defineConfig_onComplete_extends_cx(): void
     {
         $prefix = 'never-gonna-give-you-up';
@@ -430,7 +442,9 @@ class cva extends TestCase
         $this->assertSame($suffix, $parts[count($parts) - 1]);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function test_defineConfig_onComplete_extends_cva(): void
     {
         $prefix = 'never-gonna-give-you-up';
@@ -454,7 +468,9 @@ class cva extends TestCase
         $this->assertSame($suffix, $parts[count($parts) - 1]);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function test_defineConfig_onComplete_extends_compose(): void
     {
         $prefix = 'never-gonna-give-you-up';

@@ -37,7 +37,7 @@ function createPrefixedQuad(
     string $t = 'top',
     string $r = 'right',
     string $b = 'bottom',
-    string $l = 'left',
+    string $l = 'left'
 ): array {
     return createBareQuad("{$prefix}-{$t}", "{$prefix}-{$r}", "{$prefix}-{$b}", "{$prefix}-{$l}");
 }
@@ -55,7 +55,7 @@ function createBareQuad(
     string $t = 'top',
     string $r = 'right',
     string $b = 'bottom',
-    string $l = 'left',
+    string $l = 'left'
 ): array {
     return [
         1 => [[$t, 0], [$r, 0], [$b, 0], [$l, 0]],

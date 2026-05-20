@@ -155,7 +155,7 @@ function splitByCommaRespectingParens(string $str): array
  * @param string|array|callable|null $importPaths Import paths configuration
  * @return array{css: string, paths: array<string>} Loaded CSS and list of resolved paths for @import resolution
  */
-function resolveImportPaths(string|array|callable|null $importPaths): array
+function resolveImportPaths($importPaths): array
 {
     if ($importPaths === null) {
         return ['css' => '', 'paths' => []];
@@ -235,6 +235,16 @@ function resolveImportUri(string $uri, ?string $fromFile, array $searchPaths): ?
 
     // Handle absolute paths (Unix style starting with /)
     if (str_starts_with($uri, '/')) {
+        $resolved = realpath($uri);
+        if ($resolved !== false && is_file($resolved)) {
+            return $resolved;
+        }
+
+        return null;
+    }
+
+    // Handle absolute paths on Windows, e.g. C:\path\to\file.css.
+    if (preg_match('/^[A-Za-z]:[\/\\\\]/', $uri)) {
         $resolved = realpath($uri);
         if ($resolved !== false && is_file($resolved)) {
             return $resolved;
@@ -1959,7 +1969,7 @@ function extractKeyframeNames(string $value): array
  *       },
  *   ]);
  */
-function generate(string|array $input, string $css = '@import "tailwindcss";'): string
+function generate($input, string $css = '@import "tailwindcss";'): string
 {
     $minify = false;
     $cache = null;
@@ -2076,7 +2086,7 @@ function generateWithoutCache(string $content, string $css, array $compileOption
  * // Clear cache in custom directory
  * clearCache('/path/to/cache');
  */
-function clearCache(string|bool|null $cache = true): int
+function clearCache($cache = true): int
 {
     if ($cache === null || $cache === false) {
         return 0;
@@ -2439,7 +2449,7 @@ function registerPlugin(\TailwindPHP\Plugin\PluginInterface $plugin): void
  * @param string $value The raw value string
  * @return mixed Parsed value
  */
-function parsePluginOptionValue(string $value): mixed
+function parsePluginOptionValue(string $value)
 {
     $value = trim($value);
 
@@ -2554,7 +2564,7 @@ class TailwindCompiler
      * @param string|array<string> $utilities Single utility or array of utilities
      * @return array<string, string> Map of property => value
      */
-    public function properties(string|array $utilities): array
+    public function properties($utilities): array
     {
         if (is_string($utilities)) {
             $utilities = [$utilities];
@@ -2579,7 +2589,7 @@ class TailwindCompiler
      * @param string|array<string> $utilities Single utility or array of utilities
      * @return array<string, string> Map of property => resolved value
      */
-    public function computedProperties(string|array $utilities): array
+    public function computedProperties($utilities): array
     {
         if (is_string($utilities)) {
             $utilities = [$utilities];
@@ -2953,7 +2963,7 @@ class Tailwind
      * @param string $css Optional CSS input (only used when $input is a string)
      * @return string Generated CSS
      */
-    public static function generate(string|array $input, string $css = '@import "tailwindcss";'): string
+    public static function generate($input, string $css = '@import "tailwindcss";'): string
     {
         return generate($input, $css);
     }
@@ -2980,7 +2990,7 @@ class Tailwind
      * @param string $css Optional CSS configuration
      * @return array<string, string> Map of property => raw value (with CSS variables)
      */
-    public static function properties(string|array $input, string $css = '@import "tailwindcss";'): array
+    public static function properties($input, string $css = '@import "tailwindcss";'): array
     {
         [$utilities, $cssConfig] = self::parseInput($input, $css);
         $compiler = new TailwindCompiler($cssConfig);
@@ -2995,7 +3005,7 @@ class Tailwind
      * @param string $css Optional CSS configuration
      * @return array<string, string> Map of property => resolved value (CSS variables resolved)
      */
-    public static function computedProperties(string|array $input, string $css = '@import "tailwindcss";'): array
+    public static function computedProperties($input, string $css = '@import "tailwindcss";'): array
     {
         [$utilities, $cssConfig] = self::parseInput($input, $css);
         $compiler = new TailwindCompiler($cssConfig);
@@ -3010,7 +3020,7 @@ class Tailwind
      * @param string $css Optional CSS configuration
      * @return string|null Raw value (with CSS variables) or null if not found
      */
-    public static function value(string|array $input, string $css = '@import "tailwindcss";'): ?string
+    public static function value($input, string $css = '@import "tailwindcss";'): ?string
     {
         [$utilities, $cssConfig] = self::parseInput($input, $css);
         $compiler = new TailwindCompiler($cssConfig);
@@ -3026,7 +3036,7 @@ class Tailwind
      * @param string $css Optional CSS configuration
      * @return string|null Resolved value (CSS variables resolved) or null if not found
      */
-    public static function computedValue(string|array $input, string $css = '@import "tailwindcss";'): ?string
+    public static function computedValue($input, string $css = '@import "tailwindcss";'): ?string
     {
         [$utilities, $cssConfig] = self::parseInput($input, $css);
         $compiler = new TailwindCompiler($cssConfig);
@@ -3074,7 +3084,7 @@ class Tailwind
      * @param string|bool|null $cache Cache directory path, true for default, or null
      * @return int Number of cache files deleted
      */
-    public static function clearCache(string|bool|null $cache = true): int
+    public static function clearCache($cache = true): int
     {
         return clearCache($cache);
     }
@@ -3439,7 +3449,7 @@ class Tailwind
      * @param string $css
      * @return array{0: string|array<string>, 1: string}
      */
-    private static function parseInput(string|array $input, string $css): array
+    private static function parseInput($input, string $css): array
     {
         if (is_string($input)) {
             return [$input, $css];
@@ -3492,7 +3502,7 @@ require_once __DIR__ . '/_tailwindphp/lib/cva/cva.php';
  * cn('hidden', ['block' => $isVisible]);         // => 'block' (if $isVisible)
  * cn('btn', 'btn-primary', ['btn-lg' => $large]);
  */
-function cn(mixed ...$inputs): string
+function cn(...$inputs): string
 {
     return \TailwindPHP\Lib\TailwindMerge\cn(...$inputs);
 }
@@ -3510,7 +3520,7 @@ function cn(mixed ...$inputs): string
  * merge('text-red-500', 'text-blue-500');          // => 'text-blue-500'
  * merge('hover:bg-red-500', 'hover:bg-blue-500');  // => 'hover:bg-blue-500'
  */
-function merge(mixed ...$args): string
+function merge(...$args): string
 {
     return \TailwindPHP\Lib\TailwindMerge\twMerge(...$args);
 }
@@ -3527,7 +3537,7 @@ function merge(mixed ...$args): string
  * join('foo', 'bar');       // => 'foo bar'
  * join('foo', null, 'bar'); // => 'foo bar'
  */
-function join(mixed ...$args): string
+function join(...$args): string
 {
     return \TailwindPHP\Lib\TailwindMerge\twJoin(...$args);
 }

@@ -693,14 +693,20 @@ class ImportPathsTest extends TestCase
                     return '@import "tailwindcss"; @import "level-1.css";';
                 }
 
-                return match ($uri) {
-                    'level-1.css' => '.level-1 { color: red; } @import "level-2.css";',
-                    'level-2.css' => '.level-2 { color: orange; } @import "level-3.css";',
-                    'level-3.css' => '.level-3 { color: yellow; } @import "level-4.css";',
-                    'level-4.css' => '.level-4 { color: green; } @import "level-5.css";',
-                    'level-5.css' => '.level-5 { color: blue; }',
-                    default => null,
-                };
+                switch ($uri) {
+                    case 'level-1.css':
+                        return '.level-1 { color: red; } @import "level-2.css";';
+                    case 'level-2.css':
+                        return '.level-2 { color: orange; } @import "level-3.css";';
+                    case 'level-3.css':
+                        return '.level-3 { color: yellow; } @import "level-4.css";';
+                    case 'level-4.css':
+                        return '.level-4 { color: green; } @import "level-5.css";';
+                    case 'level-5.css':
+                        return '.level-5 { color: blue; }';
+                    default:
+                        return null;
+                }
             },
         ]);
 
@@ -967,11 +973,14 @@ class ImportPathsTest extends TestCase
                     return '@import "tailwindcss"; @import "buttons.css"; @import "icons.css";';
                 }
 
-                return match ($uri) {
-                    'buttons.css' => '@utility btn { padding: 0.5rem 1rem; }',
-                    'icons.css' => '@utility icon { width: 1.5rem; height: 1.5rem; }',
-                    default => null,
-                };
+                switch ($uri) {
+                    case 'buttons.css':
+                        return '@utility btn { padding: 0.5rem 1rem; }';
+                    case 'icons.css':
+                        return '@utility icon { width: 1.5rem; height: 1.5rem; }';
+                    default:
+                        return null;
+                }
             },
         ]);
 

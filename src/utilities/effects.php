@@ -167,7 +167,7 @@ function registerEffectsUtilities(UtilityBuilder $builder): void
         string $value,
         ?string $alpha,
         callable $varInjector,
-        string $prefix = '',
+        string $prefix = ''
     ) use ($theme): array {
         $replacedValue = replaceShadowColors($value, function ($color) use ($alpha, $varInjector, $theme) {
             if ($alpha === null) {

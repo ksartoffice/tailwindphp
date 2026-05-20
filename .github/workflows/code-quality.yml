@@ -9,7 +9,12 @@ on:
 jobs:
   lint:
     runs-on: ubuntu-latest
-    name: Lint & Analyse
+    name: Lint & Analyse PHP ${{ matrix.php }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ['7.4', '8.3']
 
     steps:
       - name: Checkout code
@@ -18,15 +23,15 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.3'
+          php-version: ${{ matrix.php }}
           extensions: mbstring
           coverage: none
 
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress
 
-      - name: Check formatting (Pint)
-        run: vendor/bin/pint --test
+      - name: Check formatting (PHP-CS-Fixer)
+        run: vendor/bin/php-cs-fixer fix --dry-run --diff
 
       - name: Static analysis (PHPStan)
         run: vendor/bin/phpstan analyse --memory-limit=512M

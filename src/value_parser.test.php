@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace TailwindPHP;
 
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 use function TailwindPHP\ValueParser\parse;
@@ -17,21 +16,27 @@ class value_parser extends TestCase
 {
     // parse tests
 
-    #[Test]
+    /**
+ * @test
+ */
     public function parses_a_value(): void
     {
         $result = parse('123px');
         $this->assertEquals([['kind' => 'word', 'value' => '123px']], $result);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function parses_a_string_value(): void
     {
         $result = parse("'hello world'");
         $this->assertEquals([['kind' => 'word', 'value' => "'hello world'"]], $result);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function parses_a_list(): void
     {
         $result = parse('hello world');
@@ -42,21 +47,27 @@ class value_parser extends TestCase
         ], $result);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function parses_a_string_containing_parentheses(): void
     {
         $result = parse("'hello ( world )'");
         $this->assertEquals([['kind' => 'word', 'value' => "'hello ( world )'"]], $result);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function parses_a_function_with_no_arguments(): void
     {
         $result = parse('theme()');
         $this->assertEquals([['kind' => 'function', 'value' => 'theme', 'nodes' => []]], $result);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function parses_a_function_with_a_single_argument(): void
     {
         $result = parse('theme(foo)');
@@ -67,7 +78,9 @@ class value_parser extends TestCase
         ], $result);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function parses_a_function_with_a_single_string_argument(): void
     {
         $result = parse("theme('foo')");
@@ -78,7 +91,9 @@ class value_parser extends TestCase
         ], $result);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function parses_a_function_with_multiple_arguments(): void
     {
         $result = parse('theme(foo, bar)');
@@ -95,7 +110,9 @@ class value_parser extends TestCase
         ], $result);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function parses_a_function_with_multiple_arguments_across_lines(): void
     {
         $result = parse("theme(\n\tfoo,\n\tbar\n)");
@@ -114,7 +131,9 @@ class value_parser extends TestCase
         ], $result);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function parses_a_function_with_nested_arguments(): void
     {
         $result = parse('theme(foo, theme(bar))');
@@ -133,7 +152,9 @@ class value_parser extends TestCase
         ], $result);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function parses_a_function_with_nested_arguments_separated_by_slash(): void
     {
         $result = parse('theme(colors.red.500/var(--opacity))');
@@ -152,7 +173,9 @@ class value_parser extends TestCase
         ], $result);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function handles_calculations(): void
     {
         $result = parse('calc((1 + 2) * 3)');
@@ -181,7 +204,9 @@ class value_parser extends TestCase
         ], $result);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function handles_media_query_params_with_functions(): void
     {
         $result = parse('(min-width: 600px) and (max-width:theme(colors.red.500)) and (theme(--breakpoint-sm)<width<=theme(--breakpoint-md))');
@@ -230,7 +255,9 @@ class value_parser extends TestCase
         ], $result);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function does_not_error_when_extra_close_paren_passed(): void
     {
         $result = parse('calc(1 + 2))');
@@ -251,28 +278,36 @@ class value_parser extends TestCase
 
     // toCss tests
 
-    #[Test]
+    /**
+ * @test
+ */
     public function pretty_prints_calculations(): void
     {
         $result = toCss(parse('calc((1 + 2) * 3)'));
         $this->assertEquals('calc((1 + 2) * 3)', $result);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function pretty_prints_nested_function_calls(): void
     {
         $result = toCss(parse('theme(foo, theme(bar))'));
         $this->assertEquals('theme(foo, theme(bar))', $result);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function pretty_prints_media_query_params_with_functions(): void
     {
         $result = toCss(parse('(min-width: 600px) and (max-width:theme(colors.red.500))'));
         $this->assertEquals('(min-width: 600px) and (max-width:theme(colors.red.500))', $result);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function preserves_multiple_spaces(): void
     {
         $result = toCss(parse('foo(   bar  )'));
@@ -281,7 +316,9 @@ class value_parser extends TestCase
 
     // walk integration test
 
-    #[Test]
+    /**
+ * @test
+ */
     public function can_be_used_to_replace_a_function_call(): void
     {
         $ast = parse('(min-width: 600px) and (max-width: theme(lg))');

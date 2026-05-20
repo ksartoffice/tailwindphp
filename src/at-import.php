@@ -49,7 +49,7 @@ function substituteAtImports(
     string $base,
     callable $loadStylesheet,
     int $recurseCount = 0,
-    bool $track = false,
+    bool $track = false
 ): int {
     $features = FEATURES_NONE;
 
@@ -208,7 +208,7 @@ function buildImportNodes(
     array $importedAst,
     ?string $layer,
     ?string $media,
-    ?string $supports,
+    ?string $supports
 ): array {
     $root = $importedAst;
 

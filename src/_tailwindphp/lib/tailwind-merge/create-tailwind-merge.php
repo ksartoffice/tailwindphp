@@ -83,7 +83,7 @@ function createTailwindMerge(callable $createConfigFirst, callable ...$createCon
 
     $functionToCall = $initTailwindMerge;
 
-    return function (mixed ...$classLists) use (&$functionToCall): string {
+    return function (...$classLists) use (&$functionToCall): string {
         return $functionToCall(twJoin(...$classLists));
     };
 }

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace TailwindPHP\Tests;
 
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 use function TailwindPHP\clearCache;
@@ -40,7 +39,9 @@ class CacheTest extends TestCase
         }
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function it_caches_generated_css_with_custom_directory(): void
     {
         $html = '<div class="flex p-4">Hello</div>';
@@ -66,7 +67,9 @@ class CacheTest extends TestCase
         $this->assertStringContainsString('.p-4', $css1);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function it_caches_to_default_directory_when_cache_is_true(): void
     {
         $html = '<div class="mt-8 text-center">Hello</div>';
@@ -92,7 +95,9 @@ class CacheTest extends TestCase
         clearCache(true);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function it_generates_different_cache_keys_for_different_inputs(): void
     {
         $html1 = '<div class="flex">A</div>';
@@ -113,7 +118,9 @@ class CacheTest extends TestCase
         $this->assertCount(2, $cacheFiles);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function it_generates_different_cache_keys_for_different_css(): void
     {
         $html = '<div class="custom-class">Hello</div>';
@@ -137,7 +144,9 @@ class CacheTest extends TestCase
         $this->assertCount(2, $cacheFiles);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function it_generates_different_cache_keys_for_minify_option(): void
     {
         $html = '<div class="bg-red-500">Hello</div>';
@@ -159,7 +168,9 @@ class CacheTest extends TestCase
         $this->assertCount(2, $cacheFiles);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function it_respects_cache_ttl(): void
     {
         $html = '<div class="border">Hello</div>';
@@ -188,7 +199,9 @@ class CacheTest extends TestCase
         $this->assertStringContainsString('.border', $css);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function it_clears_cache_with_custom_directory(): void
     {
         $html = '<div class="hidden visible">Hello</div>';
@@ -212,7 +225,9 @@ class CacheTest extends TestCase
         $this->assertEmpty($after);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function it_clears_cache_via_static_method(): void
     {
         $html = '<div class="opacity-50">Hello</div>';
@@ -231,28 +246,36 @@ class CacheTest extends TestCase
         $this->assertEmpty($after);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function it_returns_zero_when_clearing_nonexistent_directory(): void
     {
         $deleted = clearCache('/nonexistent/directory/path');
         $this->assertSame(0, $deleted);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function it_returns_zero_when_clearing_with_null(): void
     {
         $deleted = clearCache(null);
         $this->assertSame(0, $deleted);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function it_returns_zero_when_clearing_with_false(): void
     {
         $deleted = clearCache(false);
         $this->assertSame(0, $deleted);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function it_does_not_cache_when_cache_option_is_not_set(): void
     {
         $html = '<div class="rotate-45">Hello</div>';
@@ -268,7 +291,9 @@ class CacheTest extends TestCase
         // (Note: other tests may have created files, so we just verify it works)
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function it_creates_cache_directory_if_not_exists(): void
     {
         $newCacheDir = $this->testCacheDir . '/nested/cache/dir';
@@ -296,7 +321,9 @@ class CacheTest extends TestCase
         rmdir(dirname(dirname($newCacheDir)));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function it_returns_cached_content_on_second_call(): void
     {
         $html = '<div class="translate-x-4">Hello</div>';

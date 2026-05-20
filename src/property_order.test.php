@@ -1,8 +1,6 @@
 <?php
 
 declare(strict_types=1);
-
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 use const TailwindPHP\PropertyOrder\PROPERTY_ORDER;
@@ -14,50 +12,66 @@ use const TailwindPHP\PropertyOrder\PROPERTY_ORDER;
  */
 class property_order extends TestCase
 {
-    #[Test]
+    /**
+ * @test
+ */
     public function property_order_constant_exists(): void
     {
         $this->assertIsArray(PROPERTY_ORDER);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function property_order_has_many_properties(): void
     {
         // Should have hundreds of properties
         $this->assertGreaterThan(100, count(PROPERTY_ORDER));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function property_order_contains_display(): void
     {
         $this->assertContains('display', PROPERTY_ORDER);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function property_order_contains_position(): void
     {
         $this->assertContains('position', PROPERTY_ORDER);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function property_order_contains_margin(): void
     {
         $this->assertContains('margin', PROPERTY_ORDER);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function property_order_contains_padding(): void
     {
         $this->assertContains('padding', PROPERTY_ORDER);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function property_order_contains_flex(): void
     {
         $this->assertContains('flex', PROPERTY_ORDER);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function property_order_contains_grid_properties(): void
     {
         $this->assertContains('grid-column', PROPERTY_ORDER);
@@ -66,7 +80,9 @@ class property_order extends TestCase
         $this->assertContains('grid-template-rows', PROPERTY_ORDER);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function property_order_contains_tw_custom_properties(): void
     {
         // Should contain Tailwind-specific custom properties
@@ -75,7 +91,9 @@ class property_order extends TestCase
         $this->assertContains('--tw-blur', PROPERTY_ORDER);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function property_order_position_before_margin(): void
     {
         $positionIndex = array_search('position', PROPERTY_ORDER);
@@ -84,7 +102,9 @@ class property_order extends TestCase
         $this->assertLessThan($marginIndex, $positionIndex);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function property_order_margin_before_padding(): void
     {
         $marginIndex = array_search('margin', PROPERTY_ORDER);
@@ -93,7 +113,9 @@ class property_order extends TestCase
         $this->assertLessThan($paddingIndex, $marginIndex);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function property_order_display_before_width(): void
     {
         $displayIndex = array_search('display', PROPERTY_ORDER);
@@ -102,7 +124,9 @@ class property_order extends TestCase
         $this->assertLessThan($widthIndex, $displayIndex);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function property_order_all_strings(): void
     {
         foreach (PROPERTY_ORDER as $property) {
@@ -110,7 +134,9 @@ class property_order extends TestCase
         }
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function property_order_no_duplicates(): void
     {
         $unique = array_unique(PROPERTY_ORDER);

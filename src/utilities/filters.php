@@ -505,7 +505,7 @@ function registerFiltersUtilities(UtilityBuilder $builder): void
         string $property,
         string $value,
         ?string $alpha,
-        callable $varInjector,
+        callable $varInjector
     ): array {
         // Parse drop shadow(s) and replace colors
         // The value is the raw shadow values like "0 1px 1px rgb(0 0 0 / 0.05)"

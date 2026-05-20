@@ -1,8 +1,6 @@
 <?php
 
 declare(strict_types=1);
-
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 use function TailwindPHP\Utils\isColor;
@@ -18,7 +16,9 @@ class is_color extends TestCase
     // Hex colors
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function hex_3_digit(): void
     {
         $this->assertTrue(isColor('#fff'));
@@ -26,7 +26,9 @@ class is_color extends TestCase
         $this->assertTrue(isColor('#abc'));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function hex_6_digit(): void
     {
         $this->assertTrue(isColor('#ffffff'));
@@ -34,7 +36,9 @@ class is_color extends TestCase
         $this->assertTrue(isColor('#abcdef'));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function hex_8_digit_alpha(): void
     {
         $this->assertTrue(isColor('#ffffff80'));
@@ -45,32 +49,42 @@ class is_color extends TestCase
     // Named colors
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function named_color_red(): void
     {
         $this->assertTrue(isColor('red'));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function named_color_blue(): void
     {
         $this->assertTrue(isColor('blue'));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function named_color_transparent(): void
     {
         $this->assertTrue(isColor('transparent'));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function named_color_currentcolor(): void
     {
         $this->assertTrue(isColor('currentcolor'));
         $this->assertTrue(isColor('currentColor'));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function named_color_rebeccapurple(): void
     {
         $this->assertTrue(isColor('rebeccapurple'));
@@ -80,76 +94,100 @@ class is_color extends TestCase
     // CSS color functions
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function rgb_function(): void
     {
         $this->assertTrue(isColor('rgb(255, 0, 0)'));
         $this->assertTrue(isColor('rgb(255 0 0)'));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function rgba_function(): void
     {
         $this->assertTrue(isColor('rgba(255, 0, 0, 0.5)'));
         $this->assertTrue(isColor('rgba(255 0 0 / 50%)'));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function hsl_function(): void
     {
         $this->assertTrue(isColor('hsl(0, 100%, 50%)'));
         $this->assertTrue(isColor('hsl(0 100% 50%)'));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function hsla_function(): void
     {
         $this->assertTrue(isColor('hsla(0, 100%, 50%, 0.5)'));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function hwb_function(): void
     {
         $this->assertTrue(isColor('hwb(0 0% 0%)'));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function lab_function(): void
     {
         $this->assertTrue(isColor('lab(50% 0 0)'));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function lch_function(): void
     {
         $this->assertTrue(isColor('lch(50% 0 0)'));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function oklab_function(): void
     {
         $this->assertTrue(isColor('oklab(50% 0 0)'));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function oklch_function(): void
     {
         $this->assertTrue(isColor('oklch(50% 0 0)'));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function color_function(): void
     {
         $this->assertTrue(isColor('color(srgb 1 0 0)'));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function color_mix_function(): void
     {
         $this->assertTrue(isColor('color-mix(in oklab, red 50%, blue)'));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function light_dark_function(): void
     {
         $this->assertTrue(isColor('light-dark(white, black)'));
@@ -159,13 +197,17 @@ class is_color extends TestCase
     // System colors
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function system_color_canvas(): void
     {
         $this->assertTrue(isColor('canvas'));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function system_color_buttonface(): void
     {
         $this->assertTrue(isColor('buttonface'));
@@ -175,27 +217,35 @@ class is_color extends TestCase
     // Non-colors
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function non_color_empty(): void
     {
         $this->assertFalse(isColor(''));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function non_color_random_string(): void
     {
         $this->assertFalse(isColor('hello'));
         $this->assertFalse(isColor('notacolor'));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function non_color_number(): void
     {
         $this->assertFalse(isColor('123'));
         $this->assertFalse(isColor('1.5'));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function non_color_unit(): void
     {
         $this->assertFalse(isColor('10px'));

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace TailwindPHP;
 
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 use function TailwindPHP\Ast\toCss;
@@ -44,7 +43,9 @@ class expand_declaration extends TestCase
         return toCss($ast);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function expand_to_4_properties(): void
     {
         $options = SIGNATURE_EXPAND_PROPERTIES;
@@ -97,7 +98,9 @@ CSS;
         $this->assertEquals(trim($expected), trim($this->expand($input, $options)));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function expand_to_2_properties(): void
     {
         $options = SIGNATURE_EXPAND_PROPERTIES;
@@ -126,7 +129,9 @@ CSS;
         $this->assertEquals(trim($expected), trim($this->expand($input, $options)));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function expansion_with_important(): void
     {
         $options = SIGNATURE_EXPAND_PROPERTIES;
@@ -179,7 +184,9 @@ CSS;
         $this->assertEquals(trim($expected), trim($this->expand($input, $options)));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function expand_logical_properties_margin_block(): void
     {
         $options = SIGNATURE_EXPAND_PROPERTIES | SIGNATURE_LOGICAL_TO_PHYSICAL;

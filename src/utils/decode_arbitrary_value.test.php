@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace TailwindPHP\Utils;
 
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 use function TailwindPHP\DecodeArbitraryValue\decodeArbitraryValue;
@@ -14,25 +12,33 @@ class decode_arbitrary_value extends TestCase
 {
     // Decoding arbitrary values tests
 
-    #[Test]
+    /**
+ * @test
+ */
     public function replaces_an_underscore_with_a_space(): void
     {
         $this->assertEquals('foo bar', decodeArbitraryValue('foo_bar'));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function replaces_multiple_underscores_with_spaces(): void
     {
         $this->assertEquals('  foo  bar  ', decodeArbitraryValue('__foo__bar__'));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function replaces_escaped_underscores_with_a_normal_underscore(): void
     {
         $this->assertEquals('foo_bar', decodeArbitraryValue('foo\\_bar'));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function does_not_replace_underscores_in_url(): void
     {
         $this->assertEquals('url(./my_file.jpg)', decodeArbitraryValue('url(./my_file.jpg)'));
@@ -42,7 +48,9 @@ class decode_arbitrary_value extends TestCase
         );
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function does_not_replace_underscores_in_first_argument_of_var(): void
     {
         $this->assertEquals('var(--spacing-1_5)', decodeArbitraryValue('var(--spacing-1_5)'));
@@ -53,7 +61,9 @@ class decode_arbitrary_value extends TestCase
         );
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function does_not_replace_underscores_in_first_argument_of_theme(): void
     {
         $this->assertEquals('theme(--spacing-1_5)', decodeArbitraryValue('theme(--spacing-1_5)'));
@@ -64,7 +74,9 @@ class decode_arbitrary_value extends TestCase
         );
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function leaves_var_as_is(): void
     {
         $this->assertEquals('var(--foo)', decodeArbitraryValue('var(--foo)'));
@@ -191,8 +203,10 @@ class decode_arbitrary_value extends TestCase
         ];
     }
 
-    #[Test]
-    #[DataProvider('mathOperatorsProvider')]
+    /**
+ * @dataProvider mathOperatorsProvider
+ * @test
+ */
     public function adds_spaces_around_math_operators(string $input, string $expected): void
     {
         $this->assertEquals($expected, decodeArbitraryValue($input));

@@ -146,7 +146,7 @@ class Theme
      * @param mixed $src
      * @return void
      */
-    public function add(string $key, string $value, int $options = THEME_OPTION_NONE, mixed $src = null): void
+    public function add(string $key, string $value, int $options = THEME_OPTION_NONE, $src = null): void
     {
         // Clear resolve cache when values change
         $this->resolveKeyCache = [];

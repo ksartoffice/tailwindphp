@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace TailwindPHP\Tests;
 
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use TailwindPHP\Cli\Application;
 use TailwindPHP\Cli\Console\Input;
@@ -53,35 +52,45 @@ class CliTest extends TestCase
     // Input Tests
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function input_parses_long_option_with_value(): void
     {
         $input = new Input(['tailwindphp', '--input=./src/app.css']);
         $this->assertSame('./src/app.css', $input->getOption('input'));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function input_parses_long_option_boolean(): void
     {
         $input = new Input(['tailwindphp', '--minify']);
         $this->assertTrue($input->getBoolOption('minify'));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function input_parses_short_option_with_value(): void
     {
         $input = new Input(['tailwindphp', '-i', './templates/app.css']);
         $this->assertSame('./templates/app.css', $input->getOption('i'));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function input_parses_short_option_boolean(): void
     {
         $input = new Input(['tailwindphp', '-m']);
         $this->assertTrue($input->getBoolOption('m'));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function input_parses_multiple_options(): void
     {
         $input = new Input([
@@ -96,7 +105,9 @@ class CliTest extends TestCase
         $this->assertTrue($input->getBoolOption('minify'));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function input_detects_help_option(): void
     {
         $input = new Input(['tailwindphp', '--help']);
@@ -106,7 +117,9 @@ class CliTest extends TestCase
         $this->assertTrue($input->wantsHelp());
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function input_detects_version_option(): void
     {
         $input = new Input(['tailwindphp', '--version']);
@@ -116,7 +129,9 @@ class CliTest extends TestCase
         $this->assertTrue($input->wantsVersion());
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function input_detects_verbose_option(): void
     {
         $input = new Input(['tailwindphp', '-v']);
@@ -126,7 +141,9 @@ class CliTest extends TestCase
         $this->assertTrue($input->isVerbose());
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function input_detects_quiet_option(): void
     {
         $input = new Input(['tailwindphp', '-q']);
@@ -136,14 +153,18 @@ class CliTest extends TestCase
         $this->assertTrue($input->isQuiet());
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function input_handles_no_prefix(): void
     {
         $input = new Input(['tailwindphp', '--no-cache']);
         $this->assertFalse($input->getBoolOption('cache'));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function input_parses_watch_option(): void
     {
         $input = new Input(['tailwindphp', '-w']);
@@ -153,14 +174,18 @@ class CliTest extends TestCase
         $this->assertTrue($input->getBoolOption('watch'));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function input_parses_optimize_option(): void
     {
         $input = new Input(['tailwindphp', '--optimize']);
         $this->assertTrue($input->getBoolOption('optimize'));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function input_parses_cwd_option(): void
     {
         $input = new Input(['tailwindphp', '--cwd=/path/to/project']);
@@ -171,7 +196,9 @@ class CliTest extends TestCase
     // Output Tests
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function output_formats_color_tags(): void
     {
         $output = new Output();
@@ -185,7 +212,9 @@ class CliTest extends TestCase
     // Application Tests
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function application_shows_version(): void
     {
         $input = new Input(['tailwindphp', '--version']);
@@ -201,13 +230,17 @@ class CliTest extends TestCase
         $this->assertSame(0, $exitCode);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function application_has_correct_version(): void
     {
         $this->assertSame('1.0.0', Application::VERSION);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function application_has_correct_name(): void
     {
         $this->assertSame('tailwindphp', Application::NAME);
@@ -217,7 +250,9 @@ class CliTest extends TestCase
     // Build Tests (implicit command)
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function build_with_input_and_output(): void
     {
         // Create test input CSS file
@@ -258,7 +293,9 @@ class CliTest extends TestCase
         }
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function build_with_minify_option(): void
     {
         $inputFile = $this->testDir . '/app.css';
@@ -293,7 +330,9 @@ class CliTest extends TestCase
         }
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function build_creates_output_directory(): void
     {
         $inputFile = $this->testDir . '/app.css';
@@ -324,7 +363,9 @@ class CliTest extends TestCase
         }
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function build_returns_error_for_missing_input_file(): void
     {
         $input = new Input([
@@ -343,7 +384,9 @@ class CliTest extends TestCase
         $this->assertSame(1, $exitCode);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function build_returns_error_when_input_equals_output(): void
     {
         $file = $this->testDir . '/app.css';
@@ -365,7 +408,9 @@ class CliTest extends TestCase
         $this->assertSame(1, $exitCode);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function build_with_cwd_option(): void
     {
         // Create project directory
@@ -391,7 +436,9 @@ class CliTest extends TestCase
         $this->assertFileExists($projectDir . '/output.css');
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function build_with_optimize_option(): void
     {
         $inputFile = $this->testDir . '/app.css';
@@ -423,7 +470,9 @@ class CliTest extends TestCase
         }
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function build_scans_multiple_file_types(): void
     {
         $inputFile = $this->testDir . '/app.css';

@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace TailwindPHP;
 
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -51,8 +49,10 @@ class constant_fold_declaration extends TestCase
         ];
     }
 
-    #[Test]
-    #[DataProvider('foldableExpressionsProvider')]
+    /**
+ * @dataProvider foldableExpressionsProvider
+ * @test
+ */
     public function should_constant_fold(string $input, string $expected): void
     {
         $this->assertEquals($expected, constantFoldDeclaration($input));
@@ -73,8 +73,10 @@ class constant_fold_declaration extends TestCase
         ];
     }
 
-    #[Test]
-    #[DataProvider('differentUnitsProvider')]
+    /**
+ * @dataProvider differentUnitsProvider
+ * @test
+ */
     public function should_not_constant_fold_different_units(string $input): void
     {
         $this->assertEquals($input, constantFoldDeclaration($input));
@@ -110,8 +112,10 @@ class constant_fold_declaration extends TestCase
         ];
     }
 
-    #[Test]
-    #[DataProvider('foldToZeroProvider')]
+    /**
+ * @dataProvider foldToZeroProvider
+ * @test
+ */
     public function should_constant_fold_to_zero(string $input): void
     {
         $this->assertEquals('0', constantFoldDeclaration($input));
@@ -140,14 +144,18 @@ class constant_fold_declaration extends TestCase
         ];
     }
 
-    #[Test]
-    #[DataProvider('nonFoldableUnitsProvider')]
+    /**
+ * @dataProvider nonFoldableUnitsProvider
+ * @test
+ */
     public function should_not_fold_non_foldable_units_to_zero(string $input, string $expected): void
     {
         $this->assertEquals($expected, constantFoldDeclaration($input));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function should_not_constant_fold_when_dividing_by_zero(): void
     {
         $this->assertEquals('calc(123rem / 0)', constantFoldDeclaration('calc(123rem / 0)'));

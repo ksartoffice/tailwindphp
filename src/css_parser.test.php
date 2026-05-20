@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace TailwindPHP;
 
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use TailwindPHP\CssParser\CssSyntaxError;
 
@@ -15,21 +13,27 @@ class css_parser extends TestCase
 {
     // COMMENTS
 
-    #[Test]
+    /**
+ * @test
+ */
     public function parses_a_comment_and_ignores_it(): void
     {
         $result = parse('/*Hello, world!*/');
         $this->assertEquals([], $result);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function parses_a_comment_with_an_escaped_ending_and_ignores_it(): void
     {
         $result = parse('/*Hello, \*\/ world!*/');
         $this->assertEquals([], $result);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function parses_a_comment_inside_of_a_selector_and_ignores_it(): void
     {
         $result = parse('.foo { /*Example comment*/ }');
@@ -38,7 +42,9 @@ class css_parser extends TestCase
         ], $result);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function removes_comments_in_between_selectors_while_maintaining_correct_whitespace(): void
     {
         $result = parse('.foo/*.bar*/.baz { }');
@@ -67,7 +73,9 @@ class css_parser extends TestCase
         ], $result);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function collects_license_comments(): void
     {
         $result = parse('/*! License #1 */');
@@ -76,7 +84,9 @@ class css_parser extends TestCase
         ], $result);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function handles_comments_before_element_selectors(): void
     {
         $result = parse('.dark /* comment */p { color: black; }');
@@ -93,7 +103,9 @@ class css_parser extends TestCase
 
     // DECLARATIONS
 
-    #[Test]
+    /**
+ * @test
+ */
     public function parses_a_simple_declaration(): void
     {
         $result = parse('color: red;');
@@ -102,7 +114,9 @@ class css_parser extends TestCase
         ], $result);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function parses_declarations_with_strings(): void
     {
         $result = parse("content: 'Hello, world!';");
@@ -111,7 +125,9 @@ class css_parser extends TestCase
         ], $result);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function parses_declarations_with_nested_strings(): void
     {
         $result = parse('content: \'Good, "monday", morning!\';');
@@ -120,7 +136,9 @@ class css_parser extends TestCase
         ], $result);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function parses_declarations_with_nested_strings_that_are_not_balanced(): void
     {
         $result = parse('content: "It\'s a beautiful day!";');
@@ -129,7 +147,9 @@ class css_parser extends TestCase
         ], $result);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function parses_declarations_with_strings_and_escaped_string_endings(): void
     {
         $result = parse("content: 'These are not the end \"\\' of the string';");
@@ -138,7 +158,9 @@ class css_parser extends TestCase
         ], $result);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function parses_declarations_with_important(): void
     {
         $result = parse('width: 123px !important;');
@@ -147,7 +169,9 @@ class css_parser extends TestCase
         ], $result);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function parses_declarations_with_important_and_trailing_comment(): void
     {
         $result = parse('width: 123px !important /* Very important */;');
@@ -158,7 +182,9 @@ class css_parser extends TestCase
 
     // CUSTOM PROPERTIES
 
-    #[Test]
+    /**
+ * @test
+ */
     public function parses_a_custom_property(): void
     {
         $result = parse('--foo: bar;');
@@ -167,7 +193,9 @@ class css_parser extends TestCase
         ], $result);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function parses_a_minified_custom_property(): void
     {
         $result = parse(':root{--foo:bar;}');
@@ -182,7 +210,9 @@ class css_parser extends TestCase
         ], $result);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function parses_a_minified_custom_property_with_no_semicolon(): void
     {
         $result = parse(':root{--foo:bar}');
@@ -197,7 +227,9 @@ class css_parser extends TestCase
         ], $result);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function parses_a_custom_property_with_missing_ending_semicolon(): void
     {
         $result = parse('--foo: bar');
@@ -206,7 +238,9 @@ class css_parser extends TestCase
         ], $result);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function parses_a_custom_property_with_missing_ending_semicolon_and_important(): void
     {
         $result = parse('--foo: bar !important');
@@ -215,7 +249,9 @@ class css_parser extends TestCase
         ], $result);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function parses_a_custom_property_with_embedded_programming_language(): void
     {
         $result = parse('--foo: if(x > 5) this.width = 10;');
@@ -224,7 +260,9 @@ class css_parser extends TestCase
         ], $result);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function parses_a_custom_property_with_empty_block_as_value(): void
     {
         $result = parse('--foo: {};');
@@ -233,7 +271,9 @@ class css_parser extends TestCase
         ], $result);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function parses_a_custom_property_with_empty_value(): void
     {
         $result = parse('--foo:;');
@@ -242,7 +282,9 @@ class css_parser extends TestCase
         ], $result);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function parses_a_custom_property_with_space_value(): void
     {
         $result = parse('--foo: ;');
@@ -251,7 +293,9 @@ class css_parser extends TestCase
         ], $result);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function parses_a_custom_property_with_escaped_characters(): void
     {
         $result = parse('--foo: This is not the end \\;, but this is;');
@@ -260,7 +304,9 @@ class css_parser extends TestCase
         ], $result);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function parses_empty_custom_properties(): void
     {
         $result = parse('--foo: ;');
@@ -269,7 +315,9 @@ class css_parser extends TestCase
         ], $result);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function parses_custom_properties_with_important(): void
     {
         $result = parse('--foo: bar !important;');
@@ -278,7 +326,9 @@ class css_parser extends TestCase
         ], $result);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function parses_custom_properties_with_data_url_value(): void
     {
         $result = parse("--foo: 'data:text/plain;base64,SGVsbG8sIFdvcmxkIQ==';");
@@ -287,7 +337,9 @@ class css_parser extends TestCase
         ], $result);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function parses_multiple_declarations(): void
     {
         $result = parse('color: red; background-color: blue;');
@@ -297,7 +349,9 @@ class css_parser extends TestCase
         ], $result);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function correctly_parses_comments_with_colon_inside_them(): void
     {
         $result = parse('color/* color: #f00; */: red;');
@@ -308,7 +362,9 @@ class css_parser extends TestCase
 
     // SELECTORS
 
-    #[Test]
+    /**
+ * @test
+ */
     public function parses_a_simple_selector(): void
     {
         $result = parse('.foo { }');
@@ -317,7 +373,9 @@ class css_parser extends TestCase
         ], $result);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function parses_selectors_with_escaped_characters(): void
     {
         $result = parse('.hover\\:foo:hover { }');
@@ -326,7 +384,9 @@ class css_parser extends TestCase
         ], $result);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function parses_multiple_simple_selectors(): void
     {
         $result = parse(".foo,\n.bar { }");
@@ -335,7 +395,9 @@ class css_parser extends TestCase
         ], $result);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function parses_multiple_declarations_inside_of_a_selector(): void
     {
         $result = parse('.foo { color: red; font-size: 16px; }');
@@ -351,7 +413,9 @@ class css_parser extends TestCase
         ], $result);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function parses_rules_with_declarations_that_end_with_missing_semicolon(): void
     {
         $result = parse('.foo { color: red; font-size: 16px }');
@@ -367,7 +431,9 @@ class css_parser extends TestCase
         ], $result);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function parses_rules_with_declarations_that_end_with_missing_semicolon_and_important(): void
     {
         $result = parse('.foo { color: red; font-size: 16px !important }');
@@ -383,7 +449,9 @@ class css_parser extends TestCase
         ], $result);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function parses_a_multiline_selector(): void
     {
         $result = parse(".foo,\n.bar,\n.baz\n{\ncolor:red;\n}");
@@ -400,7 +468,9 @@ class css_parser extends TestCase
 
     // AT-RULES
 
-    #[Test]
+    /**
+ * @test
+ */
     public function parses_an_at_rule_without_a_block(): void
     {
         $result = parse('@charset "UTF-8";');
@@ -428,8 +498,10 @@ class css_parser extends TestCase
         ];
     }
 
-    #[Test]
-    #[DataProvider('whitespaceProvider')]
+    /**
+ * @dataProvider whitespaceProvider
+ * @test
+ */
     public function parses_at_rule_with_whitespace_in_params(string $whitespace): void
     {
         $result = parse("@apply{$whitespace}bg-red-500;");
@@ -438,7 +510,9 @@ class css_parser extends TestCase
         ], $result);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function parses_an_at_rule_without_a_block_or_semicolon(): void
     {
         $result = parse('@import "tailwindcss/utilities.css"');
@@ -447,7 +521,9 @@ class css_parser extends TestCase
         ], $result);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function parses_an_at_rule_without_a_block_or_semicolon_when_last_rule_in_block(): void
     {
         $result = parse("@layer utilities {\n@import \"tailwindcss/utilities.css\"\n}");
@@ -463,7 +539,9 @@ class css_parser extends TestCase
         ], $result);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function parses_a_nested_at_rule_without_a_block(): void
     {
         $result = parse('@layer utilities { @charset "UTF-8"; }');
@@ -479,7 +557,9 @@ class css_parser extends TestCase
         ], $result);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function parses_custom_at_rules_without_a_block(): void
     {
         $result = parse('@tailwind; @tailwind base;');
@@ -489,7 +569,9 @@ class css_parser extends TestCase
         ], $result);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function parses_nested_media_queries(): void
     {
         $css = '@media (width >= 600px) { .foo { color: red; @media (width >= 800px) { color: blue; } } }';
@@ -522,7 +604,9 @@ class css_parser extends TestCase
 
     // NESTING
 
-    #[Test]
+    /**
+ * @test
+ */
     public function parses_nested_rules(): void
     {
         $result = parse('.foo { .bar { .baz { color: red; } } }');
@@ -549,7 +633,9 @@ class css_parser extends TestCase
         ], $result);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function parses_nested_selector_with_ampersand(): void
     {
         $result = parse('.foo { color: red; &:hover { color: blue; } }');
@@ -571,7 +657,9 @@ class css_parser extends TestCase
         ], $result);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function parses_nested_sibling_selectors(): void
     {
         $result = parse('.foo { .bar { color: red; } .baz { color: blue; } }');
@@ -601,7 +689,9 @@ class css_parser extends TestCase
 
     // COMPLEX
 
-    #[Test]
+    /**
+ * @test
+ */
     public function parses_complex_examples(): void
     {
         $result = parse('@custom \\{ { foo: bar; }');
@@ -617,7 +707,9 @@ class css_parser extends TestCase
         ], $result);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function parses_minified_nested_css(): void
     {
         $result = parse('.foo{color:red;@media(width>=600px){.bar{color:blue;font-weight:bold}}}');
@@ -647,7 +739,9 @@ class css_parser extends TestCase
         ], $result);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function ignores_everything_inside_comments(): void
     {
         $result = parse('.foo:has(.bar /* instead \\*\\/ of .baz { */) { color: red; }');
@@ -662,14 +756,18 @@ class css_parser extends TestCase
         ], $result);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function ignores_consecutive_semicolons(): void
     {
         $result = parse(';;;');
         $this->assertEquals([], $result);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function ignores_semicolons_after_at_rule_with_body(): void
     {
         $result = parse('@plugin "foo" {} ;');
@@ -678,7 +776,9 @@ class css_parser extends TestCase
         ], $result);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function ignores_consecutive_semicolons_after_declaration(): void
     {
         $result = parse('.foo { color: red;;; }');
@@ -695,7 +795,9 @@ class css_parser extends TestCase
 
     // ERRORS
 
-    #[Test]
+    /**
+ * @test
+ */
     public function errors_when_curly_brackets_are_unbalanced_opening(): void
     {
         $this->expectException(CssSyntaxError::class);
@@ -703,7 +805,9 @@ class css_parser extends TestCase
         parse('.foo { color: red; } .bar color: blue; }');
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function errors_when_curly_brackets_are_unbalanced_closing(): void
     {
         $this->expectException(CssSyntaxError::class);
@@ -711,7 +815,9 @@ class css_parser extends TestCase
         parse('.foo { color: red; } .bar { color: blue;');
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function errors_when_unterminated_string_is_used(): void
     {
         $this->expectException(CssSyntaxError::class);
@@ -719,7 +825,9 @@ class css_parser extends TestCase
         parse(".foo { content: \"Hello world!\n }");
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function errors_when_incomplete_custom_properties_are_used(): void
     {
         $this->expectException(CssSyntaxError::class);
@@ -727,7 +835,9 @@ class css_parser extends TestCase
         parse('--foo');
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function errors_when_incomplete_custom_properties_are_used_inside_rules(): void
     {
         $this->expectException(CssSyntaxError::class);
@@ -735,7 +845,9 @@ class css_parser extends TestCase
         parse('.foo { --bar }');
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function errors_when_declaration_is_incomplete(): void
     {
         $this->expectException(CssSyntaxError::class);
@@ -743,7 +855,9 @@ class css_parser extends TestCase
         parse('.foo { bar }');
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function ignores_bom_at_beginning_of_file(): void
     {
         $result = parse("\u{FEFF}@reference 'tailwindcss';");

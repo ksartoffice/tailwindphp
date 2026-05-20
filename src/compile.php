@@ -45,7 +45,7 @@ const COMPILE_FLAG_RESPECT_IMPORTANT = 1 << 0;
 function compileCandidates(
     iterable $rawCandidates,
     object $designSystem,
-    array $options = [],
+    array $options = []
 ): array {
     $onInvalidCandidate = $options['onInvalidCandidate'] ?? null;
     $respectImportant = $options['respectImportant'] ?? true;

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace TailwindPHP;
 
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 use function TailwindPHP\Ast\atRoot;
@@ -19,7 +18,9 @@ use function TailwindPHP\CssParser\parse;
 
 class ast extends TestCase
 {
-    #[Test]
+    /**
+ * @test
+ */
     public function creates_style_rule_node(): void
     {
         $result = styleRule('.foo', [
@@ -35,7 +36,9 @@ class ast extends TestCase
         ], $result);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function creates_at_rule_node(): void
     {
         $result = atRule('@media', '(min-width: 768px)', [
@@ -58,7 +61,9 @@ class ast extends TestCase
         ], $result);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function creates_declaration_node(): void
     {
         $result = decl('color', 'red');
@@ -78,7 +83,9 @@ class ast extends TestCase
         ], $resultImportant);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function creates_comment_node(): void
     {
         $result = comment('Hello, world!');
@@ -88,7 +95,9 @@ class ast extends TestCase
         ], $result);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function creates_context_node(): void
     {
         $result = context(['theme' => 'dark'], [
@@ -110,7 +119,9 @@ class ast extends TestCase
         ], $result);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function creates_at_root_node(): void
     {
         $result = atRoot([
@@ -131,7 +142,9 @@ class ast extends TestCase
         ], $result);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function clones_ast_nodes_deeply(): void
     {
         $original = styleRule('.foo', [
@@ -154,7 +167,9 @@ class ast extends TestCase
         $this->assertEquals('red', $original['nodes'][0]['value']);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function clones_at_rule_nodes(): void
     {
         $original = atRule('@media', '(min-width: 768px)', [
@@ -170,7 +185,9 @@ class ast extends TestCase
         $this->assertEquals('(min-width: 768px)', $original['params']);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function clones_context_nodes(): void
     {
         $original = context(['theme' => 'dark'], [
@@ -186,7 +203,9 @@ class ast extends TestCase
         $this->assertEquals('dark', $original['context']['theme']);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function clones_at_root_nodes(): void
     {
         $original = atRoot([
@@ -202,7 +221,9 @@ class ast extends TestCase
         $this->assertEquals('.foo', $original['nodes'][0]['selector']);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function clones_comment_nodes(): void
     {
         $original = comment('Hello, world!');
@@ -215,7 +236,9 @@ class ast extends TestCase
         $this->assertEquals('Hello, world!', $original['value']);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function converts_ast_to_css_string(): void
     {
         $ast = [
@@ -230,7 +253,9 @@ class ast extends TestCase
         $this->assertEquals($expected, $css);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function converts_nested_ast_to_css_string(): void
     {
         $ast = [
@@ -248,7 +273,9 @@ class ast extends TestCase
         $this->assertEquals($expected, $css);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function converts_at_rules_to_css_string(): void
     {
         $ast = [
@@ -265,7 +292,9 @@ class ast extends TestCase
         $this->assertEquals($expected, $css);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function converts_at_rules_without_nodes_to_css_with_semicolon(): void
     {
         $ast = [
@@ -279,7 +308,9 @@ class ast extends TestCase
         $this->assertEquals($expected, $css);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function converts_important_declarations_to_css(): void
     {
         $ast = [
@@ -294,7 +325,9 @@ class ast extends TestCase
         $this->assertEquals($expected, $css);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function converts_comments_to_css(): void
     {
         $ast = [
@@ -310,7 +343,9 @@ class ast extends TestCase
         $this->assertEquals($expected, $css);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function pretty_prints_parsed_ast(): void
     {
         $parsed = parse('.foo{color:red;&:hover{color:blue;}}');

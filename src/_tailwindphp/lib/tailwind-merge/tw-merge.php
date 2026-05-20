@@ -23,7 +23,7 @@ require_once __DIR__ . '/default-config.php';
  * @param mixed ...$classLists Class values to merge
  * @return string Merged class string
  */
-function twMerge(mixed ...$classLists): string
+function twMerge(...$classLists): string
 {
     static $merge = null;
 

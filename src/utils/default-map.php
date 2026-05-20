@@ -45,7 +45,7 @@ class DefaultMap
      * @param mixed $key
      * @return string|int
      */
-    private function normalizeKey(mixed $key): string|int
+    private function normalizeKey($key)
     {
         if (is_array($key)) {
             return serialize($key);
@@ -58,7 +58,7 @@ class DefaultMap
      * @param TKey $key
      * @return TValue
      */
-    public function get(mixed $key): mixed
+    public function get($key)
     {
         $normalizedKey = $this->normalizeKey($key);
         if (!array_key_exists($normalizedKey, $this->map)) {
@@ -72,7 +72,7 @@ class DefaultMap
      * @param TKey $key
      * @param TValue $value
      */
-    public function set(mixed $key, mixed $value): void
+    public function set($key, $value): void
     {
         $this->map[$this->normalizeKey($key)] = $value;
     }
@@ -81,7 +81,7 @@ class DefaultMap
      * @param TKey $key
      * @return bool
      */
-    public function has(mixed $key): bool
+    public function has($key): bool
     {
         return array_key_exists($this->normalizeKey($key), $this->map);
     }
@@ -89,7 +89,7 @@ class DefaultMap
     /**
      * @param TKey $key
      */
-    public function delete(mixed $key): void
+    public function delete($key): void
     {
         unset($this->map[$this->normalizeKey($key)]);
     }

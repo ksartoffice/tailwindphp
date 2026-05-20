@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace TailwindPHP;
 
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 use function TailwindPHP\DesignSystem\replaceAlpha;
@@ -37,56 +36,72 @@ class replace_shadow_colors extends TestCase
     // Without replacer (simple)
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function should_handle_var_shadow(): void
     {
         $parsed = replaceShadowColors('var(--my-shadow)', fn ($c) => $this->simpleReplacer($c));
         $this->assertEquals('var(--my-shadow)', $parsed);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function should_handle_var_shadow_with_offset(): void
     {
         $parsed = replaceShadowColors('1px var(--my-shadow)', fn ($c) => $this->simpleReplacer($c));
         $this->assertEquals('1px var(--my-shadow)', $parsed);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function should_handle_var_color_with_offsets(): void
     {
         $parsed = replaceShadowColors('1px 1px var(--my-color)', fn ($c) => $this->simpleReplacer($c));
         $this->assertEquals('1px 1px var(--tw-shadow-color, var(--my-color))', $parsed);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function should_handle_var_color_with_zero_offsets(): void
     {
         $parsed = replaceShadowColors('0 0 0 var(--my-color)', fn ($c) => $this->simpleReplacer($c));
         $this->assertEquals('0 0 0 var(--tw-shadow-color, var(--my-color))', $parsed);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function should_handle_two_values_with_currentcolor(): void
     {
         $parsed = replaceShadowColors('1px 2px', fn ($c) => $this->simpleReplacer($c));
         $this->assertEquals('1px 2px var(--tw-shadow-color, currentcolor)', $parsed);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function should_handle_three_values_with_currentcolor(): void
     {
         $parsed = replaceShadowColors('1px 2px 3px', fn ($c) => $this->simpleReplacer($c));
         $this->assertEquals('1px 2px 3px var(--tw-shadow-color, currentcolor)', $parsed);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function should_handle_four_values_with_currentcolor(): void
     {
         $parsed = replaceShadowColors('1px 2px 3px 4px', fn ($c) => $this->simpleReplacer($c));
         $this->assertEquals('1px 2px 3px 4px var(--tw-shadow-color, currentcolor)', $parsed);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function should_handle_multiple_shadows(): void
     {
         $input = implode(', ', ['var(--my-shadow)', '1px 1px var(--my-color)', '0 0 1px var(--my-color)']);
@@ -101,7 +116,9 @@ class replace_shadow_colors extends TestCase
     // With replacer (alpha modification)
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function should_handle_var_color_with_intensity(): void
     {
         $parsed = replaceShadowColors('1px 1px var(--my-color)', fn ($c) => $this->alphaReplacer($c));
@@ -112,7 +129,9 @@ class replace_shadow_colors extends TestCase
         );
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function should_handle_box_shadow_with_intensity(): void
     {
         $parsed = replaceShadowColors('1px 1px var(--my-color)', fn ($c) => $this->alphaReplacer($c));
@@ -123,7 +142,9 @@ class replace_shadow_colors extends TestCase
         );
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function should_handle_four_values_with_intensity_and_no_color_value(): void
     {
         $parsed = replaceShadowColors('1px 2px 3px 4px', fn ($c) => $this->alphaReplacer($c));
@@ -134,7 +155,9 @@ class replace_shadow_colors extends TestCase
         );
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function should_handle_multiple_shadows_with_intensity(): void
     {
         $input = implode(', ', ['var(--my-shadow)', '1px 1px var(--my-color)', '0 0 1px var(--my-color)']);

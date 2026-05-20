@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace TailwindPHP\Tests;
 
-use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 use function TailwindPHP\compile;
@@ -89,7 +88,9 @@ CSS;
     /**
      * Run a single UI spec test case.
      */
-    #[DataProvider('uiSpecTestProvider')]
+    /**
+ * @dataProvider uiSpecTestProvider
+ */
     public function test_ui_spec(array $test): void
     {
         $name = $test['name'] ?? 'unknown';

@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace TailwindPHP;
 
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use TailwindPHP\Tests\TestHelper;
 
@@ -18,7 +16,7 @@ use TailwindPHP\Tests\TestHelper;
  * The tests verify that our PHP implementation produces CSS output that
  * matches the expected output from TailwindCSS for variant handling.
  */
-class variants extends TestCase
+class VariantsTest extends TestCase
 {
     private static array $testCases = [];
     private static bool $parsed = false;
@@ -437,8 +435,10 @@ class variants extends TestCase
         return array_map(fn ($test) => [$test], self::$testCases);
     }
 
-    #[Test]
-    #[DataProvider('variantTestCases')]
+    /**
+ * @dataProvider variantTestCases
+ * @test
+ */
     public function variant_compliance(array $testCase): void
     {
         $css = TestHelper::run($testCase['classes']);

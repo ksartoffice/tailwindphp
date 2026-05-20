@@ -159,7 +159,7 @@ class ClassGroupUtils
         array $classGroup,
         array &$classPartObject,
         string $classGroupId,
-        array $theme,
+        array $theme
     ): void {
         foreach ($classGroup as $classDefinition) {
             $this->processClassDefinition($classDefinition, $classPartObject, $classGroupId, $theme);
@@ -172,10 +172,10 @@ class ClassGroupUtils
      * @param array<string, mixed> $theme
      */
     private function processClassDefinition(
-        mixed $classDefinition,
+        $classDefinition,
         array &$classPartObject,
         string $classGroupId,
-        array $theme,
+        array $theme
     ): void {
         if (is_string($classDefinition)) {
             $target = $classDefinition === ''

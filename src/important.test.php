@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace TailwindPHP;
 
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -14,7 +13,9 @@ use PHPUnit\Framework\TestCase;
  */
 class important extends TestCase
 {
-    #[Test]
+    /**
+ * @test
+ */
     public function utilities_can_be_wrapped_in_a_selector(): void
     {
         // This is the v4 equivalent of `important: "#app"` from v3
@@ -34,7 +35,9 @@ CSS;
         $this->assertStringContainsString('text-decoration-line: line-through', $result);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function utilities_can_be_wrapped_with_selector_and_marked_as_important(): void
     {
         // @media important makes all utilities !important
@@ -56,7 +59,9 @@ CSS;
         $this->assertStringContainsString('text-decoration-line: line-through !important', $result);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function important_suffix_on_utility_classes(): void
     {
         // The ! suffix makes a utility important
@@ -74,7 +79,9 @@ CSS;
         $this->assertStringContainsString('margin-top: var(--spacing-10) !important', $result);
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function important_suffix_with_variants(): void
     {
         $input = <<<CSS

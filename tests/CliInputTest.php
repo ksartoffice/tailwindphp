@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace TailwindPHP\Tests;
 
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use TailwindPHP\Cli\Console\Input;
 
@@ -24,7 +23,9 @@ class CliInputTest extends TestCase
     // Long Option Tests
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function parses_long_boolean_option(): void
     {
         $input = new Input(['script.php', '--verbose']);
@@ -33,7 +34,9 @@ class CliInputTest extends TestCase
         $this->assertTrue($input->getOption('verbose'));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function parses_long_option_with_equals_value(): void
     {
         $input = new Input(['script.php', '--output=dist/app.css']);
@@ -42,7 +45,9 @@ class CliInputTest extends TestCase
         $this->assertSame('dist/app.css', $input->getOption('output'));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function parses_no_prefix_as_false(): void
     {
         $input = new Input(['script.php', '--no-color']);
@@ -51,7 +56,9 @@ class CliInputTest extends TestCase
         $this->assertFalse($input->getOption('color'));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function parses_multiple_long_options(): void
     {
         $input = new Input(['script.php', '--verbose', '--watch', '--minify']);
@@ -65,7 +72,9 @@ class CliInputTest extends TestCase
     // Short Option Tests
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function parses_short_boolean_option(): void
     {
         $input = new Input(['script.php', '-v']);
@@ -74,7 +83,9 @@ class CliInputTest extends TestCase
         $this->assertTrue($input->getOption('v'));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function parses_short_option_with_value(): void
     {
         $input = new Input(['script.php', '-o', 'output.css']);
@@ -83,7 +94,9 @@ class CliInputTest extends TestCase
         $this->assertSame('output.css', $input->getOption('o'));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function parses_multiple_short_flags(): void
     {
         $input = new Input(['script.php', '-vvv']);
@@ -91,7 +104,9 @@ class CliInputTest extends TestCase
         $this->assertTrue($input->hasOption('v'));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function parses_multiple_separate_short_options(): void
     {
         $input = new Input(['script.php', '-v', '-m']);
@@ -104,7 +119,9 @@ class CliInputTest extends TestCase
     // Command and Argument Tests
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function parses_command(): void
     {
         $input = new Input(['script.php', 'build']);
@@ -112,7 +129,9 @@ class CliInputTest extends TestCase
         $this->assertSame('build', $input->getCommand());
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function parses_command_with_options(): void
     {
         $input = new Input(['script.php', '--verbose', 'build', '--minify']);
@@ -122,7 +141,9 @@ class CliInputTest extends TestCase
         $this->assertTrue($input->getOption('minify'));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function parses_positional_arguments(): void
     {
         $input = new Input(['script.php', 'build', 'input.css', 'output.css']);
@@ -131,7 +152,9 @@ class CliInputTest extends TestCase
         $this->assertSame(['input.css', 'output.css'], $input->getArguments());
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function gets_specific_argument_by_index(): void
     {
         $input = new Input(['script.php', 'build', 'first', 'second', 'third']);
@@ -141,7 +164,9 @@ class CliInputTest extends TestCase
         $this->assertSame('third', $input->getArgument(2));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function returns_default_for_missing_argument(): void
     {
         $input = new Input(['script.php', 'build']);
@@ -154,7 +179,9 @@ class CliInputTest extends TestCase
     // Option Value Access Tests
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function gets_string_option_value(): void
     {
         $input = new Input(['script.php', '--output=styles.css']);
@@ -162,7 +189,9 @@ class CliInputTest extends TestCase
         $this->assertSame('styles.css', $input->getStringOption('output'));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function returns_default_for_missing_string_option(): void
     {
         $input = new Input(['script.php']);
@@ -171,7 +200,9 @@ class CliInputTest extends TestCase
         $this->assertSame('default.css', $input->getStringOption('output', 'default.css'));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function returns_default_when_bool_option_used_for_string(): void
     {
         $input = new Input(['script.php', '--output']);
@@ -180,7 +211,9 @@ class CliInputTest extends TestCase
         $this->assertSame('fallback', $input->getStringOption('output', 'fallback'));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function gets_bool_option_value(): void
     {
         $input = new Input(['script.php', '--minify']);
@@ -188,7 +221,9 @@ class CliInputTest extends TestCase
         $this->assertTrue($input->getBoolOption('minify'));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function returns_default_for_missing_bool_option(): void
     {
         $input = new Input(['script.php']);
@@ -197,7 +232,9 @@ class CliInputTest extends TestCase
         $this->assertTrue($input->getBoolOption('minify', true));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function interprets_no_prefix_as_false_bool(): void
     {
         $input = new Input(['script.php', '--no-minify']);
@@ -205,7 +242,9 @@ class CliInputTest extends TestCase
         $this->assertFalse($input->getBoolOption('minify'));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function gets_all_options(): void
     {
         $input = new Input(['script.php', '--verbose', '--output=file.css', '-m']);
@@ -221,7 +260,9 @@ class CliInputTest extends TestCase
     // Special Option Tests
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function detects_help_long_option(): void
     {
         $input = new Input(['script.php', '--help']);
@@ -229,7 +270,9 @@ class CliInputTest extends TestCase
         $this->assertTrue($input->wantsHelp());
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function detects_help_short_option(): void
     {
         $input = new Input(['script.php', '-h']);
@@ -237,7 +280,9 @@ class CliInputTest extends TestCase
         $this->assertTrue($input->wantsHelp());
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function detects_version_long_option(): void
     {
         $input = new Input(['script.php', '--version']);
@@ -245,7 +290,9 @@ class CliInputTest extends TestCase
         $this->assertTrue($input->wantsVersion());
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function detects_version_short_option(): void
     {
         $input = new Input(['script.php', '-V']);
@@ -253,7 +300,9 @@ class CliInputTest extends TestCase
         $this->assertTrue($input->wantsVersion());
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function detects_verbose_long_option(): void
     {
         $input = new Input(['script.php', '--verbose']);
@@ -261,7 +310,9 @@ class CliInputTest extends TestCase
         $this->assertTrue($input->isVerbose());
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function detects_verbose_short_option(): void
     {
         $input = new Input(['script.php', '-v']);
@@ -269,7 +320,9 @@ class CliInputTest extends TestCase
         $this->assertTrue($input->isVerbose());
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function detects_quiet_long_option(): void
     {
         $input = new Input(['script.php', '--quiet']);
@@ -277,7 +330,9 @@ class CliInputTest extends TestCase
         $this->assertTrue($input->isQuiet());
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function detects_quiet_short_option(): void
     {
         $input = new Input(['script.php', '-q']);
@@ -289,7 +344,9 @@ class CliInputTest extends TestCase
     // Raw Args Tests
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function returns_raw_args(): void
     {
         $argv = ['script.php', '--verbose', 'build'];
@@ -302,7 +359,9 @@ class CliInputTest extends TestCase
     // Edge Cases
     // ==================================================
 
-    #[Test]
+    /**
+ * @test
+ */
     public function handles_empty_args(): void
     {
         $input = new Input(['script.php']);
@@ -312,7 +371,9 @@ class CliInputTest extends TestCase
         $this->assertSame([], $input->getOptions());
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function handles_dash_alone_as_argument(): void
     {
         // A single dash is sometimes used for stdin
@@ -322,7 +383,9 @@ class CliInputTest extends TestCase
         $this->assertSame(['-'], $input->getArguments());
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function parses_complex_command_line(): void
     {
         // Note: Short options like -v consume the next arg as value if it doesn't start with -
@@ -347,7 +410,9 @@ class CliInputTest extends TestCase
         $this->assertSame(['extra-arg'], $input->getArguments());
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function option_with_equals_preserves_value_with_equals(): void
     {
         $input = new Input(['script.php', '--config=path/to/file=name.json']);
@@ -355,7 +420,9 @@ class CliInputTest extends TestCase
         $this->assertSame('path/to/file=name.json', $input->getOption('config'));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function bool_option_interprets_string_true_values(): void
     {
         // When a bool option has a string value, getBoolOption interprets it
@@ -370,7 +437,9 @@ class CliInputTest extends TestCase
         $this->assertTrue($input4->getBoolOption('debug'));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function bool_option_interprets_string_false_values(): void
     {
         $input = new Input(['script.php', '--debug=false']);

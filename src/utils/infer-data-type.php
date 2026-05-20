@@ -10,7 +10,7 @@ namespace TailwindPHP\Utils;
  * Port of: packages/tailwindcss/src/utils/infer-data-type.ts
  *
  * @port-deviation:dispatch TypeScript uses callback functions directly in type checking.
- * PHP uses first-class callables to keep dispatch namespace-relative.
+ * PHP uses string callables to keep PHP 7.4 compatibility.
  *
  * @port-deviation:none Otherwise this is a direct 1:1 port.
  */
@@ -34,31 +34,66 @@ const ANGLE_UNITS = ['deg', 'rad', 'grad', 'turn'];
  */
 function inferDataType(string $value, array $types): ?string
 {
-    if (str_starts_with($value, 'var(')) {
+    if (substr($value, 0, 4) === 'var(') {
         return null;
     }
 
     foreach ($types as $type) {
-        $check = match ($type) {
-            'color' => isColor(...),
-            'length' => isLengthValue(...),
-            'percentage' => isPercentage(...),
-            'ratio' => isFraction(...),
-            'number' => isNumberValue(...),
-            'integer' => isPositiveInteger(...),
-            'url' => isUrl(...),
-            'position' => isBackgroundPosition(...),
-            'bg-size' => isBackgroundSize(...),
-            'line-width' => isLineWidth(...),
-            'image' => isImage(...),
-            'family-name' => isFamilyName(...),
-            'generic-name' => isGenericName(...),
-            'absolute-size' => isAbsoluteSize(...),
-            'relative-size' => isRelativeSize(...),
-            'angle' => isAngle(...),
-            'vector' => isVector(...),
-            default => null,
-        };
+        $check = null;
+
+        switch ($type) {
+            case 'color':
+                $check = __NAMESPACE__ . '\\isColor';
+                break;
+            case 'length':
+                $check = __NAMESPACE__ . '\\isLengthValue';
+                break;
+            case 'percentage':
+                $check = __NAMESPACE__ . '\\isPercentage';
+                break;
+            case 'ratio':
+                $check = __NAMESPACE__ . '\\isFraction';
+                break;
+            case 'number':
+                $check = __NAMESPACE__ . '\\isNumberValue';
+                break;
+            case 'integer':
+                $check = __NAMESPACE__ . '\\isPositiveInteger';
+                break;
+            case 'url':
+                $check = __NAMESPACE__ . '\\isUrl';
+                break;
+            case 'position':
+                $check = __NAMESPACE__ . '\\isBackgroundPosition';
+                break;
+            case 'bg-size':
+                $check = __NAMESPACE__ . '\\isBackgroundSize';
+                break;
+            case 'line-width':
+                $check = __NAMESPACE__ . '\\isLineWidth';
+                break;
+            case 'image':
+                $check = __NAMESPACE__ . '\\isImage';
+                break;
+            case 'family-name':
+                $check = __NAMESPACE__ . '\\isFamilyName';
+                break;
+            case 'generic-name':
+                $check = __NAMESPACE__ . '\\isGenericName';
+                break;
+            case 'absolute-size':
+                $check = __NAMESPACE__ . '\\isAbsoluteSize';
+                break;
+            case 'relative-size':
+                $check = __NAMESPACE__ . '\\isRelativeSize';
+                break;
+            case 'angle':
+                $check = __NAMESPACE__ . '\\isAngle';
+                break;
+            case 'vector':
+                $check = __NAMESPACE__ . '\\isVector';
+                break;
+        }
 
         if ($check !== null && $check($value)) {
             return $type;
@@ -99,7 +134,7 @@ function isImage(string $value): bool
     $count = 0;
 
     foreach (segment($value, ',') as $part) {
-        if (str_starts_with($part, 'var(')) {
+        if (substr($part, 0, 4) === 'var(') {
             continue;
         }
 
@@ -148,7 +183,7 @@ function isFamilyName(string $value): bool
             return false;
         }
 
-        if (str_starts_with($part, 'var(')) {
+        if (substr($part, 0, 4) === 'var(') {
             continue;
         }
 
@@ -230,7 +265,7 @@ function isBackgroundPosition(string $value): bool
             continue;
         }
 
-        if (str_starts_with($part, 'var(')) {
+        if (substr($part, 0, 4) === 'var(') {
             continue;
         }
 
@@ -305,7 +340,7 @@ function isVector(string $value): bool
 /**
  * Check if value is a non-negative integer (0 or positive).
  */
-function isPositiveInteger(mixed $value): bool
+function isPositiveInteger($value): bool
 {
     $num = is_numeric($value) ? (int) $value : null;
 
@@ -315,7 +350,7 @@ function isPositiveInteger(mixed $value): bool
 /**
  * Check if value is a strictly positive integer (> 0).
  */
-function isStrictPositiveInteger(mixed $value): bool
+function isStrictPositiveInteger($value): bool
 {
     $num = is_numeric($value) ? (int) $value : null;
 
@@ -325,7 +360,7 @@ function isStrictPositiveInteger(mixed $value): bool
 /**
  * Check if value is a valid spacing multiplier (multiple of 0.25).
  */
-function isValidSpacingMultiplier(mixed $value): bool
+function isValidSpacingMultiplier($value): bool
 {
     return isMultipleOf($value, 0.25);
 }
@@ -333,7 +368,7 @@ function isValidSpacingMultiplier(mixed $value): bool
 /**
  * Check if value is a valid opacity (0-100, multiple of 0.25).
  */
-function isValidOpacityValue(mixed $value): bool
+function isValidOpacityValue($value): bool
 {
     if (!is_numeric($value)) {
         return false;
@@ -347,7 +382,7 @@ function isValidOpacityValue(mixed $value): bool
 /**
  * Check if value is a multiple of a given divisor.
  */
-function isMultipleOf(mixed $value, float $divisor): bool
+function isMultipleOf($value, float $divisor): bool
 {
     if (!is_numeric($value)) {
         return false;

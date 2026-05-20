@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace TailwindPHP;
 
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 use function TailwindPHP\AttributeSelectorParser\parse;
@@ -38,8 +36,10 @@ class attribute_selector_parser extends TestCase
         ];
     }
 
-    #[Test]
-    #[DataProvider('invalidSelectorProvider')]
+    /**
+ * @dataProvider invalidSelectorProvider
+ * @test
+ */
     public function should_parse_an_invalid_attribute_selector_as_null(string $input): void
     {
         $this->assertNull(parse($input));
@@ -82,14 +82,18 @@ class attribute_selector_parser extends TestCase
         ];
     }
 
-    #[Test]
-    #[DataProvider('validSelectorProvider')]
+    /**
+ * @dataProvider validSelectorProvider
+ * @test
+ */
     public function should_parse_correctly(string $selector, array $expected): void
     {
         $this->assertEquals($expected, parse($selector));
     }
 
-    #[Test]
+    /**
+ * @test
+ */
     public function should_work_with_a_real_world_example(): void
     {
         $this->assertEquals(

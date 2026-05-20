@@ -1,5 +1,6 @@
 parameters:
     level: 4
+    phpVersion: 70400
     paths:
         - src
     excludePaths:
@@ -48,3 +49,6 @@ parameters:
         - '#Comparison operation .* between int<1, max> and 0 is always true#'
         # Return type variance in closures
         - '#Anonymous function never returns null so it can be removed#'
+        # Defensive parser branches and bitwise skip sentinels in ported AST walkers
+        - '#Else branch is unreachable because previous condition is always true#'
+        - '#Unary operation "~" on .* results in an error#'

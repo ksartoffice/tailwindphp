@@ -243,8 +243,13 @@ function parse(string $input): ?array
  */
 function isAsciiWhitespace(int $code): bool
 {
-    return match ($code) {
-        SPACE, TAB, LINE_BREAK, CARRIAGE_RETURN => true,
-        default => false,
-    };
+    switch ($code) {
+        case SPACE:
+        case TAB:
+        case LINE_BREAK:
+        case CARRIAGE_RETURN:
+            return true;
+        default:
+            return false;
+    }
 }

@@ -85,7 +85,7 @@ class PluginAPI
         Theme $theme,
         Utilities $utilities,
         Variants $variants,
-        array $config = [],
+        array $config = []
     ) {
         $this->theme = $theme;
         $this->utilities = $utilities;
@@ -181,7 +181,7 @@ class PluginAPI
     /**
      * Add a static variant.
      */
-    public function addVariant(string $name, string|array $variant): void
+    public function addVariant(string $name, $variant): void
     {
         $this->variants->addPluginVariant($name, $variant);
     }
@@ -205,7 +205,7 @@ class PluginAPI
     /**
      * Get a value from the theme.
      */
-    public function theme(string $path, mixed $defaultValue = null): mixed
+    public function theme(string $path, $defaultValue = null)
     {
         $modifier = null;
         if (str_contains($path, '/')) {
@@ -235,7 +235,7 @@ class PluginAPI
     /**
      * Get a value from the config.
      */
-    public function config(?string $path = null, mixed $defaultValue = null): mixed
+    public function config(?string $path = null, $defaultValue = null)
     {
         if ($path === null) {
             return $this->config;
@@ -288,7 +288,7 @@ class PluginAPI
         return $declarations;
     }
 
-    private function isNestedSelector(string|int $property): bool
+    private function isNestedSelector($property): bool
     {
         if (is_int($property)) {
             return false;
@@ -302,7 +302,7 @@ class PluginAPI
                str_contains($property, '>');
     }
 
-    private function toKebabCase(string|int $str): string
+    private function toKebabCase($str): string
     {
         if (is_int($str)) {
             return (string) $str;
@@ -311,7 +311,7 @@ class PluginAPI
         return strtolower(preg_replace('/([A-Z])/', '-$1', $str));
     }
 
-    private function resolveThemePath(string $path, mixed $default): mixed
+    private function resolveThemePath(string $path, $default)
     {
         $parts = explode('.', $path);
         $namespace = array_shift($parts);
@@ -347,7 +347,7 @@ class PluginAPI
         return $value ?? $default;
     }
 
-    private function resolvePath(array $data, string $path, mixed $default): mixed
+    private function resolvePath(array $data, string $path, $default)
     {
         $parts = explode('.', $path);
         $current = $data;
@@ -458,7 +458,7 @@ class PluginManager
         Theme $theme,
         Utilities $utilities,
         Variants $variants,
-        array $config = [],
+        array $config = []
     ): PluginAPI {
         return new PluginAPI($theme, $utilities, $variants, $config);
     }
@@ -468,7 +468,7 @@ class PluginManager
         Theme $theme,
         Utilities $utilities,
         Variants $variants,
-        array $config = [],
+        array $config = []
     ): PluginAPI {
         $api = $this->createAPI($theme, $utilities, $variants, $config);
 

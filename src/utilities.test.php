@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace TailwindPHP;
 
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use TailwindPHP\Tests\TestHelper;
 
@@ -18,7 +16,7 @@ use TailwindPHP\Tests\TestHelper;
  * The tests verify that our PHP implementation produces CSS output that
  * matches the expected output from TailwindCSS.
  */
-class utilities extends TestCase
+class UtilitiesTest extends TestCase
 {
     private static array $testCases = [];
     private static bool $parsed = false;
@@ -543,8 +541,10 @@ class utilities extends TestCase
         return array_map(fn ($test) => [$test], self::$testCases);
     }
 
-    #[Test]
-    #[DataProvider('tailwindTestCases')]
+    /**
+ * @dataProvider tailwindTestCases
+ * @test
+ */
     public function tailwind_compliance(array $testCase): void
     {
         // Handle compileCss type tests - they have custom CSS with @theme

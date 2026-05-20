@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace TailwindPHP\Plugin\Plugins;
 
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 use function TailwindPHP\compile;
@@ -91,7 +89,9 @@ class typography_plugin extends TestCase
         return $data;
     }
 
-    #[DataProvider('typographyTestProvider')]
+    /**
+ * @dataProvider typographyTestProvider
+ */
     public function test_typography(array $test): void
     {
         $name = $test['name'] ?? 'unknown';

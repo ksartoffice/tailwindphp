@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace TailwindPHP;
 
-use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -104,7 +103,9 @@ class css_functions extends TestCase
     /**
      * Run a single css-functions test case.
      */
-    #[DataProvider('cssFunctionsTestProvider')]
+    /**
+ * @dataProvider cssFunctionsTestProvider
+ */
     public function test_css_functions(array $test): void
     {
         $name = $test['name'] ?? 'unknown';

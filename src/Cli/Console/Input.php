@@ -171,7 +171,7 @@ class Input
      * @param string|bool|null $default
      * @return string|bool|null
      */
-    public function getOption(string $name, string|bool|null $default = null): string|bool|null
+    public function getOption(string $name, $default = null)
     {
         return $this->options[$name] ?? $default;
     }

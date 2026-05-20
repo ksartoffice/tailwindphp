@@ -326,7 +326,7 @@ class WalkAction
  * @param callable|array $hooks Either a function (enter callback) or array with 'enter' and/or 'exit' callbacks
  * @return void
  */
-function walk(array &$ast, callable|array $hooks): void
+function walk(array &$ast, $hooks): void
 {
     if (is_callable($hooks)) {
         walkImplementation($ast, $hooks);
