@@ -9,63 +9,66 @@ import { expect, test } from 'vitest'
 import { compileCss, run } from './test-utils/run'
 
 test('divide-x', async () => {
-  expect(
-    await compileCss(
-      css`
-        @tailwind utilities;
-      `,
-      ['divide-x', 'divide-x-4', 'divide-x-123', 'divide-x-[4px]'],
-    ),
-  ).toMatchInlineSnapshot(`
-    "@layer properties {
-      @supports (((-webkit-hyphens: none)) and (not (margin-trim: inline))) or ((-moz-orient: inline) and (not (color: rgb(from red r g b)))) {
-        *, :before, :after, ::backdrop {
-          --tw-divide-x-reverse: 0;
-          --tw-border-style: solid;
+  expect(await run(['divide-x', 'divide-x-0', 'divide-x-4', 'divide-x-123', 'divide-x-[4px]']))
+    .toMatchInlineSnapshot(`
+      "
+      @layer properties {
+        @supports (((-webkit-hyphens: none)) and (not (margin-trim: inline))) or ((-moz-orient: inline) and (not (color: rgb(from red r g b)))) {
+          *, :before, :after, ::backdrop {
+            --tw-divide-x-reverse: 0;
+            --tw-border-style: solid;
+          }
         }
       }
-    }
 
-    :where(.divide-x > :not(:last-child)) {
-      --tw-divide-x-reverse: 0;
-      border-inline-style: var(--tw-border-style);
-      border-inline-start-width: calc(1px * var(--tw-divide-x-reverse));
-      border-inline-end-width: calc(1px * calc(1 - var(--tw-divide-x-reverse)));
-    }
+      :where(.divide-x > :not(:last-child)) {
+        --tw-divide-x-reverse: 0;
+        border-inline-style: var(--tw-border-style);
+        border-inline-start-width: calc(1px * var(--tw-divide-x-reverse));
+        border-inline-end-width: calc(1px * calc(1 - var(--tw-divide-x-reverse)));
+      }
 
-    :where(.divide-x-4 > :not(:last-child)) {
-      --tw-divide-x-reverse: 0;
-      border-inline-style: var(--tw-border-style);
-      border-inline-start-width: calc(4px * var(--tw-divide-x-reverse));
-      border-inline-end-width: calc(4px * calc(1 - var(--tw-divide-x-reverse)));
-    }
+      :where(.divide-x-0 > :not(:last-child)) {
+        --tw-divide-x-reverse: 0;
+        border-inline-style: var(--tw-border-style);
+        border-inline-start-width: calc(0px * var(--tw-divide-x-reverse));
+        border-inline-end-width: calc(0px * calc(1 - var(--tw-divide-x-reverse)));
+      }
 
-    :where(.divide-x-123 > :not(:last-child)) {
-      --tw-divide-x-reverse: 0;
-      border-inline-style: var(--tw-border-style);
-      border-inline-start-width: calc(123px * var(--tw-divide-x-reverse));
-      border-inline-end-width: calc(123px * calc(1 - var(--tw-divide-x-reverse)));
-    }
+      :where(.divide-x-4 > :not(:last-child)) {
+        --tw-divide-x-reverse: 0;
+        border-inline-style: var(--tw-border-style);
+        border-inline-start-width: calc(4px * var(--tw-divide-x-reverse));
+        border-inline-end-width: calc(4px * calc(1 - var(--tw-divide-x-reverse)));
+      }
 
-    :where(.divide-x-\\[4px\\] > :not(:last-child)) {
-      --tw-divide-x-reverse: 0;
-      border-inline-style: var(--tw-border-style);
-      border-inline-start-width: calc(4px * var(--tw-divide-x-reverse));
-      border-inline-end-width: calc(4px * calc(1 - var(--tw-divide-x-reverse)));
-    }
+      :where(.divide-x-123 > :not(:last-child)) {
+        --tw-divide-x-reverse: 0;
+        border-inline-style: var(--tw-border-style);
+        border-inline-start-width: calc(123px * var(--tw-divide-x-reverse));
+        border-inline-end-width: calc(123px * calc(1 - var(--tw-divide-x-reverse)));
+      }
 
-    @property --tw-divide-x-reverse {
-      syntax: "*";
-      inherits: false;
-      initial-value: 0;
-    }
+      :where(.divide-x-\\[4px\\] > :not(:last-child)) {
+        --tw-divide-x-reverse: 0;
+        border-inline-style: var(--tw-border-style);
+        border-inline-start-width: calc(4px * var(--tw-divide-x-reverse));
+        border-inline-end-width: calc(4px * calc(1 - var(--tw-divide-x-reverse)));
+      }
 
-    @property --tw-border-style {
-      syntax: "*";
-      inherits: false;
-      initial-value: solid;
-    }"
-  `)
+      @property --tw-divide-x-reverse {
+        syntax: "*";
+        inherits: false;
+        initial-value: 0;
+      }
+
+      @property --tw-border-style {
+        syntax: "*";
+        inherits: false;
+        initial-value: solid;
+      }
+      "
+    `)
   expect(
     await run([
       '-divide-x',
@@ -83,17 +86,18 @@ test('divide-x', async () => {
 
 test('divide-x with custom default border width', async () => {
   expect(
-    await compileCss(
+    await run(
+      ['divide-x'],
       css`
         @theme {
           --default-border-width: 2px;
         }
         @tailwind utilities;
       `,
-      ['divide-x'],
     ),
   ).toMatchInlineSnapshot(`
-    "@layer properties {
+    "
+    @layer properties {
       @supports (((-webkit-hyphens: none)) and (not (margin-trim: inline))) or ((-moz-orient: inline) and (not (color: rgb(from red r g b)))) {
         *, :before, :after, ::backdrop {
           --tw-divide-x-reverse: 0;
@@ -119,73 +123,78 @@ test('divide-x with custom default border width', async () => {
       syntax: "*";
       inherits: false;
       initial-value: solid;
-    }"
+    }
+    "
   `)
   expect(await run(['divide-x/foo'])).toEqual('')
 })
 
 test('divide-y', async () => {
-  expect(
-    await compileCss(
-      css`
-        @tailwind utilities;
-      `,
-      ['divide-y', 'divide-y-4', 'divide-y-123', 'divide-y-[4px]'],
-    ),
-  ).toMatchInlineSnapshot(`
-    "@layer properties {
-      @supports (((-webkit-hyphens: none)) and (not (margin-trim: inline))) or ((-moz-orient: inline) and (not (color: rgb(from red r g b)))) {
-        *, :before, :after, ::backdrop {
-          --tw-divide-y-reverse: 0;
-          --tw-border-style: solid;
+  expect(await run(['divide-y', 'divide-y-0', 'divide-y-4', 'divide-y-123', 'divide-y-[4px]']))
+    .toMatchInlineSnapshot(`
+      "
+      @layer properties {
+        @supports (((-webkit-hyphens: none)) and (not (margin-trim: inline))) or ((-moz-orient: inline) and (not (color: rgb(from red r g b)))) {
+          *, :before, :after, ::backdrop {
+            --tw-divide-y-reverse: 0;
+            --tw-border-style: solid;
+          }
         }
       }
-    }
 
-    :where(.divide-y > :not(:last-child)) {
-      --tw-divide-y-reverse: 0;
-      border-bottom-style: var(--tw-border-style);
-      border-top-style: var(--tw-border-style);
-      border-top-width: calc(1px * var(--tw-divide-y-reverse));
-      border-bottom-width: calc(1px * calc(1 - var(--tw-divide-y-reverse)));
-    }
+      :where(.divide-y > :not(:last-child)) {
+        --tw-divide-y-reverse: 0;
+        border-bottom-style: var(--tw-border-style);
+        border-top-style: var(--tw-border-style);
+        border-top-width: calc(1px * var(--tw-divide-y-reverse));
+        border-bottom-width: calc(1px * calc(1 - var(--tw-divide-y-reverse)));
+      }
 
-    :where(.divide-y-4 > :not(:last-child)) {
-      --tw-divide-y-reverse: 0;
-      border-bottom-style: var(--tw-border-style);
-      border-top-style: var(--tw-border-style);
-      border-top-width: calc(4px * var(--tw-divide-y-reverse));
-      border-bottom-width: calc(4px * calc(1 - var(--tw-divide-y-reverse)));
-    }
+      :where(.divide-y-0 > :not(:last-child)) {
+        --tw-divide-y-reverse: 0;
+        border-bottom-style: var(--tw-border-style);
+        border-top-style: var(--tw-border-style);
+        border-top-width: calc(0px * var(--tw-divide-y-reverse));
+        border-bottom-width: calc(0px * calc(1 - var(--tw-divide-y-reverse)));
+      }
 
-    :where(.divide-y-123 > :not(:last-child)) {
-      --tw-divide-y-reverse: 0;
-      border-bottom-style: var(--tw-border-style);
-      border-top-style: var(--tw-border-style);
-      border-top-width: calc(123px * var(--tw-divide-y-reverse));
-      border-bottom-width: calc(123px * calc(1 - var(--tw-divide-y-reverse)));
-    }
+      :where(.divide-y-4 > :not(:last-child)) {
+        --tw-divide-y-reverse: 0;
+        border-bottom-style: var(--tw-border-style);
+        border-top-style: var(--tw-border-style);
+        border-top-width: calc(4px * var(--tw-divide-y-reverse));
+        border-bottom-width: calc(4px * calc(1 - var(--tw-divide-y-reverse)));
+      }
 
-    :where(.divide-y-\\[4px\\] > :not(:last-child)) {
-      --tw-divide-y-reverse: 0;
-      border-bottom-style: var(--tw-border-style);
-      border-top-style: var(--tw-border-style);
-      border-top-width: calc(4px * var(--tw-divide-y-reverse));
-      border-bottom-width: calc(4px * calc(1 - var(--tw-divide-y-reverse)));
-    }
+      :where(.divide-y-123 > :not(:last-child)) {
+        --tw-divide-y-reverse: 0;
+        border-bottom-style: var(--tw-border-style);
+        border-top-style: var(--tw-border-style);
+        border-top-width: calc(123px * var(--tw-divide-y-reverse));
+        border-bottom-width: calc(123px * calc(1 - var(--tw-divide-y-reverse)));
+      }
 
-    @property --tw-divide-y-reverse {
-      syntax: "*";
-      inherits: false;
-      initial-value: 0;
-    }
+      :where(.divide-y-\\[4px\\] > :not(:last-child)) {
+        --tw-divide-y-reverse: 0;
+        border-bottom-style: var(--tw-border-style);
+        border-top-style: var(--tw-border-style);
+        border-top-width: calc(4px * var(--tw-divide-y-reverse));
+        border-bottom-width: calc(4px * calc(1 - var(--tw-divide-y-reverse)));
+      }
 
-    @property --tw-border-style {
-      syntax: "*";
-      inherits: false;
-      initial-value: solid;
-    }"
-  `)
+      @property --tw-divide-y-reverse {
+        syntax: "*";
+        inherits: false;
+        initial-value: 0;
+      }
+
+      @property --tw-border-style {
+        syntax: "*";
+        inherits: false;
+        initial-value: solid;
+      }
+      "
+    `)
   expect(
     await run([
       '-divide-y',
@@ -203,17 +212,18 @@ test('divide-y', async () => {
 
 test('divide-y with custom default border width', async () => {
   expect(
-    await compileCss(
+    await run(
+      ['divide-y'],
       css`
         @theme {
           --default-border-width: 2px;
         }
         @tailwind utilities;
       `,
-      ['divide-y'],
     ),
   ).toMatchInlineSnapshot(`
-    "@layer properties {
+    "
+    @layer properties {
       @supports (((-webkit-hyphens: none)) and (not (margin-trim: inline))) or ((-moz-orient: inline) and (not (color: rgb(from red r g b)))) {
         *, :before, :after, ::backdrop {
           --tw-divide-y-reverse: 0;
@@ -240,14 +250,16 @@ test('divide-y with custom default border width', async () => {
       syntax: "*";
       inherits: false;
       initial-value: solid;
-    }"
+    }
+    "
   `)
   expect(await run(['divide-y/foo'])).toEqual('')
 })
 
 test('divide-x-reverse', async () => {
   expect(await run(['divide-x-reverse'])).toMatchInlineSnapshot(`
-    "@layer properties {
+    "
+    @layer properties {
       @supports (((-webkit-hyphens: none)) and (not (margin-trim: inline))) or ((-moz-orient: inline) and (not (color: rgb(from red r g b)))) {
         *, :before, :after, ::backdrop {
           --tw-divide-x-reverse: 0;
@@ -263,14 +275,16 @@ test('divide-x-reverse', async () => {
       syntax: "*";
       inherits: false;
       initial-value: 0;
-    }"
+    }
+    "
   `)
   expect(await run(['-divide-x-reverse', 'divide-x-reverse/foo'])).toEqual('')
 })
 
 test('divide-y-reverse', async () => {
   expect(await run(['divide-y-reverse'])).toMatchInlineSnapshot(`
-    "@layer properties {
+    "
+    @layer properties {
       @supports (((-webkit-hyphens: none)) and (not (margin-trim: inline))) or ((-moz-orient: inline) and (not (color: rgb(from red r g b)))) {
         *, :before, :after, ::backdrop {
           --tw-divide-y-reverse: 0;
@@ -286,7 +300,8 @@ test('divide-y-reverse', async () => {
       syntax: "*";
       inherits: false;
       initial-value: 0;
-    }"
+    }
+    "
   `)
   expect(await run(['-divide-y-reverse', 'divide-y-reverse/foo'])).toEqual('')
 })
@@ -295,7 +310,8 @@ test('divide-style', async () => {
   expect(
     await run(['divide-solid', 'divide-dashed', 'divide-dotted', 'divide-double', 'divide-none']),
   ).toMatchInlineSnapshot(`
-    ":where(.divide-dashed > :not(:last-child)) {
+    "
+    :where(.divide-dashed > :not(:last-child)) {
       --tw-border-style: dashed;
       border-style: dashed;
     }
@@ -318,7 +334,8 @@ test('divide-style', async () => {
     :where(.divide-solid > :not(:last-child)) {
       --tw-border-style: solid;
       border-style: solid;
-    }"
+    }
+    "
   `)
   expect(
     await run([
@@ -339,14 +356,7 @@ test('divide-style', async () => {
 
 test('divide-color', async () => {
   expect(
-    await compileCss(
-      css`
-        @theme {
-          --color-red-500: #ef4444;
-          --border-color-best-blue: #6495ed;
-        }
-        @tailwind utilities;
-      `,
+    await run(
       [
         'divide-red-500',
         'divide-red-500/50',
@@ -367,9 +377,17 @@ test('divide-color', async () => {
         'divide-[#0088cc]/[0.5]',
         'divide-[#0088cc]/[50%]',
       ],
+      css`
+        @theme {
+          --color-red-500: #ef4444;
+          --border-color-best-blue: #6495ed;
+        }
+        @tailwind utilities;
+      `,
     ),
   ).toMatchInlineSnapshot(`
-    ":root, :host {
+    "
+    :root, :host {
       --color-red-500: #ef4444;
       --border-color-best-blue: #6495ed;
     }
@@ -486,7 +504,8 @@ test('divide-color', async () => {
 
     :where(.divide-transparent > :not(:last-child)) {
       border-color: #0000;
-    }"
+    }
+    "
   `)
   expect(
     await run([

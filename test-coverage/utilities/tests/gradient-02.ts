@@ -10,13 +10,7 @@ import { compileCss, run } from './test-utils/run'
 
 test('to', async () => {
   expect(
-    await compileCss(
-      css`
-        @theme {
-          --color-red-500: #ef4444;
-        }
-        @tailwind utilities;
-      `,
+    await run(
       [
         // --tw-gradient-to
         'to-red-500',
@@ -51,9 +45,16 @@ test('to', async () => {
         'to-[length:var(--my-position)]',
         'to-[percentage:var(--my-position)]',
       ],
+      css`
+        @theme {
+          --color-red-500: #ef4444;
+        }
+        @tailwind utilities;
+      `,
     ),
   ).toMatchInlineSnapshot(`
-    "@layer properties {
+    "
+    @layer properties {
       @supports (((-webkit-hyphens: none)) and (not (margin-trim: inline))) or ((-moz-orient: inline) and (not (color: rgb(from red r g b)))) {
         *, :before, :after, ::backdrop {
           --tw-gradient-position: initial;
@@ -354,7 +355,8 @@ test('to', async () => {
       syntax: "<length-percentage>";
       inherits: false;
       initial-value: 100%;
-    }"
+    }
+    "
   `)
   expect(
     await run([

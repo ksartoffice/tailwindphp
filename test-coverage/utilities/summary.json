@@ -1,11 +1,11 @@
 {
     "sourceFile": "tailwindcss\/packages\/tailwindcss\/src\/utilities.test.ts",
-    "sourceLines": 29976,
-    "totalTests": 284,
+    "sourceLines": 31510,
+    "totalTests": 355,
     "categories": {
         "accessibility": {
             "tests": 2,
-            "lines": 31,
+            "lines": 35,
             "files": 1,
             "testNames": [
                 "sr-only",
@@ -14,31 +14,97 @@
         },
         "pointer-events": {
             "tests": 1,
-            "lines": 19,
+            "lines": 21,
             "files": 1,
             "testNames": [
                 "pointer-events"
             ]
         },
         "other": {
-            "tests": 9,
-            "lines": 715,
-            "files": 1,
+            "tests": 75,
+            "lines": 2899,
+            "files": 4,
             "testNames": [
                 "visibility",
                 "field-sizing",
+                "container > creates the right media queries and sorts it before width",
+                "container > sorts breakpoints based on unit and then in ascending aOrder",
+                "container > custom `@utility container` always follow the core utility ",
                 "--tw-scroll-snap-strictness",
+                "tab",
                 "indent",
                 "decoration",
                 "contain",
                 "content",
                 "underline-offset",
-                "@container"
+                "@container",
+                "spacing utilities > `--spacing: initial` disables the spacing multiplier",
+                "spacing utilities > `--spacing-*: initial` disables the spacing multiplier",
+                "spacing utilities > only multiples of 0.25 with no trailing zeroes are supported with the spacing multiplier",
+                "spacing utilities > spacing utilities must have a value",
+                "spacing utilities > --spacing-* variables take precedence over --container-* variables",
+                "custom utilities > custom static utility",
+                "custom utilities > custom static utility emit CSS variables if the utility is used",
+                "custom utilities > custom static utility (negative)",
+                "custom utilities > Multiple static utilities are merged",
+                "custom utilities > custom utilities support some special characters",
+                "custom utilities > can override specific versions of a functional utility with a static utility",
+                "custom utilities > can override the default value of a functional utility",
+                "custom utilities > custom utilities are sorted by used properties",
+                "custom utilities > custom utilities must use a valid name definitions",
+                "custom utilities > custom utilities work with `@apply`",
+                "custom utilities > referencing custom utilities in custom utilities via `@apply` should work",
+                "custom utilities > custom utilities with `@apply` causing circular dependencies should error",
+                "custom utilities > custom utilities with `@apply` causing circular dependencies should error (deeply nesting)",
+                "custom utilities > custom utilities with `@apply` causing circular dependencies should error (multiple levels)",
+                "custom utilities > functional utilities > functional utilities require a `--value(\u2026)`",
+                "custom utilities > functional utilities > functional utilities must resolve at least one `--value(\u2026)`",
+                "custom utilities > functional utilities > resolving values from `@theme`",
+                "custom utilities > functional utilities > functional utility with double-dash separator",
+                "custom utilities > functional utilities > resolving values from `@theme`, with `--example-*` syntax",
+                "custom utilities > functional utilities > resolving values from `@theme`, with `--example-\\\\*` syntax (prettier friendly)",
+                "custom utilities > functional utilities > resolving bare values",
+                "custom utilities > functional utilities > bare values with unsupported data types should result in a warning",
+                "custom utilities > functional utilities > resolve literal values",
+                "custom utilities > functional utilities > resolving bare values with constraints for integer, percentage, and ratio",
+                "custom utilities > functional utilities > resolving unsupported bare values",
+                "custom utilities > functional utilities > resolving arbitrary values",
+                "custom utilities > functional utilities > resolving any arbitrary values",
+                "custom utilities > functional utilities > resolving any arbitrary values (without space)",
+                "custom utilities > functional utilities > resolving any arbitrary values (with escaped `*`)",
+                "custom utilities > functional utilities > resolving theme, bare and arbitrary values all at once",
+                "custom utilities > functional utilities > in combination with calc to produce different data types of values",
+                "custom utilities > functional utilities > shorthand if resulting values are of the same type",
+                "custom utilities > functional utilities > negative values",
+                "custom utilities > functional utilities > using the same value multiple times",
+                "custom utilities > functional utilities > using `--spacing(\u2026)` shorthand",
+                "custom utilities > functional utilities > using `--spacing(\u2026)` shorthand (inline theme)",
+                "custom utilities > functional utilities > functional utilities can use `--default(\u2026)` in `--value(\u2026)`",
+                "custom utilities > functional utilities > functional utilities can use `--default(\u2026)` in complex expressions",
+                "custom utilities > functional utilities > functional utilities can use `--default(\u2026)` with `--modifier(\u2026)`",
+                "custom utilities > functional utilities > functional utilities can use `--default(\u2026)` in `--modifier(\u2026)`",
+                "custom utilities > functional utilities > functional utilities can use `--default(\u2026)` in `--value(\u2026)` and `--modifier(\u2026)`",
+                "custom utilities > functional utilities > modifiers",
+                "custom utilities > functional utilities > fractions",
+                "custom utilities > functional utilities > resolve theme values with sub-namespace (--text- * --line-height)",
+                "custom utilities > functional utilities > resolve theme values with sub-namespace (--text-\\\\* --line-height)",
+                "custom utilities > functional utilities > resolve theme values with sub-namespace (--value(--text --line-height))",
+                "custom utilities > functional utilities > resolve theme values with sub-namespace (--value(--text-*--line-height))",
+                "custom utilities > functional utilities > variables used in `@utility` will not be emitted if the utility is not used",
+                "custom utilities > functional utilities > variables used in `@utility` will be emitted if the utility is used",
+                "custom utilities > functional utilities > declaration nodes are only replaced\/removed once",
+                "custom utilities > resolve value based on `@theme`",
+                "custom utilities > resolve value based on `@theme reference`",
+                "custom utilities > resolve value based on `@theme inline`",
+                "custom utilities > resolve value based on `@theme inline reference`",
+                "custom utilities > sub namespaces can live in different @theme blocks (1)",
+                "custom utilities > sub namespaces can live in different @theme blocks (2)",
+                "custom utilities > multiple @utility definitions with the same name but different value types"
             ]
         },
         "position": {
             "tests": 1,
-            "lines": 37,
+            "lines": 39,
             "files": 1,
             "testNames": [
                 "position"
@@ -46,8 +112,8 @@
         },
         "inset": {
             "tests": 13,
-            "lines": 1918,
-            "files": 2,
+            "lines": 1957,
+            "files": 3,
             "testNames": [
                 "inset",
                 "inset-x",
@@ -66,23 +132,24 @@
         },
         "isolation": {
             "tests": 1,
-            "lines": 14,
+            "lines": 16,
             "files": 1,
             "testNames": [
                 "isolation"
             ]
         },
         "z-index": {
-            "tests": 1,
-            "lines": 58,
+            "tests": 2,
+            "lines": 82,
             "files": 1,
             "testNames": [
-                "z-index"
+                "z-index",
+                "zoom"
             ]
         },
         "order": {
             "tests": 1,
-            "lines": 99,
+            "lines": 105,
             "files": 1,
             "testNames": [
                 "order"
@@ -90,7 +157,7 @@
         },
         "grid": {
             "tests": 12,
-            "lines": 822,
+            "lines": 907,
             "files": 1,
             "testNames": [
                 "col",
@@ -109,7 +176,7 @@
         },
         "float": {
             "tests": 1,
-            "lines": 39,
+            "lines": 41,
             "files": 1,
             "testNames": [
                 "float"
@@ -117,7 +184,7 @@
         },
         "clear": {
             "tests": 1,
-            "lines": 53,
+            "lines": 55,
             "files": 1,
             "testNames": [
                 "clear"
@@ -125,8 +192,8 @@
         },
         "margin": {
             "tests": 48,
-            "lines": 7626,
-            "files": 9,
+            "lines": 7735,
+            "files": 10,
             "testNames": [
                 "margin",
                 "mx",
@@ -180,7 +247,7 @@
         },
         "box-sizing": {
             "tests": 1,
-            "lines": 14,
+            "lines": 16,
             "files": 1,
             "testNames": [
                 "box-sizing"
@@ -188,7 +255,7 @@
         },
         "text": {
             "tests": 18,
-            "lines": 1518,
+            "lines": 1590,
             "files": 2,
             "testNames": [
                 "line-clamp",
@@ -213,7 +280,7 @@
         },
         "display": {
             "tests": 3,
-            "lines": 373,
+            "lines": 379,
             "files": 1,
             "testNames": [
                 "display",
@@ -223,7 +290,7 @@
         },
         "aspect-ratio": {
             "tests": 1,
-            "lines": 49,
+            "lines": 51,
             "files": 1,
             "testNames": [
                 "aspect-ratio"
@@ -231,7 +298,7 @@
         },
         "sizing": {
             "tests": 4,
-            "lines": 350,
+            "lines": 358,
             "files": 1,
             "testNames": [
                 "size",
@@ -242,7 +309,7 @@
         },
         "flex": {
             "tests": 6,
-            "lines": 228,
+            "lines": 240,
             "files": 1,
             "testNames": [
                 "flex",
@@ -255,7 +322,7 @@
         },
         "table": {
             "tests": 2,
-            "lines": 28,
+            "lines": 32,
             "files": 1,
             "testNames": [
                 "table-layout",
@@ -264,7 +331,7 @@
         },
         "border": {
             "tests": 21,
-            "lines": 1183,
+            "lines": 1227,
             "files": 2,
             "testNames": [
                 "border-collapse",
@@ -292,7 +359,7 @@
         },
         "transform": {
             "tests": 19,
-            "lines": 1533,
+            "lines": 1581,
             "files": 2,
             "testNames": [
                 "origin",
@@ -318,7 +385,7 @@
         },
         "padding": {
             "tests": 14,
-            "lines": 770,
+            "lines": 802,
             "files": 1,
             "testNames": [
                 "perspective-origin",
@@ -339,7 +406,7 @@
         },
         "cursor": {
             "tests": 1,
-            "lines": 289,
+            "lines": 291,
             "files": 1,
             "testNames": [
                 "cursor"
@@ -347,7 +414,7 @@
         },
         "touch": {
             "tests": 3,
-            "lines": 142,
+            "lines": 148,
             "files": 1,
             "testNames": [
                 "touch-action",
@@ -357,7 +424,7 @@
         },
         "select": {
             "tests": 1,
-            "lines": 36,
+            "lines": 38,
             "files": 1,
             "testNames": [
                 "select"
@@ -365,16 +432,16 @@
         },
         "resize": {
             "tests": 1,
-            "lines": 31,
+            "lines": 33,
             "files": 1,
             "testNames": [
                 "resize"
             ]
         },
         "scroll": {
-            "tests": 26,
-            "lines": 941,
-            "files": 1,
+            "tests": 30,
+            "lines": 1282,
+            "files": 2,
             "testNames": [
                 "scroll-snap-type",
                 "scroll-snap-align",
@@ -401,12 +468,16 @@
                 "scroll-pr",
                 "scroll-pb",
                 "scroll-pl",
-                "scroll-behavior"
+                "scroll-behavior",
+                "scrollbar-width",
+                "scrollbar-gutter",
+                "scrollbar-thumb",
+                "scrollbar-track"
             ]
         },
         "appearance": {
             "tests": 1,
-            "lines": 20,
+            "lines": 22,
             "files": 1,
             "testNames": [
                 "appearance"
@@ -414,7 +485,7 @@
         },
         "columns": {
             "tests": 1,
-            "lines": 92,
+            "lines": 96,
             "files": 1,
             "testNames": [
                 "columns"
@@ -422,7 +493,7 @@
         },
         "break": {
             "tests": 3,
-            "lines": 173,
+            "lines": 179,
             "files": 1,
             "testNames": [
                 "break-before",
@@ -432,7 +503,7 @@
         },
         "place": {
             "tests": 3,
-            "lines": 189,
+            "lines": 195,
             "files": 1,
             "testNames": [
                 "place-content",
@@ -442,7 +513,7 @@
         },
         "align": {
             "tests": 7,
-            "lines": 477,
+            "lines": 491,
             "files": 1,
             "testNames": [
                 "align-content",
@@ -456,7 +527,7 @@
         },
         "gap": {
             "tests": 3,
-            "lines": 82,
+            "lines": 88,
             "files": 1,
             "testNames": [
                 "gap",
@@ -466,7 +537,7 @@
         },
         "space": {
             "tests": 4,
-            "lines": 144,
+            "lines": 234,
             "files": 1,
             "testNames": [
                 "space-x",
@@ -477,7 +548,7 @@
         },
         "divide": {
             "tests": 8,
-            "lines": 507,
+            "lines": 526,
             "files": 1,
             "testNames": [
                 "divide-x",
@@ -492,7 +563,7 @@
         },
         "accent": {
             "tests": 1,
-            "lines": 187,
+            "lines": 189,
             "files": 1,
             "testNames": [
                 "accent"
@@ -500,7 +571,7 @@
         },
         "caret": {
             "tests": 1,
-            "lines": 185,
+            "lines": 187,
             "files": 1,
             "testNames": [
                 "caret"
@@ -508,7 +579,7 @@
         },
         "overflow": {
             "tests": 4,
-            "lines": 163,
+            "lines": 171,
             "files": 1,
             "testNames": [
                 "overflow",
@@ -519,7 +590,7 @@
         },
         "overscroll": {
             "tests": 3,
-            "lines": 81,
+            "lines": 87,
             "files": 1,
             "testNames": [
                 "overscroll",
@@ -529,7 +600,7 @@
         },
         "truncate": {
             "tests": 1,
-            "lines": 10,
+            "lines": 12,
             "files": 1,
             "testNames": [
                 "truncate"
@@ -537,7 +608,7 @@
         },
         "hyphens": {
             "tests": 1,
-            "lines": 29,
+            "lines": 31,
             "files": 1,
             "testNames": [
                 "hyphens"
@@ -545,7 +616,7 @@
         },
         "whitespace": {
             "tests": 1,
-            "lines": 53,
+            "lines": 55,
             "files": 1,
             "testNames": [
                 "whitespace"
@@ -553,7 +624,7 @@
         },
         "text-wrap": {
             "tests": 1,
-            "lines": 32,
+            "lines": 34,
             "files": 1,
             "testNames": [
                 "text-wrap"
@@ -561,7 +632,7 @@
         },
         "word-break": {
             "tests": 1,
-            "lines": 33,
+            "lines": 35,
             "files": 1,
             "testNames": [
                 "word-break"
@@ -569,7 +640,7 @@
         },
         "bg": {
             "tests": 5,
-            "lines": 1245,
+            "lines": 1257,
             "files": 2,
             "testNames": [
                 "bg",
@@ -581,7 +652,7 @@
         },
         "gradient": {
             "tests": 3,
-            "lines": 1162,
+            "lines": 1168,
             "files": 2,
             "testNames": [
                 "from",
@@ -591,7 +662,7 @@
         },
         "box-decoration": {
             "tests": 1,
-            "lines": 23,
+            "lines": 25,
             "files": 1,
             "testNames": [
                 "box-decoration"
@@ -599,7 +670,7 @@
         },
         "blend": {
             "tests": 1,
-            "lines": 123,
+            "lines": 125,
             "files": 1,
             "testNames": [
                 "bg-blend"
@@ -607,7 +678,7 @@
         },
         "fill": {
             "tests": 1,
-            "lines": 172,
+            "lines": 174,
             "files": 1,
             "testNames": [
                 "fill"
@@ -615,7 +686,7 @@
         },
         "stroke": {
             "tests": 1,
-            "lines": 291,
+            "lines": 293,
             "files": 1,
             "testNames": [
                 "stroke"
@@ -623,7 +694,7 @@
         },
         "object": {
             "tests": 1,
-            "lines": 157,
+            "lines": 161,
             "files": 1,
             "testNames": [
                 "object"
@@ -631,7 +702,7 @@
         },
         "animation": {
             "tests": 1,
-            "lines": 62,
+            "lines": 66,
             "files": 1,
             "testNames": [
                 "animate"
@@ -639,7 +710,7 @@
         },
         "filter": {
             "tests": 1,
-            "lines": 535,
+            "lines": 558,
             "files": 1,
             "testNames": [
                 "filter"
@@ -647,7 +718,7 @@
         },
         "backdrop": {
             "tests": 1,
-            "lines": 462,
+            "lines": 466,
             "files": 1,
             "testNames": [
                 "backdrop-filter"
@@ -655,7 +726,7 @@
         },
         "transition": {
             "tests": 5,
-            "lines": 338,
+            "lines": 349,
             "files": 1,
             "testNames": [
                 "transition",
@@ -667,7 +738,7 @@
         },
         "forced-color": {
             "tests": 1,
-            "lines": 23,
+            "lines": 25,
             "files": 1,
             "testNames": [
                 "forced-color-adjust"
@@ -675,7 +746,7 @@
         },
         "outline": {
             "tests": 2,
-            "lines": 414,
+            "lines": 420,
             "files": 1,
             "testNames": [
                 "outline",
@@ -684,7 +755,7 @@
         },
         "opacity": {
             "tests": 1,
-            "lines": 43,
+            "lines": 45,
             "files": 1,
             "testNames": [
                 "opacity"
@@ -692,7 +763,7 @@
         },
         "shadow": {
             "tests": 1,
-            "lines": 472,
+            "lines": 481,
             "files": 1,
             "testNames": [
                 "shadow"
@@ -700,7 +771,7 @@
         },
         "ring": {
             "tests": 2,
-            "lines": 785,
+            "lines": 791,
             "files": 1,
             "testNames": [
                 "ring",

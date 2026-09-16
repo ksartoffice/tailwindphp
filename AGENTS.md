@@ -202,14 +202,16 @@ The project uses Pint (formatting) and PHPStan (static analysis):
 ```bash
 composer lint      # Check formatting (Pint --test)
 composer format    # Fix formatting (Pint)
-composer analyse   # Static analysis (PHPStan level 3)
+composer analyse   # Static analysis (PHPStan level 4)
 composer quality   # Run both lint + analyse
 ```
 
+**inline0 profile note:** TailwindPHP is registered in `_cp` as a Tailwind reproduction special case. Its colocated `.test.php` files and Pint workflow are intentional because they preserve upstream Tailwind traceability; do not move tests into `tests/Unit` / `tests/Integration` or replace Pint with PHPCS for profile alignment.
+
 **PHPStan Notes:**
-- Level 3 is used (higher levels conflict with function-based architecture)
+- Level 4 is used (higher levels conflict with function-based architecture)
 - Some patterns are intentionally ignored (dynamic arrays, cross-file functions)
-- All 75 source files are analyzed, test files are excluded
+- Source files are analyzed, test files are excluded
 
 ---
 
@@ -818,16 +820,23 @@ fwrite(STDERR, "Debug: " . print_r($value, true) . "\n");
 
 ## Current Status
 
-**Total: 4,013 tests (all passing)**
+**Total: 4,427 tests (all passing)**
+
+Reference: TailwindCSS **v4.3.3** (see `composer versions`).
 
 ### Core Tests (extracted from TypeScript test suites)
 
+The extractors handle `describe()`-nested tests and every `run()` call shape
+of the v4.3.3 test helper (inline arrays, Prettier-multiline calls, css
+template second arguments, template-variable bindings, and the
+`{ polyfills: Polyfills.None }` options argument).
+
 | Test File | Status | Tests |
 |-----------|--------|-------|
-| `utilities.test.php` | ✅ | 547 (includes 183 compileCss tests) |
-| `variants.test.php` | ✅ | 139 |
-| `index.test.php` | ✅ | 78 (5 N/A - outside scope) |
-| `css_functions.test.php` | ✅ | 60 (7 N/A for JS tooling) |
+| `utilities.test.php` | ✅ | 706 |
+| `variants.test.php` | ✅ | 164 |
+| `index.test.php` | ✅ | 148 (file-system/JS-runtime cases N/A) |
+| `css_functions.test.php` | ✅ | 64 (7 N/A for JS tooling) |
 | `ui_spec.test.php` | ✅ | 68 |
 
 ### Plugin Tests (`src/plugin/`)
@@ -912,16 +921,16 @@ These tests provide exhaustive coverage of the TailwindPHP public API including:
 | `css_parser.test.php` | ✅ | 70 |
 | `candidate.test.php` | ✅ | 66 |
 | `decode_arbitrary_value.test.php` | ✅ | 60 |
-| `constant_fold_declaration.test.php` | ✅ | 57 |
-| `selector_parser.test.php` | ✅ | 22 |
+| `constant_fold_declaration.test.php` | ✅ | 63 |
+| `selector_parser.test.php` | ✅ | 40 |
 | `attribute_selector_parser.test.php` | ✅ | 20 |
 | `value_parser.test.php` | ✅ | 19 |
 | `ast.test.php` | ✅ | 18 |
-| `walk.test.php` | ✅ | 15 |
+| `walk.test.php` | ✅ | 16 |
 | `compare.test.php` | ✅ | 14 |
 | `brace_expansion.test.php` | ✅ | 13 |
 | `segment.test.php` | ✅ | 12 |
-| `replace_shadow_colors.test.php` | ✅ | 12 |
+| `replace_shadow_colors.test.php` | ✅ | 14 |
 | `escape.test.php` | ✅ | 10 |
 | `prefix.test.php` | ✅ | 9 |
 | `expand_declaration.test.php` | ✅ | 4 |
@@ -933,7 +942,7 @@ Tests for PHP-specific implementations and helpers (not direct TypeScript ports)
 
 | Test File | Status | Tests |
 |-----------|--------|-------|
-| `_tailwindphp/LightningCss.test.php` | ✅ | 68 |
+| `_tailwindphp/LightningCss.test.php` | ✅ | 70 |
 | `theme_unit.test.php` | ✅ | 46 |
 | `utils/infer_data_type.test.php` | ✅ | 45 |
 | `utils/is_color.test.php` | ✅ | 33 |
@@ -983,6 +992,18 @@ Tests for edge cases and complex scenarios:
 - Dark mode with variant combinations
 - Pseudo-element variants with modifiers
 
+### Regression Tests (`tests/`)
+
+| Test File | Status | Tests |
+|-----------|--------|-------|
+| `PropertyRegistrationTest.php` | ✅ | 98 |
+| `ContainerUtilityTest.php` | ✅ | 3 |
+| `NestedApplyRegressionTest.php` | ✅ | 3 |
+
+- `PropertyRegistrationTest.php` — `@property` registration of composed `--tw-*` variable groups (translate, scale, transform, filters, backdrop-filters, transitions, typography, font-variant-numeric, contain, touch-action, scroll-snap, border-spacing), including registration details, the `@layer properties` fallback, and the negative cases that must register nothing
+- `ContainerUtilityTest.php` — the `container` layout component (per-breakpoint media queries, unit-then-value breakpoint sorting, custom theme breakpoints)
+- `NestedApplyRegressionTest.php` — nested rules surviving a parent `@apply` that expands to multiple declarations
+
 ### tw-animate-css Tests (`tests/TwAnimateCssTest.php`)
 
 | Test File | Status | Tests |
@@ -1005,13 +1026,14 @@ Tests for tw-animate-css integration:
 - RTL/LTR-aware start/end directional slides
 - Common shadcn/ui patterns (dialogs, dropdowns)
 
-### Cache Tests (`tests/CacheTest.php`)
+### Cache Tests (`tests/`)
 
 | Test File | Status | Tests |
 |-----------|--------|-------|
 | `CacheTest.php` | ✅ | 14 |
+| `StateCacheTest.php` | ✅ | 6 |
 
-Tests for file-based caching:
+Tests for file-based caching and the persistent construction-state cache:
 - Cache to default and custom directories
 - Cache key generation from content, CSS, and minify option
 - Cache TTL (time-to-live) expiration

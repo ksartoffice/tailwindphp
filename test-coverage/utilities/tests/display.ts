@@ -34,7 +34,8 @@ test('display', async () => {
       'hidden',
     ]),
   ).toMatchInlineSnapshot(`
-    ".block {
+    "
+    .block {
       display: block;
     }
 
@@ -116,7 +117,8 @@ test('display', async () => {
 
     .table-row-group {
       display: table-row-group;
-    }"
+    }
+    "
   `)
   expect(
     await run([
@@ -168,14 +170,7 @@ test('display', async () => {
 
 test('inline-size', async () => {
   expect(
-    await compileCss(
-      css`
-        @theme {
-          --spacing-4: 1rem;
-          --container-xl: 36rem;
-        }
-        @tailwind utilities;
-      `,
+    await run(
       [
         'inline-full',
         'inline-auto',
@@ -191,9 +186,17 @@ test('inline-size', async () => {
         'inline-1/2',
         'inline-[4px]',
       ],
+      css`
+        @theme {
+          --spacing-4: 1rem;
+          --container-xl: 36rem;
+        }
+        @tailwind utilities;
+      `,
     ),
   ).toMatchInlineSnapshot(`
-    ":root, :host {
+    "
+    :root, :host {
       --spacing-4: 1rem;
       --container-xl: 36rem;
     }
@@ -248,7 +251,8 @@ test('inline-size', async () => {
 
     .inline-xl {
       inline-size: var(--container-xl);
-    }"
+    }
+    "
   `)
   expect(
     await run([
@@ -278,13 +282,7 @@ test('inline-size', async () => {
 
 test('block-size', async () => {
   expect(
-    await compileCss(
-      css`
-        @theme {
-          --spacing-4: 1rem;
-        }
-        @tailwind utilities;
-      `,
+    await run(
       [
         'block-full',
         'block-auto',
@@ -300,9 +298,16 @@ test('block-size', async () => {
         'block-1/2',
         'block-[4px]',
       ],
+      css`
+        @theme {
+          --spacing-4: 1rem;
+        }
+        @tailwind utilities;
+      `,
     ),
   ).toMatchInlineSnapshot(`
-    ":root, :host {
+    "
+    :root, :host {
       --spacing-4: 1rem;
     }
 
@@ -356,7 +361,8 @@ test('block-size', async () => {
 
     .block-svh {
       block-size: 100svh;
-    }"
+    }
+    "
   `)
   expect(
     await run([

@@ -10,17 +10,18 @@ import { compileCss, run } from './test-utils/run'
 
 test('aspect-ratio', async () => {
   expect(
-    await compileCss(
+    await run(
+      ['aspect-video', 'aspect-[10/9]', 'aspect-4/3', 'aspect-8.5/11'],
       css`
         @theme {
           --aspect-video: 16 / 9;
         }
         @tailwind utilities;
       `,
-      ['aspect-video', 'aspect-[10/9]', 'aspect-4/3', 'aspect-8.5/11'],
     ),
   ).toMatchInlineSnapshot(`
-    ":root, :host {
+    "
+    :root, :host {
       --aspect-video: 16 / 9;
     }
 
@@ -38,7 +39,8 @@ test('aspect-ratio', async () => {
 
     .aspect-video {
       aspect-ratio: var(--aspect-video);
-    }"
+    }
+    "
   `)
   expect(
     await run([

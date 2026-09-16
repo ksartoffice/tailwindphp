@@ -37,7 +37,8 @@ test('object', async () => {
       'object-right-top',
     ]),
   ).toMatchInlineSnapshot(`
-    ".object-contain {
+    "
+    .object-contain {
       object-fit: contain;
     }
 
@@ -111,7 +112,8 @@ test('object', async () => {
 
     .object-top-right {
       object-position: right top;
-    }"
+    }
+    "
   `)
   expect(
     await run([
@@ -146,23 +148,25 @@ test('object', async () => {
   ).toEqual('')
 
   expect(
-    await compileCss(
+    await run(
+      ['object-center'],
       css`
         @theme {
           --object-position-center: top left;
         }
         @tailwind utilities;
       `,
-      ['object-center'],
     ),
   ).toMatchInlineSnapshot(`
-    ":root, :host {
+    "
+    :root, :host {
       --object-position-center: top left;
     }
 
     .object-center {
       object-position: var(--object-position-center);
-    }"
+    }
+    "
   `)
 })
 
