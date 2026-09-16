@@ -16,6 +16,11 @@
   <a href="https://github.com/inline0/tailwindphp/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="license"></a>
 </p>
 
+> **Note**
+> これは [dnnsjsk/tailwindphp](https://github.com/dnnsjsk/tailwindphp) のフォークで、
+> PHP 7.4 対応と TailwindCSS v3 互換ユーティリティを追加しています。
+> 本家との差分と upstream の取り込み手順は [FORK.md](FORK.md) を参照してください。
+
 ---
 
 ## What is TailwindPHP?
