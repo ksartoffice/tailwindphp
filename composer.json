@@ -10,13 +10,13 @@
         "utility-css",
         "php"
     ],
-    "homepage": "https://github.com/dnnsjsk/tailwindphp",
+    "homepage": "https://github.com/inline0/tailwindphp",
     "bin": [
         "bin/tailwindphp"
     ],
     "support": {
-        "issues": "https://github.com/dnnsjsk/tailwindphp/issues",
-        "source": "https://github.com/dnnsjsk/tailwindphp"
+        "issues": "https://github.com/inline0/tailwindphp/issues",
+        "source": "https://github.com/inline0/tailwindphp"
     },
     "authors": [
         {
@@ -76,7 +76,8 @@
             "src/plugin.php",
             "src/plugin/plugins/typography-plugin.php",
             "src/plugin/plugins/forms-plugin.php",
-            "src/index.php"
+            "src/index.php",
+            "src/state-cache.php"
         ]
     },
     "autoload-dev": {
@@ -96,7 +97,8 @@
     },
     "scripts": {
         "extract": [
-            "@php test-coverage/extract-run-tests.php",
+            "@php test-coverage/extract-run-tests.php utilities",
+            "@php test-coverage/extract-run-tests.php variants",
             "@php test-coverage/extract-index-tests.php",
             "@php test-coverage/extract-css-functions-tests.php",
             "@php test-coverage/extract-candidate-tests.php",

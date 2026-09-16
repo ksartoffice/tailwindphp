@@ -1,3 +1,15 @@
+# Line endings: keep LF in the working tree on every platform.
+# Several tests compare generated CSS (always LF) against heredoc literals in
+# PHP sources, so a CRLF checkout - which Git for Windows does by default via
+# the system-wide core.autocrlf=true - makes those assertions fail.
+* text=auto eol=lf
+*.png binary
+*.jpg binary
+*.gif binary
+*.ico binary
+*.woff binary
+*.woff2 binary
+
 # Exclude development files from distribution archives
 # These are not included when users install via composer require
 

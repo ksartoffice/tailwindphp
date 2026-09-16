@@ -10,14 +10,7 @@ import { compileCss, run } from './test-utils/run'
 
 test('accent', async () => {
   expect(
-    await compileCss(
-      css`
-        @theme {
-          --color-red-500: #ef4444;
-          --accent-color-blue-500: #3b82f6;
-        }
-        @tailwind utilities;
-      `,
+    await run(
       [
         'accent-red-500',
         'accent-red-500/50',
@@ -38,9 +31,17 @@ test('accent', async () => {
         'accent-[#0088cc]/[0.5]',
         'accent-[#0088cc]/[50%]',
       ],
+      css`
+        @theme {
+          --color-red-500: #ef4444;
+          --accent-color-blue-500: #3b82f6;
+        }
+        @tailwind utilities;
+      `,
     ),
   ).toMatchInlineSnapshot(`
-    ":root, :host {
+    "
+    :root, :host {
       --color-red-500: #ef4444;
       --accent-color-blue-500: #3b82f6;
     }
@@ -157,7 +158,8 @@ test('accent', async () => {
 
     .accent-transparent {
       accent-color: #0000;
-    }"
+    }
+    "
   `)
   expect(
     await run([

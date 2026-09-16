@@ -11,7 +11,8 @@ import { compileCss, run } from './test-utils/run'
 test('line-clamp', async () => {
   expect(await run(['line-clamp-4', 'line-clamp-99', 'line-clamp-[123]', 'line-clamp-none']))
     .toMatchInlineSnapshot(`
-      ".line-clamp-4 {
+      "
+      .line-clamp-4 {
         -webkit-line-clamp: 4;
         -webkit-box-orient: vertical;
         display: -webkit-box;
@@ -37,7 +38,8 @@ test('line-clamp', async () => {
         -webkit-box-orient: horizontal;
         display: block;
         overflow: visible;
-      }"
+      }
+      "
     `)
   expect(
     await run([
@@ -56,17 +58,18 @@ test('line-clamp', async () => {
   ).toEqual('')
 
   expect(
-    await compileCss(
+    await run(
+      ['line-clamp-none'],
       css`
         @theme {
           --line-clamp-none: 0;
         }
         @tailwind utilities;
       `,
-      ['line-clamp-none'],
     ),
   ).toMatchInlineSnapshot(`
-    ":root, :host {
+    "
+    :root, :host {
       --line-clamp-none: 0;
     }
 
@@ -75,19 +78,22 @@ test('line-clamp', async () => {
       -webkit-box-orient: vertical;
       display: -webkit-box;
       overflow: hidden;
-    }"
+    }
+    "
   `)
 })
 
 test('list-style-position', async () => {
   expect(await run(['list-inside', 'list-outside'])).toMatchInlineSnapshot(`
-    ".list-inside {
+    "
+    .list-inside {
       list-style-position: inside;
     }
 
     .list-outside {
       list-style-position: outside;
-    }"
+    }
+    "
   `)
   expect(
     await run(['-list-inside', '-list-outside', 'list-inside/foo', 'list-outside/foo']),
@@ -97,7 +103,8 @@ test('list-style-position', async () => {
 test('list', async () => {
   expect(await run(['list-none', 'list-disc', 'list-decimal', 'list-[var(--value)]']))
     .toMatchInlineSnapshot(`
-      ".list-\\[var\\(--value\\)\\] {
+      "
+      .list-\\[var\\(--value\\)\\] {
         list-style-type: var(--value);
       }
 
@@ -111,7 +118,8 @@ test('list', async () => {
 
       .list-none {
         list-style-type: none;
-      }"
+      }
+      "
     `)
   expect(
     await run([
@@ -127,35 +135,39 @@ test('list', async () => {
   ).toEqual('')
 
   expect(
-    await compileCss(
+    await run(
+      ['list-none'],
       css`
         @theme {
           --list-style-type-none: disc;
         }
         @tailwind utilities;
       `,
-      ['list-none'],
     ),
   ).toMatchInlineSnapshot(`
-    ":root, :host {
+    "
+    :root, :host {
       --list-style-type-none: disc;
     }
 
     .list-none {
       list-style-type: var(--list-style-type-none);
-    }"
+    }
+    "
   `)
 })
 
 test('list-image', async () => {
   expect(await run(['list-image-none', 'list-image-[var(--value)]'])).toMatchInlineSnapshot(`
-    ".list-image-\\[var\\(--value\\)\\] {
+    "
+    .list-image-\\[var\\(--value\\)\\] {
       list-style-image: var(--value);
     }
 
     .list-image-none {
       list-style-image: none;
-    }"
+    }
+    "
   `)
   expect(
     await run([
@@ -168,35 +180,39 @@ test('list-image', async () => {
   ).toEqual('')
 
   expect(
-    await compileCss(
+    await run(
+      ['list-image-none'],
       css`
         @theme {
           --list-style-image-none: url(../foo.png);
         }
         @tailwind utilities;
       `,
-      ['list-image-none'],
     ),
   ).toMatchInlineSnapshot(`
-    ":root, :host {
+    "
+    :root, :host {
       --list-style-image-none: url("../foo.png");
     }
 
     .list-image-none {
       list-style-image: var(--list-style-image-none);
-    }"
+    }
+    "
   `)
 })
 
 test('text-overflow', async () => {
   expect(await run(['text-ellipsis', 'text-clip'])).toMatchInlineSnapshot(`
-    ".text-clip {
+    "
+    .text-clip {
       text-overflow: clip;
     }
 
     .text-ellipsis {
       text-overflow: ellipsis;
-    }"
+    }
+    "
   `)
   expect(await run(['-text-ellipsis', '-text-clip', 'text-ellipsis/foo', 'text-clip/foo'])).toEqual(
     '',
@@ -207,7 +223,8 @@ test('text-align', async () => {
   expect(
     await run(['text-left', 'text-center', 'text-right', 'text-justify', 'text-start', 'text-end']),
   ).toMatchInlineSnapshot(`
-    ".text-center {
+    "
+    .text-center {
       text-align: center;
     }
 
@@ -229,7 +246,8 @@ test('text-align', async () => {
 
     .text-start {
       text-align: start;
-    }"
+    }
+    "
   `)
   expect(
     await run([
@@ -251,16 +269,7 @@ test('text-align', async () => {
 
 test('font', async () => {
   expect(
-    await compileCss(
-      css`
-        @theme {
-          --font-sans:
-            ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-            'Segoe UI Symbol', 'Noto Color Emoji';
-          --font-weight-bold: 650;
-        }
-        @tailwind utilities;
-      `,
+    await run(
       [
         // font-family
         'font-sans',
@@ -275,9 +284,19 @@ test('font', async () => {
         'font-[100]',
         'font-[number:var(--my-weight)]',
       ],
+      css`
+        @theme {
+          --font-sans:
+            ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+            'Segoe UI Symbol', 'Noto Color Emoji';
+          --font-weight-bold: 650;
+        }
+        @tailwind utilities;
+      `,
     ),
   ).toMatchInlineSnapshot(`
-    "@layer properties {
+    "
+    @layer properties {
       @supports (((-webkit-hyphens: none)) and (not (margin-trim: inline))) or ((-moz-orient: inline) and (not (color: rgb(from red r g b)))) {
         *, :before, :after, ::backdrop {
           --tw-font-weight: initial;
@@ -330,19 +349,11 @@ test('font', async () => {
     @property --tw-font-weight {
       syntax: "*";
       inherits: false
-    }"
+    }
+    "
   `)
   expect(
-    await compileCss(
-      css`
-        @theme reference {
-          --font-sans:
-            ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-            'Segoe UI Symbol', 'Noto Color Emoji';
-          --font-weight-bold: 650;
-        }
-        @tailwind utilities;
-      `,
+    await run(
       [
         'font',
         // font-family
@@ -362,6 +373,15 @@ test('font', async () => {
         'font-[100]/foo',
         'font-[number:var(--my-weight)]/foo',
       ],
+      css`
+        @theme reference {
+          --font-sans:
+            ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+            'Segoe UI Symbol', 'Noto Color Emoji';
+          --font-weight-bold: 650;
+        }
+        @tailwind utilities;
+      `,
     ),
   ).toEqual('')
 })
@@ -375,7 +395,8 @@ test('font-features', async () => {
       'font-features-(--my-features)',
     ]),
   ).toMatchInlineSnapshot(`
-    ".font-features-\\(--my-features\\) {
+    "
+    .font-features-\\(--my-features\\) {
       font-feature-settings: var(--my-features);
     }
 
@@ -389,7 +410,8 @@ test('font-features', async () => {
 
     .font-features-\\[var\\(--my-features\\)\\] {
       font-feature-settings: var(--my-features);
-    }"
+    }
+    "
   `)
   expect(
     await run([
@@ -403,7 +425,8 @@ test('font-features', async () => {
 
 test('text-transform', async () => {
   expect(await run(['uppercase', 'lowercase', 'capitalize', 'normal-case'])).toMatchInlineSnapshot(`
-    ".capitalize {
+    "
+    .capitalize {
       text-transform: capitalize;
     }
 
@@ -417,7 +440,8 @@ test('text-transform', async () => {
 
     .uppercase {
       text-transform: uppercase;
-    }"
+    }
+    "
   `)
   expect(
     await run([
@@ -435,13 +459,15 @@ test('text-transform', async () => {
 
 test('font-style', async () => {
   expect(await run(['italic', 'not-italic'])).toMatchInlineSnapshot(`
-    ".italic {
+    "
+    .italic {
       font-style: italic;
     }
 
     .not-italic {
       font-style: normal;
-    }"
+    }
+    "
   `)
   expect(await run(['-italic', '-not-italic', 'italic/foo', 'not-italic/foo'])).toEqual('')
 })
@@ -449,7 +475,8 @@ test('font-style', async () => {
 test('font-stretch', async () => {
   expect(await run(['font-stretch-ultra-expanded', 'font-stretch-50%', 'font-stretch-200%']))
     .toMatchInlineSnapshot(`
-      ".font-stretch-50\\% {
+      "
+      .font-stretch-50\\% {
         font-stretch: 50%;
       }
 
@@ -459,7 +486,8 @@ test('font-stretch', async () => {
 
       .font-stretch-ultra-expanded {
         font-stretch: ultra-expanded;
-      }"
+      }
+      "
     `)
   expect(
     await run([
@@ -479,7 +507,8 @@ test('font-stretch', async () => {
 test('text-decoration-line', async () => {
   expect(await run(['underline', 'overline', 'line-through', 'no-underline']))
     .toMatchInlineSnapshot(`
-      ".line-through {
+      "
+      .line-through {
         text-decoration-line: line-through;
       }
 
@@ -493,7 +522,8 @@ test('text-decoration-line', async () => {
 
       .underline {
         text-decoration-line: underline;
-      }"
+      }
+      "
     `)
   expect(
     await run([
@@ -511,7 +541,8 @@ test('text-decoration-line', async () => {
 
 test('leading', async () => {
   expect(
-    await compileCss(
+    await run(
+      ['leading-tight', 'leading-6', 'leading-[var(--value)]'],
       css`
         @theme {
           --leading-tight: 1.25;
@@ -519,10 +550,10 @@ test('leading', async () => {
         }
         @tailwind utilities;
       `,
-      ['leading-tight', 'leading-6', 'leading-[var(--value)]'],
     ),
   ).toMatchInlineSnapshot(`
-    "@layer properties {
+    "
+    @layer properties {
       @supports (((-webkit-hyphens: none)) and (not (margin-trim: inline))) or ((-moz-orient: inline) and (not (color: rgb(from red r g b)))) {
         *, :before, :after, ::backdrop {
           --tw-leading: initial;
@@ -553,7 +584,8 @@ test('leading', async () => {
     @property --tw-leading {
       syntax: "*";
       inherits: false
-    }"
+    }
+    "
   `)
   expect(
     await run([
@@ -568,17 +600,18 @@ test('leading', async () => {
   ).toEqual('')
 
   expect(
-    await compileCss(
+    await run(
+      ['leading-none'],
       css`
         @theme {
           --leading-none: 2;
         }
         @tailwind utilities;
       `,
-      ['leading-none'],
     ),
   ).toMatchInlineSnapshot(`
-    "@layer properties {
+    "
+    @layer properties {
       @supports (((-webkit-hyphens: none)) and (not (margin-trim: inline))) or ((-moz-orient: inline) and (not (color: rgb(from red r g b)))) {
         *, :before, :after, ::backdrop {
           --tw-leading: initial;
@@ -598,13 +631,15 @@ test('leading', async () => {
     @property --tw-leading {
       syntax: "*";
       inherits: false
-    }"
+    }
+    "
   `)
 })
 
 test('tracking', async () => {
   expect(
-    await compileCss(
+    await run(
+      ['tracking-normal', 'tracking-wide', 'tracking-[var(--value)]', '-tracking-[var(--value)]'],
       css`
         @theme {
           --tracking-normal: 0em;
@@ -612,10 +647,10 @@ test('tracking', async () => {
         }
         @tailwind utilities;
       `,
-      ['tracking-normal', 'tracking-wide', 'tracking-[var(--value)]', '-tracking-[var(--value)]'],
     ),
   ).toMatchInlineSnapshot(`
-    "@layer properties {
+    "
+    @layer properties {
       @supports (((-webkit-hyphens: none)) and (not (margin-trim: inline))) or ((-moz-orient: inline) and (not (color: rgb(from red r g b)))) {
         *, :before, :after, ::backdrop {
           --tw-tracking: initial;
@@ -651,7 +686,8 @@ test('tracking', async () => {
     @property --tw-tracking {
       syntax: "*";
       inherits: false
-    }"
+    }
+    "
   `)
   expect(
     await run([
@@ -666,7 +702,8 @@ test('tracking', async () => {
 
 test('font-smoothing', async () => {
   expect(await run(['antialiased', 'subpixel-antialiased'])).toMatchInlineSnapshot(`
-    ".antialiased {
+    "
+    .antialiased {
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
     }
@@ -674,7 +711,8 @@ test('font-smoothing', async () => {
     .subpixel-antialiased {
       -webkit-font-smoothing: auto;
       -moz-osx-font-smoothing: auto;
-    }"
+    }
+    "
   `)
   expect(
     await run([
@@ -700,7 +738,8 @@ test('font-variant-numeric', async () => {
       'stacked-fractions',
     ]),
   ).toMatchInlineSnapshot(`
-    "@layer properties {
+    "
+    @layer properties {
       @supports (((-webkit-hyphens: none)) and (not (margin-trim: inline))) or ((-moz-orient: inline) and (not (color: rgb(from red r g b)))) {
         *, :before, :after, ::backdrop {
           --tw-ordinal: initial;
@@ -714,42 +753,42 @@ test('font-variant-numeric', async () => {
 
     .diagonal-fractions {
       --tw-numeric-fraction: diagonal-fractions;
-      font-variant-numeric: var(--tw-ordinal,  ) var(--tw-slashed-zero,  ) var(--tw-numeric-figure,  ) var(--tw-numeric-spacing,  ) var(--tw-numeric-fraction,  );
+      font-variant-numeric: var(--tw-ordinal, ) var(--tw-slashed-zero, ) var(--tw-numeric-figure, ) var(--tw-numeric-spacing, ) var(--tw-numeric-fraction, );
     }
 
     .lining-nums {
       --tw-numeric-figure: lining-nums;
-      font-variant-numeric: var(--tw-ordinal,  ) var(--tw-slashed-zero,  ) var(--tw-numeric-figure,  ) var(--tw-numeric-spacing,  ) var(--tw-numeric-fraction,  );
+      font-variant-numeric: var(--tw-ordinal, ) var(--tw-slashed-zero, ) var(--tw-numeric-figure, ) var(--tw-numeric-spacing, ) var(--tw-numeric-fraction, );
     }
 
     .oldstyle-nums {
       --tw-numeric-figure: oldstyle-nums;
-      font-variant-numeric: var(--tw-ordinal,  ) var(--tw-slashed-zero,  ) var(--tw-numeric-figure,  ) var(--tw-numeric-spacing,  ) var(--tw-numeric-fraction,  );
+      font-variant-numeric: var(--tw-ordinal, ) var(--tw-slashed-zero, ) var(--tw-numeric-figure, ) var(--tw-numeric-spacing, ) var(--tw-numeric-fraction, );
     }
 
     .ordinal {
       --tw-ordinal: ordinal;
-      font-variant-numeric: var(--tw-ordinal,  ) var(--tw-slashed-zero,  ) var(--tw-numeric-figure,  ) var(--tw-numeric-spacing,  ) var(--tw-numeric-fraction,  );
+      font-variant-numeric: var(--tw-ordinal, ) var(--tw-slashed-zero, ) var(--tw-numeric-figure, ) var(--tw-numeric-spacing, ) var(--tw-numeric-fraction, );
     }
 
     .proportional-nums {
       --tw-numeric-spacing: proportional-nums;
-      font-variant-numeric: var(--tw-ordinal,  ) var(--tw-slashed-zero,  ) var(--tw-numeric-figure,  ) var(--tw-numeric-spacing,  ) var(--tw-numeric-fraction,  );
+      font-variant-numeric: var(--tw-ordinal, ) var(--tw-slashed-zero, ) var(--tw-numeric-figure, ) var(--tw-numeric-spacing, ) var(--tw-numeric-fraction, );
     }
 
     .slashed-zero {
       --tw-slashed-zero: slashed-zero;
-      font-variant-numeric: var(--tw-ordinal,  ) var(--tw-slashed-zero,  ) var(--tw-numeric-figure,  ) var(--tw-numeric-spacing,  ) var(--tw-numeric-fraction,  );
+      font-variant-numeric: var(--tw-ordinal, ) var(--tw-slashed-zero, ) var(--tw-numeric-figure, ) var(--tw-numeric-spacing, ) var(--tw-numeric-fraction, );
     }
 
     .stacked-fractions {
       --tw-numeric-fraction: stacked-fractions;
-      font-variant-numeric: var(--tw-ordinal,  ) var(--tw-slashed-zero,  ) var(--tw-numeric-figure,  ) var(--tw-numeric-spacing,  ) var(--tw-numeric-fraction,  );
+      font-variant-numeric: var(--tw-ordinal, ) var(--tw-slashed-zero, ) var(--tw-numeric-figure, ) var(--tw-numeric-spacing, ) var(--tw-numeric-fraction, );
     }
 
     .tabular-nums {
       --tw-numeric-spacing: tabular-nums;
-      font-variant-numeric: var(--tw-ordinal,  ) var(--tw-slashed-zero,  ) var(--tw-numeric-figure,  ) var(--tw-numeric-spacing,  ) var(--tw-numeric-fraction,  );
+      font-variant-numeric: var(--tw-ordinal, ) var(--tw-slashed-zero, ) var(--tw-numeric-figure, ) var(--tw-numeric-spacing, ) var(--tw-numeric-fraction, );
     }
 
     .normal-nums {
@@ -779,7 +818,8 @@ test('font-variant-numeric', async () => {
     @property --tw-numeric-fraction {
       syntax: "*";
       inherits: false
-    }"
+    }
+    "
   `)
   expect(
     await run([

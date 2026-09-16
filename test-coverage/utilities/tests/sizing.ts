@@ -10,13 +10,7 @@ import { compileCss, run } from './test-utils/run'
 
 test('size', async () => {
   expect(
-    await compileCss(
-      css`
-        @theme {
-          --spacing-4: 1rem;
-        }
-        @tailwind utilities;
-      `,
+    await run(
       [
         'size-auto',
         'size-full',
@@ -27,9 +21,16 @@ test('size', async () => {
         'size-1/2',
         'size-[4px]',
       ],
+      css`
+        @theme {
+          --spacing-4: 1rem;
+        }
+        @tailwind utilities;
+      `,
     ),
   ).toMatchInlineSnapshot(`
-    ":root, :host {
+    "
+    :root, :host {
       --spacing-4: 1rem;
     }
 
@@ -71,7 +72,8 @@ test('size', async () => {
     .size-min {
       width: min-content;
       height: min-content;
-    }"
+    }
+    "
   `)
   expect(
     await run([
@@ -97,14 +99,7 @@ test('size', async () => {
 
 test('width', async () => {
   expect(
-    await compileCss(
-      css`
-        @theme {
-          --spacing-4: 1rem;
-          --width-xl: 36rem;
-        }
-        @tailwind utilities;
-      `,
+    await run(
       [
         'w-full',
         'w-auto',
@@ -120,9 +115,17 @@ test('width', async () => {
         'w-1/2',
         'w-[4px]',
       ],
+      css`
+        @theme {
+          --spacing-4: 1rem;
+          --width-xl: 36rem;
+        }
+        @tailwind utilities;
+      `,
     ),
   ).toMatchInlineSnapshot(`
-    ":root, :host {
+    "
+    :root, :host {
       --spacing-4: 1rem;
       --width-xl: 36rem;
     }
@@ -177,7 +180,8 @@ test('width', async () => {
 
     .w-xl {
       width: var(--width-xl);
-    }"
+    }
+    "
   `)
   expect(
     await run([
@@ -208,13 +212,7 @@ test('width', async () => {
 
 test('height', async () => {
   expect(
-    await compileCss(
-      css`
-        @theme {
-          --spacing-4: 1rem;
-        }
-        @tailwind utilities;
-      `,
+    await run(
       [
         'h-full',
         'h-auto',
@@ -230,9 +228,16 @@ test('height', async () => {
         'h-1/2',
         'h-[4px]',
       ],
+      css`
+        @theme {
+          --spacing-4: 1rem;
+        }
+        @tailwind utilities;
+      `,
     ),
   ).toMatchInlineSnapshot(`
-    ":root, :host {
+    "
+    :root, :host {
       --spacing-4: 1rem;
     }
 
@@ -286,7 +291,8 @@ test('height', async () => {
 
     .h-svh {
       height: 100svh;
-    }"
+    }
+    "
   `)
   expect(
     await run([
@@ -325,7 +331,8 @@ test('will-change', async () => {
       'will-change-[var(--value)]',
     ]),
   ).toMatchInlineSnapshot(`
-    ".will-change-\\[var\\(--value\\)\\] {
+    "
+    .will-change-\\[var\\(--value\\)\\] {
       will-change: var(--value);
     }
 
@@ -343,7 +350,8 @@ test('will-change', async () => {
 
     .will-change-transform {
       will-change: transform;
-    }"
+    }
+    "
   `)
   expect(
     await run([

@@ -1,6 +1,8 @@
 <?php
 
 declare(strict_types=1);
+
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use TailwindPHP\LightningCss\LightningCss as LightningCssOptimizer;
 
@@ -17,40 +19,40 @@ class LightningCss extends TestCase
     // ==================================================
 
     /**
- * @test
- */
+     * @test
+     */
     public function normalize_whitespace_collapses_multiple_spaces(): void
     {
         $this->assertSame('foo bar', LightningCssOptimizer::normalizeWhitespace('foo    bar'));
     }
 
     /**
- * @test
- */
+     * @test
+     */
     public function normalize_whitespace_collapses_newlines(): void
     {
         $this->assertSame('foo bar', LightningCssOptimizer::normalizeWhitespace("foo\n  bar"));
     }
 
     /**
- * @test
- */
+     * @test
+     */
     public function normalize_whitespace_removes_space_after_opening_paren(): void
     {
         $this->assertSame('calc(1 + 2)', LightningCssOptimizer::normalizeWhitespace('calc( 1 + 2)'));
     }
 
     /**
- * @test
- */
+     * @test
+     */
     public function normalize_whitespace_removes_space_before_closing_paren(): void
     {
         $this->assertSame('calc(1 + 2)', LightningCssOptimizer::normalizeWhitespace('calc(1 + 2 )'));
     }
 
     /**
- * @test
- */
+     * @test
+     */
     public function normalize_whitespace_preserves_empty_var_fallback(): void
     {
         $this->assertSame('var(--foo, )', LightningCssOptimizer::normalizeWhitespace('var(--foo, )'));
@@ -61,40 +63,40 @@ class LightningCss extends TestCase
     // ==================================================
 
     /**
- * @test
- */
+     * @test
+     */
     public function normalize_time_converts_500ms_to_half_second(): void
     {
         $this->assertSame('.5s', LightningCssOptimizer::normalizeTimeValues('500ms'));
     }
 
     /**
- * @test
- */
+     * @test
+     */
     public function normalize_time_converts_1000ms_to_1s(): void
     {
         $this->assertSame('1s', LightningCssOptimizer::normalizeTimeValues('1000ms'));
     }
 
     /**
- * @test
- */
+     * @test
+     */
     public function normalize_time_converts_1500ms_to_1_5s(): void
     {
         $this->assertSame('1.5s', LightningCssOptimizer::normalizeTimeValues('1500ms'));
     }
 
     /**
- * @test
- */
+     * @test
+     */
     public function normalize_time_converts_0ms_to_0s(): void
     {
         $this->assertSame('0s', LightningCssOptimizer::normalizeTimeValues('0ms'));
     }
 
     /**
- * @test
- */
+     * @test
+     */
     public function normalize_time_converts_150ms(): void
     {
         $this->assertSame('.15s', LightningCssOptimizer::normalizeTimeValues('150ms'));
@@ -105,32 +107,32 @@ class LightningCss extends TestCase
     // ==================================================
 
     /**
- * @test
- */
+     * @test
+     */
     public function normalize_opacity_converts_0_percent(): void
     {
         $this->assertSame('0', LightningCssOptimizer::normalizeOpacityPercentages('0%', 'opacity'));
     }
 
     /**
- * @test
- */
+     * @test
+     */
     public function normalize_opacity_converts_100_percent(): void
     {
         $this->assertSame('1', LightningCssOptimizer::normalizeOpacityPercentages('100%', 'opacity'));
     }
 
     /**
- * @test
- */
+     * @test
+     */
     public function normalize_opacity_converts_50_percent(): void
     {
         $this->assertSame('.5', LightningCssOptimizer::normalizeOpacityPercentages('50%', 'opacity'));
     }
 
     /**
- * @test
- */
+     * @test
+     */
     public function normalize_opacity_only_affects_opacity_property(): void
     {
         $this->assertSame('50%', LightningCssOptimizer::normalizeOpacityPercentages('50%', 'width'));
@@ -141,40 +143,40 @@ class LightningCss extends TestCase
     // ==================================================
 
     /**
- * @test
- */
+     * @test
+     */
     public function normalize_colors_converts_hex_red_to_named(): void
     {
         $this->assertSame('red', LightningCssOptimizer::normalizeColors('#f00'));
     }
 
     /**
- * @test
- */
+     * @test
+     */
     public function normalize_colors_converts_long_hex_red_to_named(): void
     {
         $this->assertSame('red', LightningCssOptimizer::normalizeColors('#ff0000'));
     }
 
     /**
- * @test
- */
+     * @test
+     */
     public function normalize_colors_converts_blue_to_hex(): void
     {
         $this->assertSame('#00f', LightningCssOptimizer::normalizeColors('blue'));
     }
 
     /**
- * @test
- */
+     * @test
+     */
     public function normalize_colors_skips_var_references(): void
     {
         $this->assertSame('var(--blue)', LightningCssOptimizer::normalizeColors('var(--blue)'));
     }
 
     /**
- * @test
- */
+     * @test
+     */
     public function normalize_colors_skips_custom_properties(): void
     {
         $this->assertSame('yellow', LightningCssOptimizer::normalizeColors('yellow', true));
@@ -185,32 +187,32 @@ class LightningCss extends TestCase
     // ==================================================
 
     /**
- * @test
- */
+     * @test
+     */
     public function simplify_calc_negates_angle(): void
     {
         $this->assertSame('-45deg', LightningCssOptimizer::simplifyCalcExpressions('calc(45deg * -1)'));
     }
 
     /**
- * @test
- */
+     * @test
+     */
     public function simplify_calc_negates_negative_angle(): void
     {
         $this->assertSame('90deg', LightningCssOptimizer::simplifyCalcExpressions('calc(-90deg * -1)'));
     }
 
     /**
- * @test
- */
+     * @test
+     */
     public function simplify_calc_multiplies_rem(): void
     {
         $this->assertSame('1rem', LightningCssOptimizer::simplifyCalcExpressions('calc(.25rem * 4)'));
     }
 
     /**
- * @test
- */
+     * @test
+     */
     public function simplify_calc_preserves_complex_expressions(): void
     {
         $expr = 'calc(100% - 1rem)';
@@ -222,24 +224,24 @@ class LightningCss extends TestCase
     // ==================================================
 
     /**
- * @test
- */
+     * @test
+     */
     public function normalize_leading_zeros_removes_zero(): void
     {
         $this->assertSame('.5', LightningCssOptimizer::normalizeLeadingZeros('0.5'));
     }
 
     /**
- * @test
- */
+     * @test
+     */
     public function normalize_leading_zeros_in_value(): void
     {
         $this->assertSame('.5rem', LightningCssOptimizer::normalizeLeadingZeros('0.5rem'));
     }
 
     /**
- * @test
- */
+     * @test
+     */
     public function normalize_leading_zeros_multiple(): void
     {
         $this->assertSame('.5 .25 .125', LightningCssOptimizer::normalizeLeadingZeros('0.5 0.25 0.125'));
@@ -250,24 +252,24 @@ class LightningCss extends TestCase
     // ==================================================
 
     /**
- * @test
- */
+     * @test
+     */
     public function normalize_grid_adds_spaces_around_slash(): void
     {
         $this->assertSame('span 1 / span 2', LightningCssOptimizer::normalizeGridValues('span 1/span 2'));
     }
 
     /**
- * @test
- */
+     * @test
+     */
     public function normalize_grid_adds_px_to_bare_integer(): void
     {
         $this->assertSame('123px', LightningCssOptimizer::normalizeGridValues('123', 'grid-template-columns'));
     }
 
     /**
- * @test
- */
+     * @test
+     */
     public function normalize_grid_preserves_non_grid_property(): void
     {
         $this->assertSame('123', LightningCssOptimizer::normalizeGridValues('123', 'grid-column'));
@@ -278,19 +280,19 @@ class LightningCss extends TestCase
     // ==================================================
 
     /**
- * @test
- */
-    public function normalize_transform_removes_spaces_between_functions(): void
+     * @test
+     */
+    public function normalize_transform_preserves_spaces_between_functions(): void
     {
         $this->assertSame(
-            'scaleZ(2)rotateY(45deg)',
+            'scaleZ(2) rotateY(45deg)',
             LightningCssOptimizer::normalizeTransformFunctions('scaleZ(2) rotateY(45deg)', 'transform'),
         );
     }
 
     /**
- * @test
- */
+     * @test
+     */
     public function normalize_transform_preserves_var_spaces(): void
     {
         $value = 'var(--tw-rotate-x, ) var(--tw-rotate-y, )';
@@ -298,8 +300,8 @@ class LightningCss extends TestCase
     }
 
     /**
- * @test
- */
+     * @test
+     */
     public function normalize_transform_only_affects_transform_property(): void
     {
         $value = 'scaleZ(2) rotateY(45deg)';
@@ -311,8 +313,8 @@ class LightningCss extends TestCase
     // ==================================================
 
     /**
- * @test
- */
+     * @test
+     */
     public function normalize_animation_moves_name_to_end(): void
     {
         $this->assertSame(
@@ -322,8 +324,8 @@ class LightningCss extends TestCase
     }
 
     /**
- * @test
- */
+     * @test
+     */
     public function normalize_animation_handles_multiple(): void
     {
         $this->assertSame(
@@ -333,8 +335,8 @@ class LightningCss extends TestCase
     }
 
     /**
- * @test
- */
+     * @test
+     */
     public function normalize_animation_skips_var(): void
     {
         $value = 'var(--animation) 1s';
@@ -346,16 +348,16 @@ class LightningCss extends TestCase
     // ==================================================
 
     /**
- * @test
- */
+     * @test
+     */
     public function normalize_url_adds_quotes(): void
     {
         $this->assertSame('url("./file.jpg")', LightningCssOptimizer::normalizeUrlQuoting('url(./file.jpg)'));
     }
 
     /**
- * @test
- */
+     * @test
+     */
     public function normalize_url_preserves_data_uri(): void
     {
         $value = 'url(data:image/png;base64,abc)';
@@ -363,8 +365,8 @@ class LightningCss extends TestCase
     }
 
     /**
- * @test
- */
+     * @test
+     */
     public function normalize_url_preserves_var(): void
     {
         $value = 'url(var(--bg-image))';
@@ -376,8 +378,8 @@ class LightningCss extends TestCase
     // ==================================================
 
     /**
- * @test
- */
+     * @test
+     */
     public function transform_nesting_flattens_child_selector(): void
     {
         $ast = [
@@ -405,8 +407,74 @@ class LightningCss extends TestCase
     }
 
     /**
- * @test
- */
+     * @test
+     */
+    public function transform_nesting_wraps_a_grouped_parent_in_is(): void
+    {
+        // A parent that is a selector LIST has to be grouped before it is
+        // substituted for `&`, or the variant binds to the last selector only
+        // and every earlier selector gets the styles unconditionally. This is
+        // what `@apply hover:*` / `@apply dark:*` inside `.a, .b { ... }` hits.
+        $ast = [
+            [
+                'kind' => 'rule',
+                'selector' => '.a, .b',
+                'nodes' => [
+                    [
+                        'kind' => 'rule',
+                        'selector' => '&:hover',
+                        'nodes' => [
+                            ['kind' => 'declaration', 'property' => 'color', 'value' => 'red'],
+                        ],
+                    ],
+                    [
+                        'kind' => 'rule',
+                        'selector' => 'span',
+                        'nodes' => [
+                            ['kind' => 'declaration', 'property' => 'color', 'value' => 'blue'],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $result = LightningCssOptimizer::transformNesting($ast);
+
+        $this->assertSame(':is(.a, .b):hover', $result[0]['selector']);
+        $this->assertSame(':is(.a, .b) span', $result[1]['selector']);
+    }
+
+    /**
+     * @test
+     */
+    public function transform_nesting_leaves_a_single_parent_ungrouped(): void
+    {
+        // Grouping a lone selector would only add bytes and raise specificity
+        // expectations, so `&` keeps substituting the parent verbatim.
+        $ast = [
+            [
+                'kind' => 'rule',
+                'selector' => '.a',
+                'nodes' => [
+                    [
+                        'kind' => 'rule',
+                        'selector' => '&:hover',
+                        'nodes' => [
+                            ['kind' => 'declaration', 'property' => 'color', 'value' => 'red'],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $result = LightningCssOptimizer::transformNesting($ast);
+
+        $this->assertSame('.a:hover', $result[0]['selector']);
+    }
+
+    /**
+     * @test
+     */
     public function transform_nesting_resolves_ampersand(): void
     {
         $ast = [
@@ -431,8 +499,8 @@ class LightningCss extends TestCase
     }
 
     /**
- * @test
- */
+     * @test
+     */
     public function transform_nesting_handles_media_query(): void
     {
         $ast = [
@@ -464,8 +532,8 @@ class LightningCss extends TestCase
     }
 
     /**
- * @test
- */
+     * @test
+     */
     public function transform_nesting_deep_nesting(): void
     {
         $ast = [
@@ -496,8 +564,8 @@ class LightningCss extends TestCase
     }
 
     /**
- * @test
- */
+     * @test
+     */
     public function transform_nesting_prefixes_all_selectors_in_list(): void
     {
         // When nesting a selector list like "h1, h2, h3" inside ".parent",
@@ -524,8 +592,8 @@ class LightningCss extends TestCase
     }
 
     /**
- * @test
- */
+     * @test
+     */
     public function transform_nesting_does_not_split_commas_inside_pseudo_classes(): void
     {
         // Commas inside :where(), :not(), :is() should NOT be split
@@ -552,8 +620,8 @@ class LightningCss extends TestCase
     }
 
     /**
- * @test
- */
+     * @test
+     */
     public function transform_nesting_handles_complex_selector_list_with_pseudo_classes(): void
     {
         // Mix of top-level commas and commas inside pseudo-classes
@@ -580,8 +648,8 @@ class LightningCss extends TestCase
     }
 
     /**
- * @test
- */
+     * @test
+     */
     public function transform_nesting_scoped_preflight_import(): void
     {
         // This simulates scoping preflight via nested @import
@@ -612,7 +680,9 @@ class LightningCss extends TestCase
         $result = LightningCssOptimizer::transformNesting($ast);
 
         $this->assertCount(2, $result);
-        $this->assertSame('.editor-styles-wrapper *, .editor-styles-wrapper ::after, .editor-styles-wrapper ::before', $result[0]['selector']);
+        // ::before/::after are downleveled to their single-colon legacy form,
+        // matching lightningcss (TailwindCSS v4.3.3 output)
+        $this->assertSame('.editor-styles-wrapper *, .editor-styles-wrapper :after, .editor-styles-wrapper :before', $result[0]['selector']);
         $this->assertSame('.editor-styles-wrapper h1, .editor-styles-wrapper h2, .editor-styles-wrapper h3, .editor-styles-wrapper h4, .editor-styles-wrapper h5, .editor-styles-wrapper h6', $result[1]['selector']);
     }
 
@@ -621,8 +691,8 @@ class LightningCss extends TestCase
     // ==================================================
 
     /**
- * @test
- */
+     * @test
+     */
     public function add_vendor_prefixes_for_user_select(): void
     {
         $ast = [
@@ -646,8 +716,8 @@ class LightningCss extends TestCase
     }
 
     /**
- * @test
- */
+     * @test
+     */
     public function add_vendor_prefixes_for_backdrop_filter(): void
     {
         $ast = [
@@ -674,8 +744,8 @@ class LightningCss extends TestCase
     // ==================================================
 
     /**
- * @test
- */
+     * @test
+     */
     public function evaluate_color_mix_red_50_percent(): void
     {
         $result = LightningCssOptimizer::evaluateColorMix('color-mix(in oklab, red 50%, transparent)');
@@ -684,8 +754,8 @@ class LightningCss extends TestCase
     }
 
     /**
- * @test
- */
+     * @test
+     */
     public function evaluate_color_mix_preserves_unknown(): void
     {
         $value = 'color-mix(in oklab, unknown 50%, transparent)';
@@ -697,8 +767,8 @@ class LightningCss extends TestCase
     // ==================================================
 
     /**
- * @test
- */
+     * @test
+     */
     public function color_to_oklab_red(): void
     {
         $result = LightningCssOptimizer::colorToOklabWithOpacity('red', 1.0);
@@ -707,8 +777,8 @@ class LightningCss extends TestCase
     }
 
     /**
- * @test
- */
+     * @test
+     */
     public function color_to_oklab_hex(): void
     {
         $result = LightningCssOptimizer::colorToOklabWithOpacity('#ff0000', 0.5, true);
@@ -721,8 +791,8 @@ class LightningCss extends TestCase
     // ==================================================
 
     /**
- * @test
- */
+     * @test
+     */
     public function color_with_alpha_named(): void
     {
         $result = LightningCssOptimizer::colorWithAlpha('red', 0.5);
@@ -730,8 +800,8 @@ class LightningCss extends TestCase
     }
 
     /**
- * @test
- */
+     * @test
+     */
     public function color_with_alpha_hex(): void
     {
         $result = LightningCssOptimizer::colorWithAlpha('#00ff00', 0.5);
@@ -739,8 +809,8 @@ class LightningCss extends TestCase
     }
 
     /**
- * @test
- */
+     * @test
+     */
     public function color_with_alpha_short_hex(): void
     {
         $result = LightningCssOptimizer::colorWithAlpha('#0f0', 1.0);
@@ -752,8 +822,8 @@ class LightningCss extends TestCase
     // ==================================================
 
     /**
- * @test
- */
+     * @test
+     */
     public function transform_media_query_gte(): void
     {
         $this->assertSame(
@@ -763,8 +833,8 @@ class LightningCss extends TestCase
     }
 
     /**
- * @test
- */
+     * @test
+     */
     public function transform_media_query_lte(): void
     {
         $this->assertSame(
@@ -774,8 +844,8 @@ class LightningCss extends TestCase
     }
 
     /**
- * @test
- */
+     * @test
+     */
     public function transform_media_query_gt(): void
     {
         $this->assertSame(
@@ -785,8 +855,8 @@ class LightningCss extends TestCase
     }
 
     /**
- * @test
- */
+     * @test
+     */
     public function transform_media_query_lt(): void
     {
         $this->assertSame(
@@ -800,8 +870,8 @@ class LightningCss extends TestCase
     // ==================================================
 
     /**
- * @test
- */
+     * @test
+     */
     public function transform_container_query_gte(): void
     {
         $this->assertSame(
@@ -811,8 +881,8 @@ class LightningCss extends TestCase
     }
 
     /**
- * @test
- */
+     * @test
+     */
     public function transform_container_query_gt(): void
     {
         $this->assertSame(
@@ -826,8 +896,8 @@ class LightningCss extends TestCase
     // ==================================================
 
     /**
- * @test
- */
+     * @test
+     */
     public function merge_rules_with_same_declarations(): void
     {
         $nodes = [
@@ -850,8 +920,8 @@ class LightningCss extends TestCase
     }
 
     /**
- * @test
- */
+     * @test
+     */
     public function merge_rules_keeps_different_declarations_separate(): void
     {
         $nodes = [
@@ -877,8 +947,8 @@ class LightningCss extends TestCase
     // ==================================================
 
     /**
- * @test
- */
+     * @test
+     */
     public function optimize_value_combines_all_optimizations(): void
     {
         // Test that multiple optimizations are applied
@@ -887,8 +957,8 @@ class LightningCss extends TestCase
     }
 
     /**
- * @test
- */
+     * @test
+     */
     public function optimize_value_handles_complex_value(): void
     {
         $result = LightningCssOptimizer::optimizeValue('500ms ease-in-out', 'transition');
@@ -900,8 +970,8 @@ class LightningCss extends TestCase
     // ==================================================
 
     /**
- * @test
- */
+     * @test
+     */
     public function minify_removes_comments(): void
     {
         $css = '.foo { /* comment */ color: red; }';
@@ -909,8 +979,8 @@ class LightningCss extends TestCase
     }
 
     /**
- * @test
- */
+     * @test
+     */
     public function minify_removes_whitespace(): void
     {
         $css = ".foo {\n  color: red;\n}";
@@ -919,8 +989,8 @@ class LightningCss extends TestCase
     }
 
     /**
- * @test
- */
+     * @test
+     */
     public function minify_removes_trailing_semicolons(): void
     {
         $css = '.foo { color: red; }';

@@ -71,8 +71,18 @@ function registerInteractivityUtilities(UtilityBuilder $builder): void
 
     $touchActionValue = 'var(--tw-pan-x, ) var(--tw-pan-y, ) var(--tw-pinch-zoom, )';
 
+    // Registers the composed --tw-pan-*/--tw-pinch-zoom group with @property.
+    $touchProperties = function () {
+        return atRoot([
+            property('--tw-pan-x'),
+            property('--tw-pan-y'),
+            property('--tw-pinch-zoom'),
+        ]);
+    };
+
     foreach (['x', 'left', 'right'] as $value) {
         $builder->staticUtility("touch-pan-{$value}", [
+            $touchProperties,
             ['--tw-pan-x', "pan-{$value}"],
             ['touch-action', $touchActionValue],
         ]);
@@ -80,12 +90,14 @@ function registerInteractivityUtilities(UtilityBuilder $builder): void
 
     foreach (['y', 'up', 'down'] as $value) {
         $builder->staticUtility("touch-pan-{$value}", [
+            $touchProperties,
             ['--tw-pan-y', "pan-{$value}"],
             ['touch-action', $touchActionValue],
         ]);
     }
 
     $builder->staticUtility('touch-pinch-zoom', [
+        $touchProperties,
         ['--tw-pinch-zoom', 'pinch-zoom'],
         ['touch-action', $touchActionValue],
     ]);
@@ -116,14 +128,22 @@ function registerInteractivityUtilities(UtilityBuilder $builder): void
 
     $builder->staticUtility('snap-none', [['scroll-snap-type', 'none']]);
 
+    // Registers --tw-scroll-snap-strictness with @property (initial proximity)
+    // so `scroll-snap-type: x var(--tw-scroll-snap-strictness)` is valid
+    // without a snap-mandatory/snap-proximity utility present.
+    $snapProperties = function () {
+        return atRoot([property('--tw-scroll-snap-strictness', 'proximity', '*')]);
+    };
+
     foreach (['x', 'y', 'both'] as $value) {
         $builder->staticUtility("snap-{$value}", [
+            $snapProperties,
             ['scroll-snap-type', "{$value} var(--tw-scroll-snap-strictness)"],
         ]);
     }
 
-    $builder->staticUtility('snap-mandatory', [['--tw-scroll-snap-strictness', 'mandatory']]);
-    $builder->staticUtility('snap-proximity', [['--tw-scroll-snap-strictness', 'proximity']]);
+    $builder->staticUtility('snap-mandatory', [$snapProperties, ['--tw-scroll-snap-strictness', 'mandatory']]);
+    $builder->staticUtility('snap-proximity', [$snapProperties, ['--tw-scroll-snap-strictness', 'proximity']]);
 
     // ==================================================
     // Scroll Snap Align
@@ -195,6 +215,47 @@ function registerInteractivityUtilities(UtilityBuilder $builder): void
 
     $builder->staticUtility('scroll-auto', [['scroll-behavior', 'auto']]);
     $builder->staticUtility('scroll-smooth', [['scroll-behavior', 'smooth']]);
+
+    // ==================================================
+    // Scrollbar
+    // ==================================================
+
+    $builder->staticUtility('scrollbar-auto', [['scrollbar-width', 'auto']]);
+    $builder->staticUtility('scrollbar-thin', [['scrollbar-width', 'thin']]);
+    $builder->staticUtility('scrollbar-none', [['scrollbar-width', 'none']]);
+
+    $scrollbarColorProperties = function () {
+        return atRoot([
+            property('--tw-scrollbar-thumb', '#0000', '<color>'),
+            property('--tw-scrollbar-track', '#0000', '<color>'),
+        ]);
+    };
+
+    $builder->colorUtility('scrollbar-thumb', [
+        'themeKeys' => ['--color'],
+        'handle' => function ($value) use ($scrollbarColorProperties) {
+            return [
+                $scrollbarColorProperties(),
+                decl('--tw-scrollbar-thumb', $value),
+                decl('scrollbar-color', 'var(--tw-scrollbar-thumb) var(--tw-scrollbar-track)'),
+            ];
+        },
+    ]);
+
+    $builder->colorUtility('scrollbar-track', [
+        'themeKeys' => ['--color'],
+        'handle' => function ($value) use ($scrollbarColorProperties) {
+            return [
+                $scrollbarColorProperties(),
+                decl('--tw-scrollbar-track', $value),
+                decl('scrollbar-color', 'var(--tw-scrollbar-thumb) var(--tw-scrollbar-track)'),
+            ];
+        },
+    ]);
+
+    $builder->staticUtility('scrollbar-gutter-auto', [['scrollbar-gutter', 'auto']]);
+    $builder->staticUtility('scrollbar-gutter-stable', [['scrollbar-gutter', 'stable']]);
+    $builder->staticUtility('scrollbar-gutter-both', [['scrollbar-gutter', 'stable both-edges']]);
 
     // ==================================================
     // Overscroll Behavior
@@ -281,6 +342,16 @@ function registerInteractivityUtilities(UtilityBuilder $builder): void
         'themeKeys' => ['--content'],
         'defaultValue' => null,
         'handle' => function ($value) {
+            // String tokens serialize with double quotes in the reference
+            // output (`content-['*']` -> `--tw-content: "*"`)
+            if (
+                strlen($value) >= 2 &&
+                $value[0] === "'" && $value[strlen($value) - 1] === "'" &&
+                !str_contains($value, '"')
+            ) {
+                $value = '"' . substr($value, 1, -1) . '"';
+            }
+
             return [
                 atRoot([property('--tw-content', '""')]),
                 decl('--tw-content', $value),

@@ -10,14 +10,7 @@ import { compileCss, run } from './test-utils/run'
 
 test('bg', async () => {
   expect(
-    await compileCss(
-      css`
-        @theme {
-          --color-red-500: #ef4444;
-          --background-color-blue-500: #3b82f6;
-        }
-        @tailwind utilities;
-      `,
+    await run(
       [
         // background-color
         'bg-red-500',
@@ -159,9 +152,17 @@ test('bg', async () => {
         'bg-repeat-round',
         'bg-repeat-space',
       ],
+      css`
+        @theme {
+          --color-red-500: #ef4444;
+          --background-color-blue-500: #3b82f6;
+        }
+        @tailwind utilities;
+      `,
     ),
   ).toMatchInlineSnapshot(`
-    ":root, :host {
+    "
+    :root, :host {
       --color-red-500: #ef4444;
       --background-color-blue-500: #3b82f6;
     }
@@ -976,7 +977,8 @@ test('bg', async () => {
 
     .bg-repeat-y {
       background-repeat: repeat-y;
-    }"
+    }
+    "
   `)
   expect(
     await run([
@@ -1074,7 +1076,8 @@ test('bg', async () => {
   ).toEqual('')
 
   expect(
-    await compileCss(
+    await run(
+      ['bg-current/half', 'bg-current/custom', '[color:red]/half'],
       css`
         @theme reference {
           --opacity-half: 0.5;
@@ -1082,10 +1085,10 @@ test('bg', async () => {
         }
         @tailwind utilities;
       `,
-      ['bg-current/half', 'bg-current/custom', '[color:red]/half'],
     ),
   ).toMatchInlineSnapshot(`
-    ".bg-current\\/custom {
+    "
+    .bg-current\\/custom {
       background-color: currentColor;
     }
 
@@ -1113,7 +1116,8 @@ test('bg', async () => {
       .\\[color\\:red\\]\\/half {
         color: color-mix(in oklab, red var(--opacity-half, .5), transparent);
       }
-    }"
+    }
+    "
   `)
 })
 

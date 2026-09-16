@@ -20,7 +20,8 @@ test('order', async () => {
       'order-none',
     ]),
   ).toMatchInlineSnapshot(`
-    ".-order-4 {
+    "
+    .-order-4 {
       order: calc(4 * -1);
     }
 
@@ -46,7 +47,8 @@ test('order', async () => {
 
     .order-none {
       order: 0;
-    }"
+    }
+    "
   `)
   expect(
     await run([
@@ -68,43 +70,47 @@ test('order', async () => {
   ).toEqual('')
 
   expect(
-    await compileCss(
+    await run(
+      ['order-first'],
       css`
         @theme {
           --order-first: 1;
         }
         @tailwind utilities;
       `,
-      ['order-first'],
     ),
   ).toMatchInlineSnapshot(`
-    ":root, :host {
+    "
+    :root, :host {
       --order-first: 1;
     }
 
     .order-first {
       order: var(--order-first);
-    }"
+    }
+    "
   `)
 
   expect(
-    await compileCss(
+    await run(
+      ['order-last'],
       css`
         @theme {
           --order-last: -1;
         }
         @tailwind utilities;
       `,
-      ['order-last'],
     ),
   ).toMatchInlineSnapshot(`
-    ":root, :host {
+    "
+    :root, :host {
       --order-last: -1;
     }
 
     .order-last {
       order: var(--order-last);
-    }"
+    }
+    "
   `)
 })
 

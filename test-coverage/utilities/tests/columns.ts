@@ -10,14 +10,7 @@ import { compileCss, run } from './test-utils/run'
 
 test('columns', async () => {
   expect(
-    await compileCss(
-      css`
-        @theme {
-          --container-3xs: 16rem;
-          --container-7xl: 80rem;
-        }
-        @tailwind utilities;
-      `,
+    await run(
       [
         'columns-auto',
         'columns-3xs',
@@ -27,9 +20,17 @@ test('columns', async () => {
         'columns-[123]',
         'columns-[var(--value)]',
       ],
+      css`
+        @theme {
+          --container-3xs: 16rem;
+          --container-7xl: 80rem;
+        }
+        @tailwind utilities;
+      `,
     ),
   ).toMatchInlineSnapshot(`
-    ":root, :host {
+    "
+    :root, :host {
       --container-3xs: 16rem;
       --container-7xl: 80rem;
     }
@@ -60,7 +61,8 @@ test('columns', async () => {
 
     .columns-auto {
       columns: auto;
-    }"
+    }
+    "
   `)
   expect(
     await run([
@@ -81,23 +83,25 @@ test('columns', async () => {
   ).toEqual('')
 
   expect(
-    await compileCss(
+    await run(
+      ['columns-auto'],
       css`
         @theme {
           --columns-auto: 3;
         }
         @tailwind utilities;
       `,
-      ['columns-auto'],
     ),
   ).toMatchInlineSnapshot(`
-    ":root, :host {
+    "
+    :root, :host {
       --columns-auto: 3;
     }
 
     .columns-auto {
       columns: var(--columns-auto);
-    }"
+    }
+    "
   `)
 })
 
