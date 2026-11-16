@@ -24,7 +24,7 @@ export const references: Readonly<Record<ReferenceKind, readonly Reference[]>> =
     { name: "tailwind-merge", path: "reference/tailwind-merge", tags: "*", extract: ["php", "test-coverage/lib/extract-tailwind-merge-tests.php"] },
   ],
   plugins: [
-    { name: "typography", path: "reference/tailwindcss-typography", tags: "v*", extract: ["php", "test-coverage/plugins/typography/extract-tests.php"] },
+    { name: "typography", path: "reference/tailwindcss-typography", tags: "v*", extract: ["php", "test-coverage/plugins/extract-typography-tests.php"] },
     { name: "forms", path: "reference/tailwindcss-forms", tags: "v*", extract: ["php", "test-coverage/plugins/forms/extract-tests.php"] },
   ],
 };

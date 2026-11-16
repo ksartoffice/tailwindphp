@@ -25,7 +25,7 @@
 
 ## What is TailwindPHP?
 
-TailwindPHP is a 1:1 port of TailwindCSS 4.x to PHP. It scans your markup for class names and generates the utility CSS that TailwindCSS v4.3.3 produces, checked against TailwindCSS's own test suites — entirely in PHP, with no Node.js and no build step. It needs PHP 8.2+ with the `ctype` and `mbstring` extensions.
+TailwindPHP is a 1:1 port of TailwindCSS 4.x to PHP. It scans your markup for class names and generates the utility CSS that TailwindCSS v4.3.3 produces, checked against TailwindCSS's own test suites — entirely in PHP, with no Node.js and no build step. This fork runs on PHP 7.4 and PHP 8.x with the `ctype` and `mbstring` extensions.
 
 **The problem:** TailwindCSS is written in TypeScript and runs on Node.js. Any PHP project that wants Tailwind inherits a second runtime, an `npm install`, and a build step in CI and Docker. For WordPress plugins, framework packages, and apps that generate CSS at runtime, that's friction — or a dealbreaker.
 

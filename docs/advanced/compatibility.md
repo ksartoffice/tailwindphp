@@ -14,7 +14,7 @@ This page collects what you need to know before upgrading or relying on exact ou
 
 ## Requirements
 
-- **PHP 8.2 or later.** The test suite runs on PHP 8.2, 8.3, and 8.4.
+- **PHP 7.4 or PHP 8.x.** This fork declares `^7.4 || ^8.0`. The full test suite runs on Linux with PHP 7.4, 8.2, 8.3, and 8.4; Windows compatibility tests run on PHP 7.4.
 - **The `ctype` and `mbstring` extensions.** The compiler calls `ctype_*` and `mb_chr()`. Composer declares both extensions and reports missing support at installation time.
 - **Optional: `pcntl`** lets the CLI's `--watch` mode stop cleanly on `SIGINT`/`SIGTERM`. Without it, watch mode still works.
 

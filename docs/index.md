@@ -11,7 +11,7 @@ meta_description: "A 1:1 port of TailwindCSS 4.x to PHP. Generate Tailwind utili
 
 TailwindPHP is a **1:1 port of TailwindCSS 4.x to PHP**. It parses your CSS, scans your markup for class names, and generates the utility CSS that TailwindCSS v4.3.3 produces — entirely in PHP, with no Node.js and no build step.
 
-- **Pure PHP** — ships as a Composer package and runs on PHP 8.2+ with the standard `ctype` and `mbstring` extensions. No `exec`, no FFI, no native build tooling.
+- **Pure PHP** — this fork ships as a Composer package and runs on PHP 7.4 and PHP 8.x with the standard `ctype` and `mbstring` extensions. No `exec`, no FFI, no native build tooling.
 - **Checked against TailwindCSS** — utilities, variants, directives, and CSS functions track TailwindCSS v4.3.3. Output is verified against Tailwind's own test suites, extracted from the TypeScript source and re-run on every push (4,400+ tests). The known differences (a few serialization details with no cascade effect, plus open issues) are listed in [Compatibility & upgrading](/docs/advanced/compatibility).
 - **The whole feature set** — the full TailwindCSS v4.3.3 utility set (including `container`, the scrollbar utilities, `zoom-*` and `tab-*`), every variant (hover, focus, responsive, dark mode, container queries, arbitrary values), and the full directive surface: `@import`, `@theme`, `@apply`, `@utility`, `@variant`, `@custom-variant`, `@layer`, `@plugin`, and `@source`.
 - **Batteries included** — `cn()`, `merge()`, `join()`, and `variants()` bundle PHP ports of clsx, tailwind-merge, and CVA, so the companion libraries every Tailwind project reaches for are already there.
