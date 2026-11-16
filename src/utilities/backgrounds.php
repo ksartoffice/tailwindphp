@@ -5,9 +5,13 @@ declare(strict_types=1);
 namespace TailwindPHP\Utilities;
 
 use function TailwindPHP\Ast\atRoot;
+use function TailwindPHP\Ast\atRule;
 use function TailwindPHP\Ast\decl;
 
 use TailwindPHP\Theme;
+
+use function TailwindPHP\Utils\inferDataType;
+use function TailwindPHP\Utils\isPositiveInteger;
 
 /**
  * Background Utilities
@@ -39,12 +43,48 @@ function registerBackgroundUtilities(UtilityBuilder $builder): void
     // Background Color
     // ==================================================
 
-    $builder->colorUtility('bg', [
-        'themeKeys' => ['--background-color', '--color'],
-        'handle' => function ($value) {
+    $builder->getUtilities()->functional('bg', function (array $candidate) use ($theme) {
+        if (!isset($candidate['value'])) {
+            return null;
+        }
+
+        $modifier = $candidate['modifier'] ?? null;
+        if ($candidate['value']['kind'] === 'arbitrary') {
+            $value = $candidate['value']['value'];
+            $type = $candidate['value']['dataType'] ?? inferDataType(
+                $value,
+                ['image', 'color', 'percentage', 'position', 'bg-size', 'length', 'url'],
+            );
+            if (in_array($type, ['percentage', 'position'], true)) {
+                $property = 'background-position';
+            } elseif (in_array($type, ['bg-size', 'length', 'size'], true)) {
+                $property = 'background-size';
+            } elseif (in_array($type, ['image', 'url'], true)) {
+                $property = 'background-image';
+            } else {
+                $property = null;
+            }
+            if ($property !== null) {
+                return $modifier === null ? [decl($property, $value)] : null;
+            }
+
+            $value = asColor($value, $modifier, $theme);
+
+            return $value !== null ? [decl('background-color', $value)] : null;
+        }
+
+        $value = resolveThemeColor($candidate, $theme, ['--background-color', '--color']);
+        if ($value !== null) {
             return [decl('background-color', $value)];
-        },
-    ]);
+        }
+        if ($modifier !== null) {
+            return null;
+        }
+
+        $value = $theme->resolve($candidate['value']['value'], ['--background-image']);
+
+        return $value !== null ? [decl('background-image', $value)] : null;
+    });
 
     // ==================================================
     // Background Image
@@ -96,12 +136,6 @@ function registerBackgroundUtilities(UtilityBuilder $builder): void
     $builder->staticUtility('bg-top-right', [['background-position', '100% 0']]);
     $builder->staticUtility('bg-bottom-left', [['background-position', '0 100%']]);
     $builder->staticUtility('bg-bottom-right', [['background-position', '100% 100%']]);
-
-    // Legacy corner positions (v4.0 and earlier)
-    $builder->staticUtility('bg-left-top', [['background-position', '0 0']]);
-    $builder->staticUtility('bg-left-bottom', [['background-position', '0 100%']]);
-    $builder->staticUtility('bg-right-top', [['background-position', '100% 0']]);
-    $builder->staticUtility('bg-right-bottom', [['background-position', '100% 100%']]);
 
     // bg-position-[value] arbitrary utility
     $builder->functionalUtility('bg-position', [
@@ -163,50 +197,53 @@ function registerBackgroundUtilities(UtilityBuilder $builder): void
         'to-tl' => 'to top left',
     ];
 
-    // Register bg-linear-to-* utilities
-    foreach ($linearDirections as $suffix => $direction) {
-        registerLinearGradientUtility($builder, "bg-linear-{$suffix}", $direction);
-    }
-
-    // v3 compatibility: bg-gradient-to-* aliases
-    // TailwindCSS keeps these as static utilities with explicit oklab interpolation.
-    $legacyGradientDirections = [
-        't' => 'top',
-        'tr' => 'top right',
-        'r' => 'right',
-        'br' => 'bottom right',
-        'b' => 'bottom',
-        'bl' => 'bottom left',
-        'l' => 'left',
-        'tl' => 'top left',
-    ];
-    foreach ($legacyGradientDirections as $suffix => $direction) {
-        $builder->staticUtility("bg-gradient-to-{$suffix}", [
-            ['--tw-gradient-position', "to {$direction} in oklab"],
-            ['background-image', 'linear-gradient(var(--tw-gradient-stops))'],
-        ]);
-    }
-
-    // Register bg-linear-{angle} utilities (e.g., bg-linear-45)
-    // Note: supportsNegative is false here because arbitrary non-angle values like [to_bottom]
-    // should not support negative. The handleBareValue already handles numeric angles.
-    $builder->functionalUtility('bg-linear', [
-        'themeKeys' => ['--gradient'],
-        'supportsNegative' => false,
-        'handleBareValue' => function ($value) {
-            // Check if it's a number (angle in degrees)
-            if (is_numeric($value['value'])) {
-                return "{$value['value']}deg";
+    foreach (['bg-linear' => false, '-bg-linear' => true] as $name => $negative) {
+        $builder->getUtilities()->functional($name, function (array $candidate) use ($negative, $linearDirections) {
+            if (!isset($candidate['value'])) {
+                return null;
             }
 
-            return null;
-        },
-        'handle' => function ($value) use ($builder) {
-            // For angle values, we need to set --tw-gradient-position
-            // and use linear-gradient with var(--tw-gradient-stops)
-            return registerGradientWithAngle($builder, 'linear-gradient', $value);
-        },
-    ]);
+            $value = $candidate['value']['value'];
+            $modifier = $candidate['modifier'] ?? null;
+            if ($candidate['value']['kind'] === 'arbitrary') {
+                if ($modifier !== null) {
+                    return null;
+                }
+                $type = $candidate['value']['dataType'] ?? inferDataType($value, ['angle']);
+                if ($negative) {
+                    if ($type !== 'angle') {
+                        return null;
+                    }
+                    $value = "calc({$value} * -1)";
+                }
+
+                return [
+                    decl('--tw-gradient-position', $value),
+                    decl('background-image', "linear-gradient(var(--tw-gradient-stops,{$value}))"),
+                ];
+            }
+
+            if (!$negative && isset($linearDirections[$value])) {
+                $value = $linearDirections[$value];
+            } elseif (isPositiveInteger($value)) {
+                $value = $negative ? "calc({$value}deg * -1)" : "{$value}deg";
+            } else {
+                return null;
+            }
+
+            $interpolation = ($modifier['kind'] ?? null) === 'arbitrary'
+                ? $modifier['value']
+                : 'in ' . (getGradientInterpolationMode($modifier['value'] ?? null) ?? 'oklab');
+
+            return [
+                decl('--tw-gradient-position', $value),
+                atRule('@supports', '(background-image: linear-gradient(in lab, red, red))', [
+                    decl('--tw-gradient-position', "{$value} {$interpolation}"),
+                ]),
+                decl('background-image', 'linear-gradient(var(--tw-gradient-stops))'),
+            ];
+        });
+    }
 
     // ==================================================
     // Conic Gradient (bg-conic-*)
@@ -430,24 +467,14 @@ function getGradientInterpolationMode(?string $modifier): ?string
         return null;
     }
 
-    switch ($modifier) {
-        case 'oklch':
-        case 'oklab':
-        case 'hsl':
-        case 'srgb':
-            return $modifier;
-        case 'longer':
-            return 'oklch longer hue';
-        case 'shorter':
-            return 'oklch shorter hue';
-        case 'increasing':
-            return 'oklch increasing hue';
-        case 'decreasing':
-            return 'oklch decreasing hue';
-        default:
-            // For arbitrary values like [in_hsl_longer_hue]
-            return $modifier;
-    }
+    $modes = [
+        'longer' => 'oklch longer hue',
+        'shorter' => 'oklch shorter hue',
+        'increasing' => 'oklch increasing hue',
+        'decreasing' => 'oklch decreasing hue',
+    ];
+
+    return $modes[$modifier] ?? $modifier;
 }
 
 /**

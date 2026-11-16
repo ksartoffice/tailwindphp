@@ -44,7 +44,7 @@ const CORPUS = [
     ['large',  'site339-max',  339, '46b936f63ce2b646855f414650b38448ed40be1cde6c0363b2586a0d53073b86.html'],
 ];
 
-function ms(int|float $ns): float
+function ms($ns): float
 {
     return $ns / 1e6;
 }

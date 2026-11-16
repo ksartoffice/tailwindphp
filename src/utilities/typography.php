@@ -269,7 +269,7 @@ function registerTypographyUtilities(UtilityBuilder $builder): void
 
         if ($candidate['value']['kind'] === 'arbitrary') {
             $value = $candidate['value']['value'];
-            $dataType = $candidate['value']['dataType'] ?? null;
+            $dataType = $candidate['value']['dataType'] ?? inferDataType($value, ['number', 'generic-name', 'family-name']);
 
             // If data type indicates font family
             if ($dataType === 'generic-name' || $dataType === 'family-name') {
@@ -442,7 +442,6 @@ function registerTypographyUtilities(UtilityBuilder $builder): void
 
     // Word Break
     $builder->staticUtility('break-normal', [['overflow-wrap', 'normal'], ['word-break', 'normal']]);
-    $builder->staticUtility('break-words', [['overflow-wrap', 'break-word']]);
     $builder->staticUtility('break-all', [['word-break', 'break-all']]);
     $builder->staticUtility('break-keep', [['word-break', 'keep-all']]);
 

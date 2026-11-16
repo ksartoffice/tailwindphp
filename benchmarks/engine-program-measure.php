@@ -11,7 +11,7 @@ const WARM_RUNS = 5;
 const REPEAT_RUNS = 20;
 const BATCH_RUNS = 5;
 
-function ms(int|float $ns): float
+function ms($ns): float
 {
     return $ns / 1e6;
 }

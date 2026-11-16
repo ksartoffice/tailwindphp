@@ -2,6 +2,20 @@
 
 A **1:1 port of TailwindCSS 4.x to PHP**. See [README.md](README.md) for scope and features.
 
+## Agent instructions
+
+Keep agent instructions in `AGENTS.md` only. Use nested `AGENTS.md` files when
+guidance needs a narrower scope. Do not add `CLAUDE.md` files, symlinks, or
+forwarding stubs for repository guidance.
+
+## Releases
+
+Follow the [shared release rule](https://github.com/inline0/_cp/blob/main/AGENTS.md#canonical-github-releases).
+Titles are exactly the tag. Bodies contain only the linked `CHANGELOG.md`
+sentence with that tag. Keep complete notes in `CHANGELOG.md` before publishing.
+`.github/workflows/release-format.yml` enforces this format; keep it identical
+to `_cp/scripts/release-format.yml`.
+
 ## Table of Contents
 
 - [Critical Rules for LLMs](#critical-rules-for-llms)
@@ -412,10 +426,10 @@ tailwindphp/
 │   └── cva/                    # Git submodule - CVA source
 │
 ├── scripts/
-│   ├── update-tailwind.php     # Update TailwindCSS reference + copy CSS files
-│   └── update-libs.php         # Update companion library references
+│   ├── update-tailwind.ts     # Update TailwindCSS reference + copy CSS files
+│   └── update-libs.ts         # Update companion library references
 │
-└── CLAUDE.md                   # This file
+└── AGENTS.md                   # This file
 ```
 
 ---
@@ -443,7 +457,7 @@ tailwindphp/
 | `src/_tailwindphp/lib/cva/cva.php` | CVA (class variance authority) implementation |
 | `tests/ImportPathsTest.php` | Import paths feature tests |
 | `tests/TestHelper.php` | `TestHelper::run()` for tests |
-| `scripts/update-libs.php` | Update companion library references |
+| `scripts/update-libs.ts` | Update companion library references |
 
 ---
 
@@ -759,8 +773,8 @@ composer versions
 composer update-libs
 
 # Update specific library
-php scripts/update-libs.php clsx
-php scripts/update-libs.php tailwind-merge
+node scripts/update-libs.ts clsx
+node scripts/update-libs.ts tailwind-merge
 ```
 
 The update script will:
@@ -781,10 +795,11 @@ Tests for companion libraries are extracted from their original JavaScript/TypeS
 - Converts JS truthiness semantics to PHP (empty arrays are truthy in JS)
 - Strips JS comments before parsing
 
-**tailwind-merge**: Tests extracted from `reference/tailwind-merge/tests/*.test.ts`
+**tailwind-merge**: Tests extracted from `reference/tailwind-merge/packages/tailwind-merge/tests/*.test.ts` (3.7.0)
 - Parser handles TypeScript test syntax (`test()`, `expect().toBe()`)
 - Processes escape sequences in string literals
 - Some tests N/A (require custom config, extendTailwindMerge)
+- `node scripts/generate-tailwind-merge.ts` regenerates the PHP default configuration and the upstream differential corpus; run it after updating the pinned reference. The generated corpus covers all class groups, cross-group conflicts, variants, important modifiers and validators.
 
 ---
 
@@ -820,7 +835,7 @@ fwrite(STDERR, "Debug: " . print_r($value, true) . "\n");
 
 ## Current Status
 
-**Total: 4,427 tests (all passing)**
+**Total: 4,435 tests (all passing)**
 
 Reference: TailwindCSS **v4.3.3** (see `composer versions`).
 
@@ -833,7 +848,7 @@ template second arguments, template-variable bindings, and the
 
 | Test File | Status | Tests |
 |-----------|--------|-------|
-| `utilities.test.php` | ✅ | 706 |
+| `utilities.test.php` | ✅ | 719 (incl. 13 from `compat/legacy-utilities.test.ts`) |
 | `variants.test.php` | ✅ | 164 |
 | `index.test.php` | ✅ | 148 (file-system/JS-runtime cases N/A) |
 | `css_functions.test.php` | ✅ | 64 (7 N/A for JS tooling) |
@@ -999,10 +1014,12 @@ Tests for edge cases and complex scenarios:
 | `PropertyRegistrationTest.php` | ✅ | 98 |
 | `ContainerUtilityTest.php` | ✅ | 3 |
 | `NestedApplyRegressionTest.php` | ✅ | 3 |
+| `OpenIssueRegressionTest.php` | ✅ | 8 |
 
 - `PropertyRegistrationTest.php` — `@property` registration of composed `--tw-*` variable groups (translate, scale, transform, filters, backdrop-filters, transitions, typography, font-variant-numeric, contain, touch-action, scroll-snap, border-spacing), including registration details, the `@layer properties` fallback, and the negative cases that must register nothing
 - `ContainerUtilityTest.php` — the `container` layout component (per-breakpoint media queries, unit-then-value breakpoint sorting, custom theme breakpoints)
 - `NestedApplyRegressionTest.php` — nested rules surviving a parent `@apply` that expands to multiple declarations
+- `OpenIssueRegressionTest.php`: source paths and exclusions, CLI values and watch behavior, readable optimization, reference imports, plugin variants, and CSS mixins
 
 ### tw-animate-css Tests (`tests/TwAnimateCssTest.php`)
 
@@ -1088,7 +1105,7 @@ These PHP test files exist but contain no tests because the TypeScript originals
 | `sort.test.php` | `sort.test.ts` | IDE tooling - class sorting |
 | `to_key_path.test.php` | `to-key-path.test.ts` | Not needed |
 
-Other TypeScript test files not ported: `config.test.ts`, `resolve-config.test.ts`, `container-config.test.ts`, `screens-config.test.ts`, `flatten-color-palette.test.ts`, `apply-config-to-theme.test.ts`, `apply-keyframes-to-theme.test.ts`, `legacy-utilities.test.ts`, `source-map.test.ts`, `line-table.test.ts`, `translation-map.test.ts`.
+Other TypeScript test files not ported: `config.test.ts`, `resolve-config.test.ts`, `container-config.test.ts`, `screens-config.test.ts`, `flatten-color-palette.test.ts`, `apply-config-to-theme.test.ts`, `apply-keyframes-to-theme.test.ts`, `source-map.test.ts`, `line-table.test.ts`, `translation-map.test.ts`.
 
 ### Implemented Features
 
@@ -1160,3 +1177,19 @@ Inline deviation:
 // @port-deviation: PHP regex syntax differs from JS
 $pattern = '/.../';
 ```
+
+## Development tooling
+
+Repository tooling uses Node.js 26.12.0 (pinned in `.nvmrc`), pnpm 12.14
+and Effect 4.0.5. Install with `pnpm install --frozen-lockfile`. Run `pnpm typecheck`, `pnpm test:scripts`
+and `pnpm docs:check` for the TypeScript gate. Scripts run directly as
+`node scripts/<name>.ts`; the shared runtime provides typed CLI failures,
+filesystem services and scoped subprocesses that close on interruption.
+These are development dependencies only; PHP consumers keep the same runtime
+requirements and Composer archives exclude the Node tooling.
+
+The upstream generators bundle the checked-out reference TypeScript into a
+scoped temporary module with esbuild, preserving const enums, extensionless
+imports and validator names without changing upstream files. Run
+`pnpm generate:merge` and `pnpm generate:utilities` after reference changes;
+`pnpm versions` inspects the checked-out versions without fetching.
