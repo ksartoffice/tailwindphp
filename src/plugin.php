@@ -128,7 +128,8 @@ class PluginAPI
                 continue;
             }
             if (is_array($value)) {
-                if (array_is_list($value)) {
+                // array_is_list() is only available from PHP 8.1.
+                if ($value === [] || array_keys($value) === range(0, count($value) - 1)) {
                     foreach ($value as $item) {
                         if (is_array($item)) {
                             $nodes[] = \TailwindPHP\Ast\rule((string) $property, $this->cssToAst($item));

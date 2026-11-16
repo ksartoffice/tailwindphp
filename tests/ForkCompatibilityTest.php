@@ -36,4 +36,39 @@ final class ForkCompatibilityTest extends TestCase
         self::assertSame('flex-grow hover:grow-0 text-red-500', merge('flex-grow', 'hover:grow-0', 'text-red-500'));
         self::assertSame('decoration-red-500 box-decoration-clone', merge('decoration-red-500', 'decoration-slice', 'box-decoration-clone'));
     }
+
+    public function test_base_styles_compile_without_development_dependencies(): void
+    {
+        // A separate standalone process must not inherit Composer's dev polyfills.
+        $script = 'require ' . var_export(dirname(__DIR__) . '/autoload.php', true) . ';' . <<<'PHP'
+        $compiled = \TailwindPHP\compile('@plugin "@tailwindcss/forms"; @import "tailwindcss/utilities.css";', ['loadDefaultTheme' => false]);
+        echo $compiled['build']([]);
+
+        $api = new \TailwindPHP\Plugin\PluginAPI(new \TailwindPHP\Theme(), new \TailwindPHP\Utilities\Utilities(), new \TailwindPHP\Variants\Variants());
+        $api->addBase([
+            '.fallback' => ['display' => ['block', 'grid']],
+            '.repeat' => [['color' => 'red'], ['color' => 'blue']],
+            '.empty' => [],
+        ]);
+        echo \TailwindPHP\Ast\toCss($api->getBaseAst());
+        PHP;
+
+        $process = proc_open([PHP_BINARY, '-r', $script], [
+            0 => ['pipe', 'r'],
+            1 => ['pipe', 'w'],
+            2 => ['redirect', 1],
+        ], $pipes);
+        self::assertIsResource($process);
+        fclose($pipes[0]);
+        $css = stream_get_contents($pipes[1]);
+        fclose($pipes[1]);
+        $status = proc_close($process);
+
+        self::assertSame(0, $status, $css);
+        self::assertStringContainsString('@layer base', $css);
+        self::assertStringContainsString("input:where([type='text'])", $css);
+        self::assertStringContainsString(".fallback {\n    display: block;\n    display: grid;\n  }", $css);
+        self::assertStringContainsString(".repeat {\n    color: red;\n  }", $css);
+        self::assertStringContainsString(".repeat {\n    color: blue;\n  }", $css);
+    }
 }
