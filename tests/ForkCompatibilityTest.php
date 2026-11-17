@@ -6,6 +6,7 @@ namespace TailwindPHP\Tests;
 
 use PHPUnit\Framework\TestCase;
 
+use function TailwindPHP\compile;
 use function TailwindPHP\merge;
 
 final class ForkCompatibilityTest extends TestCase
@@ -35,6 +36,31 @@ final class ForkCompatibilityTest extends TestCase
     {
         self::assertSame('flex-grow hover:grow-0 text-red-500', merge('flex-grow', 'hover:grow-0', 'text-red-500'));
         self::assertSame('decoration-red-500 box-decoration-clone', merge('decoration-red-500', 'decoration-slice', 'box-decoration-clone'));
+    }
+
+    public static function legacyScreenBreakpoints(): array
+    {
+        return [['xl', '80rem'], ['custom', '96rem']];
+    }
+
+    /** @dataProvider legacyScreenBreakpoints */
+    public function test_max_width_screen_aliases_reject_modifiers(string $breakpoint, string $width): void
+    {
+        $css = '@theme { --breakpoint-xl: 80rem; --breakpoint-custom: 96rem; } @tailwind utilities;';
+        $alias = 'max-w-screen-' . $breakpoint;
+        $compiled = compile($css, ['loadDefaultTheme' => false]);
+        self::assertSame('', $compiled['build']([
+            $alias . '/foo',
+            $alias . '/[foo]',
+            $alias . '/0',
+            $alias . '/[0]',
+            'hover:' . $alias . '/foo',
+        ]));
+
+        $valid = compile($css, ['loadDefaultTheme' => false]);
+        $output = $valid['build']([$alias]);
+        self::assertStringContainsString('max-width: var(--breakpoint-' . $breakpoint . ');', $output);
+        self::assertStringContainsString('--breakpoint-' . $breakpoint . ': ' . $width . ';', $output);
     }
 
     public function test_base_styles_compile_without_development_dependencies(): void

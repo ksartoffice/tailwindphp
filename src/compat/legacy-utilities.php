@@ -56,6 +56,9 @@ function registerLegacyUtilities(DesignSystem $designSystem): void
     $utilities->static('object-right-bottom', fn () => [decl('object-position', 'right bottom')]);
 
     $utilities->functional('max-w-screen', function ($candidate) use ($theme) {
+        if (isset($candidate['modifier'])) {
+            return null;
+        }
         if (!isset($candidate['value'])) {
             return null;
         }
