@@ -30,8 +30,10 @@ class UtilitiesTest extends TestCase
             return;
         }
 
-        $extractedDir = __DIR__ . '/../test-coverage/utilities/tests';
-        $tsFiles = glob($extractedDir . '/*.ts');
+        $tsFiles = array_merge(
+            glob(__DIR__ . '/../test-coverage/utilities/tests/*.ts'),
+            glob(__DIR__ . '/../test-coverage/legacy-utilities/tests/*.ts'),
+        );
 
         foreach ($tsFiles as $file) {
             $tests = self::parseTestFile($file);

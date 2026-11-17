@@ -5,6 +5,106 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.8.4] - 2026-11-02
+
+### Fixed
+
+- The standalone `autoload.php` loads `src/compat/legacy-utilities.php`. Since 1.8.2, environments that load TailwindPHP without Composer's autoloader (for example prefixed WordPress plugin bundles) failed with `Call to undefined function TailwindPHP\Compat\registerLegacyUtilities()` on the first compile.
+
+### Testing
+
+- Assert that the standalone autoloader lists exactly the Composer `files` autoloads in the same order, and compile through it alone in a separate PHP process.
+
+### Upgrade notes
+
+- No output changes from 1.8.3. Projects that load `autoload.php` directly should skip 1.8.2 and 1.8.3.
+
+## [1.8.3] - 2026-11-02
+
+### Fixed
+
+- `has-*` and `not-*` variants serialize their inner selector the way Lightning CSS does in the reference pipeline. A lone `:is()` is unwrapped only when its argument is a single compound that does not start with a type or universal selector, so `has-[.foo]` and `has-[:focus]` still compile to `:has(.foo)` and `:has(:focus)` while `has-[img]`, `has-[input:checked]` and `not-[img]` keep `:has(:is(img))`, `:has(:is(input:checked))` and `:not(:is(img))`. Attribute values inside them are double-quoted (`has-[[data-slot=icon]]` compiles to `:has([data-slot="icon"])`). This covers `has-[…]`, `has-data-*`, `has-aria-*`, `group-has-*`, `peer-has-*` and `not-has-*`.
+- Class attribute scanning no longer keeps PHP or JavaScript string delimiters on candidates. In templates such as `class="<?php echo $wide ? 'lg:grid lg:p-12' : ''; ?>"`, leading quotes and trailing quotes, commas and semicolons are dropped, so `lg:grid` and `lg:p-12` are found instead of `'lg:grid` and `lg:p-12'`. Quotes inside arbitrary values (`content-['a']`, `bg-[url('/a.png')]`) are unchanged.
+
+### Testing
+
+- Add 85 variant cases captured from the pinned Tailwind CSS 4.3.3 source through Lightning CSS 1.32.0 with the reference optimizer's options (`pnpm run generate:variants`), comparing the complete generated CSS for `has-*`, `group-has-*`, `peer-has-*`, `not-has-*` and `not-*` variants. Lightning CSS is a development dependency only.
+- Add class attribute extraction regressions for PHP ternaries, function arguments, statement terminators, important modifiers and quoted arbitrary values.
+
+### Upgrade notes
+
+- Clear generated CSS caches after upgrading. Compiler state caches invalidate themselves.
+- Selectors produced by `has-[…]` and `not-[…]` with type selectors gain a `:is()` wrapper and attribute values gain quotes. Both forms match the same elements with the same specificity.
+- Templates that echo class names from PHP or JavaScript expressions inside a `class` attribute can produce utilities that were previously skipped or reported as unknown.
+
+## [1.8.2] - 2026-10-30
+
+### Fixed
+
+- Register Tailwind CSS's upstream legacy utilities, including `bg-gradient-to-*`, `max-w-screen-*`, `overflow-ellipsis`, `decoration-slice`/`decoration-clone`, `flex-grow`/`flex-shrink`, and `start-*`/`end-*`. Legacy background/object position aliases, `order-none`, and `break-words` now share the upstream compatibility registration path. ([#20](https://github.com/inline0/tailwindphp/pull/20), fixes [#19](https://github.com/inline0/tailwindphp/issues/19), thanks @vovayatsyuk)
+- Map logical inset properties to the current `inset-s-*` and `inset-e-*` utility names in `tw::cssMap()`.
+
+### Testing
+
+- Include the 13 extracted upstream legacy test cases and 83 additional declaration comparisons captured from the pinned Tailwind CSS 4.3.3 source. The comparisons cover valid and invalid candidates, negative/fractional/arbitrary insets, gradients, flex factors, breakpoint sizes, and custom theme values. Existing upstream assertions remain unchanged.
+- Align the CLI version banner with 1.8.2. Development tooling and branding updates since 1.8.1 are included without adding Node dependencies to Composer consumers.
+
+### Upgrade notes
+
+- Clear generated CSS caches after upgrading. Compiler state caches invalidate themselves.
+- Legacy gradient aliases intentionally use the upstream `in oklab` declaration directly; modern `bg-linear-*` utilities retain their existing conditional fallbacks.
+
+## [1.8.1] - 2026-10-23
+
+### Fixed
+
+- Bare `rounded` utilities resolve the default radius instead of referencing an undefined variable. Ring-offset widths emit only their offset variables, with width taking precedence over a same-named color. ([#17](https://github.com/inline0/tailwindphp/pull/17), [#18](https://github.com/inline0/tailwindphp/pull/18), thanks @vovayatsyuk)
+- Arbitrary background, font, and stroke values select the correct CSS property, including URL backgrounds, background sizes and positions, font families, and stroke widths. Numeric outline and stroke widths serialize in pixels. ([#16](https://github.com/inline0/tailwindphp/issues/16))
+- Negative grid row/column starts and ends and negative linear-gradient angles compile correctly. Linear gradients preserve interpolation modifiers, conditional color-space support, and arbitrary-angle fallbacks.
+- Inset shadows prefix each complete shadow without inserting `inset` inside nested color or variable functions. CSS variable fallbacks retain Lightning CSS spacing.
+- Content extraction recognizes static `->class('…')` and `?->class('…')` arguments, including escaped quotes and arbitrary values, through the public API and CLI. Dynamic arguments and concatenations remain excluded. This adapts the contribution in [#1](https://github.com/inline0/tailwindphp/pull/1) to the current extractor (thanks @fiderosado).
+
+### Testing
+
+- Add 54 reproducible utility cases captured directly from the pinned Tailwind CSS source, plus API, serialization, and CLI regression coverage. Existing upstream test expectations are unchanged.
+- Fetch and verify Tailwind CSS 4.3.3 remains the latest stable release; the reference remains pinned to that release.
+
+### Upgrade notes
+
+- Clear generated CSS caches after upgrading. Compiler state caches invalidate themselves.
+
+## [1.8.0] - 2026-10-15
+
+### Added
+
+- Class merging follows tailwind-merge 3.7.0, including Tailwind CSS 4.3 logical sizing, spacing, borders and corners, scrollbar utilities, named containers, decimal fractions, font-weight and family-name hints, and full-name slash lookups. Theme getters include their upstream `themeKey` metadata.
+- A reproducible configuration generator and differential corpus verify all 379 upstream class groups and their conflicts against the pinned JavaScript implementation, including variants, important modifiers, and validators.
+
+### Fixed
+
+- Class conflict resolution recognizes `columns-auto`, bare `bg-conic`, container-size names such as `inline-2xl`, `max-h-none`, deprecated `shadow-inner`, and logical-side overrides from axis shorthands. Color functions such as `color()` and `light-dark()` are no longer treated as arbitrary lengths.
+- Plugin `addBase()` styles are emitted in `@layer base`, including utilities-only imports and empty candidate builds. Plugins loaded through reference imports still register utilities while keeping base styles out of the output.
+- Forms plugin base styles match @tailwindcss/forms 0.5.11: selectors target the appropriate input or select element and place attribute matching inside `:where()`, preserving the upstream specificity.
+- Companion updates recognize the new `tailwind-merge@3.7.0` tag naming and monorepo test paths, and regenerate configuration and reference cases before testing.
+
+### Changed
+
+- Pin @tailwindcss/typography 0.5.20, whose runtime styles match the previous release. Tailwind CSS 4.3.3, clsx 2.1.1, CVA 0.7.1 and tw-animate-css 1.4.0 remain current.
+
+## [1.7.1] - 2026-10-14
+
+### Fixed
+
+- The CLI resolves `@source` files, directories, and globs relative to the input CSS file, applies `@source not` exclusions to scanning and watching, and keeps automatic scanning out of `.git`, `vendor`, and `node_modules`. Explicit sources can include dependencies. ([#8](https://github.com/inline0/tailwindphp/issues/8))
+- Long options accept space-separated values (`--input app.css`, `--output styles.css`, `--cwd path`) as well as `=`, `-i -` reads stdin, and missing values produce an error. ([#13](https://github.com/inline0/tailwindphp/issues/13))
+- `--optimize` keeps readable output in both build and watch mode; `--minify` remains the minified serializer path. ([#9](https://github.com/inline0/tailwindphp/issues/9))
+- Plugin `addVariant()` selectors and predefined `matchVariant()` values are applied to the rule, including typography element modifiers. ([#10](https://github.com/inline0/tailwindphp/issues/10))
+- CSS mixin `@apply` rules are retained literally inside their parent, in order, including optional bodies. Different mixins no longer merge as identical declaration blocks. ([#12](https://github.com/inline0/tailwindphp/issues/12))
+- Reference imports work before or after the utilities import. Built-in virtual modules honour `reference`, remain available to `@apply`, and can subsequently be imported for emitted CSS. ([#14](https://github.com/inline0/tailwindphp/issues/14))
+- Composer declares the ctype and mbstring extensions used by the compiler. ([#11](https://github.com/inline0/tailwindphp/issues/11))
+- Code quality passes with PHPStan 2.3.1 without suppressing its two new comparison diagnostics. ([#15](https://github.com/inline0/tailwindphp/issues/15))
+- Watch mode refreshes filesystem metadata, detects deleted sources, and excludes its generated stylesheet from watched files.
+
 ## [1.7.0] - 2026-08-16
 
 ### TailwindCSS 4.3.3 alignment

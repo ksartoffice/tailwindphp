@@ -87,6 +87,7 @@ const VIRTUAL_MODULES = [
 // kept intact
 const REGEX_CLASS_ATTR = '/class\s*=\s*(["\'])(.*?)\1/s';
 const REGEX_CLASSNAME_ATTR = '/className\s*=\s*(["\'])(.*?)\1/s';
+const REGEX_CLASS_METHOD = '/(?:\?->|->)\s*class\s*\(\s*(["\'])((?:\\\\.|(?!\1)[^\\\\])*)\1\s*\)/s';
 const REGEX_WHITESPACE = '/\s+/';
 const REGEX_UNESCAPE = '/\\\\(.)/';
 
@@ -580,7 +581,7 @@ function loadDefaultTheme(): Theme
  * @return array{
  *     build: callable(array<string>, bool=): string,
  *     buildExact: callable(array<string>, bool=): string,
- *     sources: array<string>,
+ *     sources: list<array{base: string, pattern: string, negated: bool}>,
  *     root: array,
  *     features: int,
  *     designSystem: \TailwindPHP\DesignSystem\DesignSystem
@@ -691,7 +692,7 @@ function compileParsed(array &$ast, array $result, array $options = []): array
     $updateUtilitiesNode = function (array &$ast, array $newNodes) {
         walk($ast, function (&$node) use ($newNodes) {
             // Find the context node that was converted from @tailwind utilities
-            if ($node['kind'] === 'context' && isset($node['context']) && is_array($node['context'])) {
+            if ($node['kind'] === 'context' && !empty($node['context']['utilities'])) {
                 $node['nodes'] = $newNodes;
 
                 return WalkAction::Stop;
@@ -931,6 +932,11 @@ function parseCssState(array &$ast, array $options = []): array
             if ($utilitiesNodePath !== null) {
                 return WalkAction::Replace([]);
             }
+            foreach ($ctx->path() as $ancestor) {
+                if (($ancestor['kind'] ?? '') === 'context' && !empty($ancestor['context']['reference'])) {
+                    return WalkAction::Replace([]);
+                }
+            }
 
             // Store the path to this node for later modification
             $utilitiesNodePath = $ctx->path();
@@ -940,7 +946,7 @@ function parseCssState(array &$ast, array $options = []): array
             // Convert the @tailwind node to a context node in place
             // This is how the TypeScript does it - mutate in place
             $node['kind'] = 'context';
-            $node['context'] = [];
+            $node['context'] = ['utilities' => true];
             $node['nodes'] = [];
             unset($node['name']);
             unset($node['params']);
@@ -1077,11 +1083,18 @@ function parseCssState(array &$ast, array $options = []): array
                 // Deduplicate virtual module imports (tailwindcss, tailwindcss/*)
                 // This applies to all virtual module imports, not just file-based ones
                 if (isVirtualModule($importPath)) {
-                    if (isset($seenVirtualModules[$importPath])) {
+                    $referenceImport = in_array('reference', \TailwindPHP\Utils\segment($modifiers, ' '), true);
+                    foreach ($ctx->path() as $ancestor) {
+                        if (($ancestor['kind'] ?? '') === 'context' && !empty($ancestor['context']['reference'])) {
+                            $referenceImport = true;
+                        }
+                    }
+                    $moduleKey = ($referenceImport ? 'reference:' : 'emit:') . $importPath;
+                    if (isset($seenVirtualModules[$moduleKey])) {
                         // Already imported - remove duplicate
                         return WalkAction::Replace([]);
                     }
-                    $seenVirtualModules[$importPath] = true;
+                    $seenVirtualModules[$moduleKey] = true;
                 }
 
                 // Handle 'tailwindcss' virtual module - full Tailwind CSS (theme + preflight + utilities)
@@ -1110,6 +1123,10 @@ function parseCssState(array &$ast, array $options = []): array
                         atRule('@layer', 'utilities', [$utilitiesNode]),
                     ];
 
+                    if (in_array('reference', \TailwindPHP\Utils\segment($modifiers, ' '), true)) {
+                        $fullContent = [atRule('@media', 'reference', $fullContent)];
+                    }
+
                     return WalkAction::Replace($fullContent);
                 }
 
@@ -1117,6 +1134,9 @@ function parseCssState(array &$ast, array $options = []): array
                 if ($importPath === 'tailwindcss/theme' || $importPath === 'tailwindcss/theme.css') {
                     $themeCss = readResourceFile('theme.css');
                     $themeAst = parse($themeCss);
+                    if (in_array('reference', \TailwindPHP\Utils\segment($modifiers, ' '), true)) {
+                        $themeAst = [atRule('@media', 'reference', $themeAst)];
+                    }
 
                     // Check for prefix() modifier
                     if (preg_match(REGEX_PREFIX_MOD, $modifiers, $prefixMatch)) {
@@ -1146,6 +1166,9 @@ function parseCssState(array &$ast, array $options = []): array
                 // Handle 'tailwindcss/utilities' or 'tailwindcss/utilities.css'
                 if ($importPath === 'tailwindcss/utilities' || $importPath === 'tailwindcss/utilities.css') {
                     $utilityNode = atRule('@tailwind', 'utilities', []);
+                    if (in_array('reference', \TailwindPHP\Utils\segment($modifiers, ' '), true)) {
+                        $utilityNode = atRule('@media', 'reference', [$utilityNode]);
+                    }
 
                     // If there's an 'important' modifier
                     if (str_contains($modifiers, 'important')) {
@@ -1171,6 +1194,9 @@ function parseCssState(array &$ast, array $options = []): array
                 if ($importPath === 'tailwindcss/preflight' || $importPath === 'tailwindcss/preflight.css') {
                     $preflightCss = readResourceFile('preflight.css');
                     $preflightAst = parse($preflightCss);
+                    if (in_array('reference', \TailwindPHP\Utils\segment($modifiers, ' '), true)) {
+                        $preflightAst = [atRule('@media', 'reference', $preflightAst)];
+                    }
 
                     // Check for layer(base) modifier
                     if (str_contains($modifiers, 'layer(base)')) {
@@ -1367,9 +1393,17 @@ function parseCssState(array &$ast, array $options = []): array
                 }
             }
 
+            $referenceMode = false;
+            foreach ($ctx->path() as $ancestor) {
+                if (($ancestor['kind'] ?? '') === 'context' && !empty($ancestor['context']['reference'])) {
+                    $referenceMode = true;
+                    break;
+                }
+            }
             $plugins[] = [
                 'name' => $pluginName,
                 'options' => $pluginOptions,
+                'reference' => $referenceMode,
             ];
 
             $features |= FEATURE_JS_PLUGIN_COMPAT;
@@ -1607,8 +1641,12 @@ function finalizeCssState(array &$ast, array $state, array $options = []): array
                 }
             }
 
-            // Execute the plugin
+            // Reference plugins still register utilities, but never emit base CSS.
+            $baseOffset = count($api->getBaseStyles());
             $pluginManager->execute($pluginName, $api, $pluginOptions);
+            if (empty($pluginRef['reference'])) {
+                $ast = array_merge($ast, $api->getBaseAst($baseOffset));
+            }
         }
     }
 
@@ -2520,7 +2558,7 @@ function optimizeAstTransformNodes(array $nodes, Theme $theme, array $usedVariab
             // Skip empty rules (no declarations or nested rules)
             // But keep @layer, @charset, @custom-media, @namespace, @import (they can be empty)
             $name = $node['name'] ?? '';
-            if (empty($children) && !in_array($name, ['@layer', '@charset', '@custom-media', '@namespace', '@import'])) {
+            if (empty($children) && !in_array($name, ['@layer', '@charset', '@custom-media', '@namespace', '@import', '@apply'])) {
                 return;
             }
         }
@@ -2911,7 +2949,7 @@ function optimizeAstPrepareIncremental(array $ast, DesignSystem $designSystem, i
     $sentinelValue = '__tailwindphp_utilities_sentinel_'.bin2hex(random_bytes(8));
     $probe = $ast;
     walk($probe, function (&$node) use ($sentinelValue) {
-        if ($node['kind'] === 'context' && isset($node['context']) && is_array($node['context'])) {
+        if ($node['kind'] === 'context' && !empty($node['context']['utilities'])) {
             $node['nodes'] = [['kind' => 'comment', 'value' => $sentinelValue]];
 
             return WalkAction::Stop;
@@ -3445,6 +3483,32 @@ function clearCache($cache = true): int
     return $deleted;
 }
 
+function trimCandidateBoundaries(string $token): string
+{
+    while ($token !== '') {
+        $first = $token[0];
+        if ($first === "'" || $first === '"' || $first === '`') {
+            $token = substr($token, 1);
+
+            continue;
+        }
+
+        $last = $token[strlen($token) - 1];
+        if (in_array($last, ["'", '"', '`', ',', ';'], true)) {
+            $rest = substr($token, 0, -1);
+            if (substr_count($rest, '[') === substr_count($rest, ']') && substr_count($rest, '(') === substr_count($rest, ')')) {
+                $token = $rest;
+
+                continue;
+            }
+        }
+
+        break;
+    }
+
+    return $token;
+}
+
 /**
  * Extract class name candidates from HTML content.
  *
@@ -3462,10 +3526,24 @@ function extractCandidates(string $html): array
                 $classAttr = html_entity_decode($classAttr, ENT_QUOTES | ENT_HTML5, 'UTF-8');
 
                 foreach (preg_split(REGEX_WHITESPACE, $classAttr) as $class) {
-                    $class = trim($class);
+                    $class = trimCandidateBoundaries(trim($class));
                     if ($class !== '') {
                         $candidates[] = $class;
                     }
+                }
+            }
+        }
+    }
+
+    // Only complete string arguments are static candidates; concatenations and
+    // dynamic expressions belong to the caller's explicit candidate extraction.
+    if (preg_match_all(REGEX_CLASS_METHOD, $html, $matches)) {
+        foreach ($matches[2] as $index => $classAttr) {
+            $quote = $matches[1][$index];
+            $classAttr = str_replace(['\\' . $quote, '\\\\'], [$quote, '\\'], $classAttr);
+            foreach (preg_split(REGEX_WHITESPACE, trim($classAttr)) as $class) {
+                if ($class !== '') {
+                    $candidates[] = $class;
                 }
             }
         }
@@ -4767,7 +4845,7 @@ class Tailwind
         }
 
         // Inset
-        foreach (['inset', 'inset-x', 'inset-y', 'top', 'right', 'bottom', 'left', 'start', 'end'] as $prefix) {
+        foreach (['inset', 'inset-x', 'inset-y', 'top', 'right', 'bottom', 'left', 'inset-s', 'inset-e'] as $prefix) {
             foreach (['0', 'px', '0.5', '1', '2', '3', '4', '5', '6', '8', '10', '12', '16', '20', 'auto', 'full', '1/2'] as $val) {
                 $candidates[] = "$prefix-$val";
             }

@@ -5,4 +5,6 @@ composer.lock
 .phpunit.cache/
 .phpstan
 test-results/
+
+node_modules/
 .php-cs-fixer.cache

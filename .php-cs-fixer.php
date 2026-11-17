@@ -7,6 +7,7 @@ $finder = PhpCsFixer\Finder::create()
     ->exclude([
         'reference',
         'vendor',
+        'node_modules',
     ]);
 
 return (new PhpCsFixer\Config())

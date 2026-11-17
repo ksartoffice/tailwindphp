@@ -11,6 +11,7 @@
 $dir = __DIR__ . '/src/';
 
 $files = [
+    '_tailwindphp/polyfills.php',
     '_tailwindphp/LightningCss.php',
     '_tailwindphp/CssMinifier.php',
     'attribute-selector-parser.php',
@@ -43,6 +44,7 @@ $files = [
     'utilities.php',
     'variants.php',
     'design-system.php',
+    'compat/legacy-utilities.php',
     'apply.php',
     'at-import.php',
     'css-functions.php',

@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * Port of: https://github.com/dcastil/tailwind-merge/blob/main/src/lib/tw-merge.ts
+ * Port of: https://github.com/dcastil/tailwind-merge/blob/main/packages/tailwind-merge/src/lib/tw-merge.ts
  *
  * Main entry point for tailwind-merge.
  *
@@ -28,7 +28,22 @@ function twMerge(...$classLists): string
     static $merge = null;
 
     if ($merge === null) {
-        $merge = createTailwindMerge(fn () => DefaultConfig::get());
+        // Keep fork aliases outside the generated upstream configuration.
+        $merge = createTailwindMerge(fn () => DefaultConfig::get(), static function (array $config): array {
+            $groups = &$config['classGroups'];
+            foreach (['grow' => 'flex-grow', 'shrink' => 'flex-shrink'] as $modern => $legacy) {
+                foreach ($groups[$modern] as $definition) {
+                    if (is_array($definition) && isset($definition[$modern])) {
+                        $groups[$modern][] = [$legacy => $definition[$modern]];
+                    }
+                }
+            }
+            $groups['box-decoration'][] = ['decoration' => ['slice', 'clone']];
+            $groups['text-overflow'][] = 'overflow-ellipsis';
+            $groups['bg-image'][] = ['bg-gradient-to' => ['t', 'tr', 'r', 'br', 'b', 'bl', 'l', 'tl']];
+
+            return $config;
+        });
     }
 
     return $merge(...$classLists);

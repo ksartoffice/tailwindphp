@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace TailwindPHP\LightningCss;
 
+use TailwindPHP\ValueParser;
+
 /**
  * CSS Optimizer - PHP implementation of lightningcss transformations.
  *
@@ -51,9 +53,13 @@ class LightningCss
         $value = self::normalizeColors($value, $isCustomProperty);
         $value = self::evaluateColorMix($value);  // Evaluate color-mix AFTER normalizeColors converts hex to named
         $value = self::normalizeOklabLightness($value);
-        // lightningcss serializes an empty var() fallback with a space after
-        // the comma: `var(--tw-blur,)` -> `var(--tw-blur, )`
-        $value = preg_replace('/var\((--[a-zA-Z0-9_-]+),\)/', 'var($1, )', $value);
+        // Lightning CSS parses nonzero unitless outline and SVG stroke widths as pixels.
+        if (in_array($property, ['outline-width', 'stroke-width'], true)
+            && preg_match('/^\+?(?:\d*\.)?\d+(?:e[+-]?\d+)?$/i', $value)
+            && (float) $value > 0) {
+            $value .= 'px';
+        }
+        $value = self::normalizeVarFallbackSpacing($value);
         $value = self::normalizeLeadingZeros($value);
         $value = self::normalizeGridValues($value, $property);
         $value = self::normalizeTransformFunctions($value, $property);
@@ -62,6 +68,39 @@ class LightningCss
         $value = self::normalizeAngleUnits($value, $isCustomProperty);
 
         return $value;
+    }
+
+    /**
+     * Format var() fallbacks without changing quoted strings or nested values.
+     */
+    public static function normalizeVarFallbackSpacing(string $value): string
+    {
+        if (!str_contains($value, 'var(') || !str_contains($value, ',')) {
+            return $value;
+        }
+
+        $nodes = ValueParser\parse($value);
+        $normalize = function (array &$nodes) use (&$normalize): void {
+            foreach ($nodes as &$node) {
+                if ($node['kind'] !== 'function') {
+                    continue;
+                }
+                if ($node['value'] === 'var') {
+                    foreach ($node['nodes'] as &$child) {
+                        if ($child['kind'] === 'separator' && str_contains($child['value'], ',')) {
+                            $child['value'] = preg_replace('/,\s*/', ', ', $child['value']);
+                            break;
+                        }
+                    }
+                    unset($child);
+                }
+                $normalize($node['nodes']);
+            }
+            unset($node);
+        };
+        $normalize($nodes);
+
+        return ValueParser\toCss($nodes);
     }
 
     /**
@@ -779,12 +818,31 @@ class LightningCss
 
         $normal = [];
         $important = [];
+        $hasMixins = false;
         foreach ($children as $child) {
+            if ($child['kind'] === 'at-rule' && ($child['name'] ?? '') === '@apply') {
+                $hasMixins = true;
+            }
             if ($child['kind'] === 'declaration' && ($child['important'] ?? false)) {
                 $important[] = $child;
             } else {
                 $normal[] = $child;
             }
+        }
+
+        if ($hasMixins) {
+            $result = [];
+            $group = [];
+            foreach ($children as $child) {
+                if ($child['kind'] === 'at-rule' && ($child['name'] ?? '') === '@apply') {
+                    $result = array_merge($result, self::reorderDeclarationBlock($group), [$child]);
+                    $group = [];
+                } else {
+                    $group[] = $child;
+                }
+            }
+
+            return array_merge($result, self::reorderDeclarationBlock($group));
         }
 
         $result = self::reorderDeclarationGroup($normal);
@@ -1213,7 +1271,8 @@ class LightningCss
             $nestedRules = [];
 
             foreach ($node['nodes'] ?? [] as $child) {
-                if ($child['kind'] === 'declaration') {
+                if ($child['kind'] === 'declaration'
+                    || ($child['kind'] === 'at-rule' && ($child['name'] ?? '') === '@apply')) {
                     $declarations[] = $child;
                 } else {
                     $nestedRules[] = $child;
@@ -1409,7 +1468,7 @@ class LightningCss
                 $currentSelector = $node['selector'];
 
                 // Only merge if this rule immediately follows another rule with same declarations
-                if ($lastDeclKey === $declKey && $lastIndex === count($result) - 1 && $lastIndex >= 0) {
+                if ($lastIndex >= 0 && $lastDeclKey === $declKey && $lastIndex === count($result) - 1) {
                     // Check if this selector is already included (avoid duplicates)
                     if (!isset($lastSelectors[$currentSelector])) {
                         // Merge selectors with previous rule
@@ -1454,6 +1513,8 @@ class LightningCss
             } elseif ($node['kind'] === 'rule') {
                 // Include nested rules in serialization
                 $parts[] = 'rule:' . ($node['selector'] ?? '') . '{' . self::serializeDeclarations($node['nodes'] ?? []) . '}';
+            } elseif ($node['kind'] === 'at-rule') {
+                return serialize($nodes);
             }
         }
         sort($parts); // Sort for consistent comparison
@@ -1643,7 +1704,7 @@ class LightningCss
     {
         // Evaluate the innermost statically analyzable color-mix(…) first so
         // nested calls collapse outside-in, mirroring lightningcss.
-        for ($guard = 0; $guard < 16; $guard++) {
+        foreach (range(0, 15) as $_) {
             $pos = strrpos($value, 'color-mix(');
             if ($pos === false) {
                 return $value;
